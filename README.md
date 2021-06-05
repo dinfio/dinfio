@@ -1,1 +1,1 @@
-# Welcome to the official Dinfio repository
+# Welcome to the Dinfio Programming Language
