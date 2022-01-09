@@ -27,7 +27,7 @@ namespace standardIO {
         __max = __writer;   // DO NOT FORGET THIS!
     }
 
-    DataType* construct(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
+    DataType* __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
         DataType* result = new DataType(__TYPE_NULL__);
         vector<AST*> params = ((AST_FunctionCall*) ast_func)->__parameters;
 

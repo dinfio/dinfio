@@ -18,7 +18,7 @@ namespace core {
     uint_fast16_t __type, __exit, __iif, __total_vars;
     uint_fast16_t __platform, __platform_linux, __platform_mac, __platform_windows;
     uint_fast16_t __execute;
-    uint_fast16_t __ref, __call, __eval;
+    uint_fast16_t __ref, __ref_call, __ref_eval;
     uint_fast16_t __var_exists, __error;
     uint_fast16_t __caller_file;
     uint_fast16_t __attribute_set, __attribute_get, __attribute_exists;
@@ -73,8 +73,8 @@ namespace core {
         __keys = register_function("keys", __REG_BUILT_IN_FUNCTION__);
         __array_random = register_function("array_random", __REG_BUILT_IN_FUNCTION__);
         __ref = register_function("ref", __REG_BUILT_IN_FUNCTION__);
-        __call = register_function("call", __REG_BUILT_IN_FUNCTION__);
-        __eval = register_function("eval", __REG_BUILT_IN_FUNCTION__);
+        __ref_call = register_function("call", __REG_BUILT_IN_FUNCTION__);
+        __ref_eval = register_function("eval", __REG_BUILT_IN_FUNCTION__);
         __error = register_function("error", __REG_BUILT_IN_FUNCTION__);
         __caller_file = register_function("caller_file", __REG_BUILT_IN_FUNCTION__);
         __attribute_get = register_function("attribute_get", __REG_BUILT_IN_FUNCTION__);
@@ -94,7 +94,7 @@ namespace core {
         __max = __register_event_loop;   // DO NOT FORGET THIS!
     }
 
-    DataType* construct(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
+    DataType* __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
         DataType* result = new DataType(__TYPE_NULL__);
         vector<AST*> params = ((AST_FunctionCall*) ast_func)->__parameters;
 
@@ -589,7 +589,7 @@ namespace core {
         } else if (func == __ref) {
             if (params.size() < 1) error_message_param("ref");
             return core::create_ref(params.at(0), "ref", 0, caller_id);
-        } else if (func == __eval) {
+        } else if (func == __ref_eval) {
             if (params.size() < 1) error_message_param("eval");
             DataType* d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_OBJECT__) error_message("eval(): parameter #1 must be a ref object");
@@ -621,7 +621,7 @@ namespace core {
             delete(b);
             return result;
 
-        } else if (func == __call) {
+        } else if (func == __ref_call) {
             if (params.size() < 1) error_message_param("call");
             DataType* d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_OBJECT__) error_message("call(): parameter #1 must be a ref object");

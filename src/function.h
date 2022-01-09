@@ -50,8 +50,8 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
 
         return new DataType(__TYPE_NULL__);
     } else if (func_id > __BUCKET_BUILT_IN_FUNCTION__) {
-        if (func_id >= standardIO::__min && func_id <= standardIO::__max) return standardIO::construct(func_id, func, caller_id);
-        if (func_id >= core::__min && func_id <= core::__max) return core::construct(func_id, func, caller_id);
+        if (func_id >= standardIO::__min && func_id <= standardIO::__max) return standardIO::__call(func_id, func, caller_id);
+        if (func_id >= core::__min && func_id <= core::__max) return core::__call(func_id, func, caller_id);
 
         return new DataType(__TYPE_NULL__);
     } else if (func_id > __BUCKET_UDEF_FUNCTION__) {

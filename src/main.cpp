@@ -19,15 +19,15 @@
     #include "global.h"
 #endif
 #include "ast.h"
-#include "variable.h"
 #include "parser.h"
 #include "expression_parser.h"
-#include "flow_control.h"
+#include "variable.h"
+#include "control_flow.h"
 #include "function.h"
 #include "walker.h"
 #include "module.h"
-#include "module_standardio.h"
 #include "module_core.h"
+#include "module_standardio.h"
 
 int main(int argc, char* argv[]) {
     parse_arguments(argc, argv);

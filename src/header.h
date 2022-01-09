@@ -319,24 +319,13 @@ void init_builtin(int, char*);
 void import_module(string);
 
 
-// Module - Standard I/O
-
-namespace standardIO {
-    uint_fast16_t __min, __max;
-
-    void __init();
-    DataType* construct(uint_fast16_t&, AST*, uint_fast32_t&);
-    void write_recursive(DataType*, int);
-}
-
-
 // Module - Core
 
 namespace core {
     uint_fast16_t __min, __max;
 
     void __init();
-    DataType* construct(uint_fast16_t&, AST*, uint_fast32_t&);
+    DataType* __call(uint_fast16_t&, AST*, uint_fast32_t&);
     DataType* create_ref(AST*, string, uint_fast8_t, uint_fast32_t&);
     DataType* create_array(uint_fast32_t);
     DataType* create_array_2d(uint_fast32_t, uint_fast32_t);
@@ -344,4 +333,15 @@ namespace core {
     DataType* create_empty_object(const string&);
     DataType* create_object(AST_ObjectNotation*, uint_fast32_t&);
     double bitwise_operation(double, double, int, char, bool);
+}
+
+
+// Module - Standard I/O
+
+namespace standardIO {
+    uint_fast16_t __min, __max;
+
+    void __init();
+    DataType* __call(uint_fast16_t&, AST*, uint_fast32_t&);
+    void write_recursive(DataType*, int);
 }
