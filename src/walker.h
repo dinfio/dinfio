@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -12,30 +12,30 @@
 ------------------------------------------------------------
 */
 
-void walk(uint_fast32_t start, uint_fast32_t& caller_id) {
+void walk(uint_fast32_t start, uint_fast32_t& caller_id, bool& stop_loop, bool& stop_procedure) {
     for (uint_fast32_t i = start; i < __n_codes; i++) {
-        if (__stop_loop || __stop_procedure) return;
+        if (stop_loop || stop_procedure) return;
 
         Code* c = __codes[i];
         __cur_i = i;
 
         if (c->__header == __H_VARIABLE_ASSIGNMENT__) {
             assignment(c->__body, c->__body2, caller_id);
-        
+            
         } else if (c->__header == __H_IF__) {
-            branch_if(c->__body, c->__endclause, c->__endclause2, false, caller_id);
+            branch_if(c->__body, i, c->__endclause, c->__endclause2, false, caller_id, stop_loop, stop_procedure);
             return;
         } else if (c->__header == __H_END_IF__ || c->__header == __H_ELSE__ || c->__header == __H_ELSE_IF__) {
             return;
 
         } else if (c->__header == __H_FOR__) {
-            loop_for(c->__body, c->__additional_header, c->__endclause, caller_id);
+            loop_for(c->__body, i, c->__additional_header, c->__endclause, caller_id, stop_loop, stop_procedure);
             return;
         } else if (c->__header == __H_END_FOR__) {
             return;
         
         } else if (c->__header == __H_WHILE__) {
-            loop_while(c->__body, c->__endclause, caller_id);
+            loop_while(c->__body, i, c->__endclause, caller_id, stop_loop, stop_procedure);
             return;
         } else if (c->__header == __H_END_WHILE__) {
             return;
@@ -46,7 +46,7 @@ void walk(uint_fast32_t start, uint_fast32_t& caller_id) {
         } else if (c->__header == __H_RETURN__) {
             assignment(c->__body, c->__body2, caller_id);
 
-            __stop_procedure = true;
+            stop_procedure = true;
             return;
         } else if (c->__header == __H_YIELD__) {
             assignment(c->__body, c->__body2, caller_id);
@@ -57,19 +57,19 @@ void walk(uint_fast32_t start, uint_fast32_t& caller_id) {
             declare_variables(c->__body, c->__body2, caller_id, false);
         
         } else if (c->__header == __H_EXIT_LOOP__) {
-            __stop_loop = true;
+            stop_loop = true;
             return;
         } else if (c->__header == __H_STOP__ || c->__header == __H_RETURN_VOID__) {
-            __stop_procedure = true;
+            stop_procedure = true;
             return;
         } else if (c->__header == __H_FUNCTION__) {
-            __stop_procedure = true;
+            stop_procedure = true;
             return;
         } else if (c->__header == __H_CLASS__) {
-            __stop_procedure = true;
+            stop_procedure = true;
             return;
         } else if (c->__header == __H_END_CLASS__) {
-            __stop_procedure = true;
+            stop_procedure = true;
             return;
         }
     }
@@ -104,14 +104,14 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
         } else {
             string c = to_string(caller_id);
 
-            if (__variables[c + e->__identifier] == NULL){
+            if (__variables.count(c + e->__identifier) == 0) {
                 c = "1";
             }
 
-            if (__variables[c + e->__identifier] != NULL) {
+            if (__variables.count(c + e->__identifier) != 0) {
                 e->__caller_id = caller_id;
                 e->__variable_holder = __variables[c + e->__identifier];
-                
+
                 if (val->__type == __TYPE_DOUBLE__) {
                     e->__variable_holder->__type = __TYPE_DOUBLE__;
                     e->__variable_holder->__value_double = val->__value_double;
@@ -192,12 +192,12 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
             set_array_value(e->__variable_holder, e, val, caller_id);
         } else {
             string c = to_string(caller_id);
-            if (__variables[c + e->__identifier] == NULL){
-                __variables.erase(c + e->__identifier);
+
+            if (__variables.count(c + e->__identifier) == 0) {
                 c = "1";
             }
 
-            if (__variables[c + e->__identifier] != NULL) {
+            if (__variables.count(c + e->__identifier) != 0) {
                 e->__caller_id = caller_id;
                 e->__variable_holder = __variables[c + e->__identifier];
                 
@@ -217,12 +217,12 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
         } else {
             if (e->__array_holder == NULL) {
                 string c = to_string(caller_id);
-                if (__variables[c + e->__identifier] == NULL){
-                    __variables.erase(c + e->__identifier);
+
+                if (__variables.count(c + e->__identifier) == 0) {
                     c = "1";
                 }
 
-                if (__variables[c + e->__identifier] != NULL) {
+                if (__variables.count(c + e->__identifier) != 0) {
                     e->__caller_id = caller_id;
                     e->__variable_holder = __variables[c + e->__identifier];
                     

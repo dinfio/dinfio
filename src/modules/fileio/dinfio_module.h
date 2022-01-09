@@ -4,23 +4,21 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
- Module Interface version 3.1.04
+ Module Interface version 1.0.0
 ------------------------------------------------------------
  NOTE: Please comply with this interface,
-       and please do not modify this file.
+       and do not modify this file.
 ------------------------------------------------------------
 */
 
-#ifndef __MODULE_H__
-#define __MODULE_H__
+#ifndef __DINFIO_MODULE_H__
+#define __DINFIO_MODULE_H__
 
 #include <iostream>
-#include <ostream>
-#include <sstream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -288,8 +286,6 @@ public:
     virtual string __get_version();
     virtual string __get_path();
 };
-
-class Module;
 
 class Module {
 public:

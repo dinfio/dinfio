@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -12,13 +12,13 @@
 ------------------------------------------------------------
 */
 
-void loop_for(AST* body, uint_fast8_t& additional_header, uint_fast32_t& endclause, uint_fast32_t& caller_id) {
+void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header, uint_fast32_t& endclause, uint_fast32_t& caller_id, bool& stop_loop, bool& stop_procedure) {
     AST* a_counter = ((AST_Parameter*) body)->__parameters[0];
     AST* a_start = ((AST_Parameter*) body)->__parameters[1];
     AST* a_end = ((AST_Parameter*) body)->__parameters[2];
 
     double step = 0;
-    uint_fast32_t start_i = __cur_i;
+    __cur_i = start_i;
 
     if (a_counter->__type != __AST_VARIABLE__) error_message("Parameter 'counter' must be a variable");
 
@@ -47,74 +47,74 @@ void loop_for(AST* body, uint_fast8_t& additional_header, uint_fast32_t& endclau
     string c = to_string(caller_id);
 
     if (__variables.count(c + e->__identifier) == 1) {
-        counter = __variables[c + e->__identifier];
+        counter = __variables.at(c + e->__identifier);
         counter->__type = __TYPE_DOUBLE__;
     } else {
         counter = new DataType(__TYPE_DOUBLE__);
-        __variables[c + e->__identifier] = counter;
+        __variables.insert(pair<string, DataType*>(c + e->__identifier, counter));
     }
 
     if (step > 0) {
         for (double i = start; i <= end; i += step) {
-            if (__stop_loop || __stop_procedure) break;
+            if (stop_loop || stop_procedure) break;
             
             counter->__value_double = i;
-            walk(start_i + 1, caller_id);
+            walk(start_i + 1, caller_id, stop_loop, stop_procedure);
         }
     } else {
         for (double i = start; i >= end; i += step) {
-            if (__stop_loop || __stop_procedure) break;
+            if (stop_loop || stop_procedure) break;
 
             counter->__value_double = i;
-            walk(start_i + 1, caller_id);
+            walk(start_i + 1, caller_id, stop_loop, stop_procedure);
         }
     }
 
-    __stop_loop = false;
-    walk(endclause + 1, caller_id);
+    stop_loop = false;
+    walk(endclause + 1, caller_id, stop_loop, stop_procedure);
 }
 
-void loop_while(AST* body, uint_fast32_t& endclause, uint_fast32_t& caller_id) {
-    uint_fast32_t start_i = __cur_i;
+void loop_while(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uint_fast32_t& caller_id, bool& stop_loop, bool& stop_procedure) {
+    __cur_i = start_i;
     DataType* dc = get_value(body, caller_id);
     bool condition = dc->__value_bool;
     remove_garbage(body, dc);
 
     while (condition) {
-        if (__stop_loop || __stop_procedure) break;
-        walk(start_i + 1, caller_id);
+        if (stop_loop || stop_procedure) break;
+        walk(start_i + 1, caller_id, stop_loop, stop_procedure);
 
         dc = get_value(body, caller_id);
         condition = dc->__value_bool;
         remove_garbage(body, dc);
     }
 
-    __stop_loop = false;
-    walk(endclause + 1, caller_id);
+    stop_loop = false;
+    walk(endclause + 1, caller_id, stop_loop, stop_procedure);
 }
 
-void branch_if(AST* body, uint_fast32_t& endclause, uint_fast32_t& endclause2, bool is_elseif, uint_fast32_t& caller_id) {
-    uint_fast32_t start_i = __cur_i;
+void branch_if(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uint_fast32_t& endclause2, bool is_elseif, uint_fast32_t& caller_id, bool& stop_loop, bool& stop_procedure) {
+    __cur_i = start_i;
     DataType* dc = get_value(body, caller_id);
     bool condition = dc->__value_bool;
     remove_garbage(body, dc);
 
     if (condition) {
-        walk(start_i + 1, caller_id);
+        walk(start_i + 1, caller_id, stop_loop, stop_procedure);
     } else {
         if (endclause2 != 0) {
             Code* c = __codes[endclause2];
 
             if (c->__header == __H_ELSE_IF__) {
                 __cur_i = endclause2;
-                branch_if(c->__body, c->__endclause, c->__endclause2, true, caller_id);
+                branch_if(c->__body, endclause2, c->__endclause, c->__endclause2, true, caller_id, stop_loop, stop_procedure);
             } else {
-                walk(endclause2 + 1, caller_id);
+                walk(endclause2 + 1, caller_id, stop_loop, stop_procedure);
             }
         }
     }
 
-    if (!is_elseif) walk(endclause + 1, caller_id);
+    if (!is_elseif) walk(endclause + 1, caller_id, stop_loop, stop_procedure);
 }
 
 void parse_flow_control() {

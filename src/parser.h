@@ -4,11 +4,11 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
- Abstract Syntax Tree Builder (FIO Parser)
+ Parser
 ------------------------------------------------------------
 */
 
@@ -239,8 +239,6 @@ Code* parse_line_code(string& line_code) {
         c->__body = parse_function_declaration(lc);
         __functions_classes.push_back(c);
         
-        //cout << "function passed" << ": " << line_code << endl;
-        
     } else if (line_code == "stop") {
         c->__header = __H_STOP__;
         __flow_controls.push_back(c);
@@ -249,8 +247,6 @@ Code* parse_line_code(string& line_code) {
         c->__header = __H_CLASS__;
         c->__body = parse_class_declaration(lc);
         __functions_classes.push_back(c);
-        
-        //cout << "class passed" << ": " << line_code << endl;
         
     } else if (line_code == "endclass") {
         c->__header = __H_END_CLASS__;
@@ -277,9 +273,7 @@ Code* parse_line_code(string& line_code) {
     } else if (line_code.substr(0, 7) == "import ") {
         string lc = remove_spaces(line_code.substr(7));
         c->__header = __H_IMPORT__;
-        c->__body = parse_field_declaration(lc);
-        
-        //cout << "import passed" << ": " << line_code << endl;
+        c->__body = parse_import_declaration(lc);
         
     } else if (line_code == "start") {
         c->__header = __H_EMPTY__;
@@ -314,14 +308,10 @@ Code* parse_line_code(string& line_code) {
             c->__body2 = parse_expression(r);
         }
         
-        //cout << "assignment passed" << ": " << line_code << endl;
-        
     } else if (line_code.find("(") != string::npos && line_code.substr(line_code.length() - 1, 1) == ")") {
         string lc = remove_spaces(line_code);
         c->__header = __H_PROCEDURE_CALL__;
         c->__body = parse_function_call(lc);
-        
-        //cout << "procedure passed" << ": " << line_code << endl;
         
     } else {
         error_message("Syntax error");

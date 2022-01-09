@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -64,6 +64,8 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
         vector<AST*> params = func->__parameters;
         __last_cur_i = __cur_i;
         uint_fast32_t default_caller_id = 1;
+        bool stop_loop = false;
+        bool stop_procedure = false;
 
         if (params.size() < f->__required_params) {
             error_message_params(func->__identifier, f->__required_params);
@@ -93,10 +95,8 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
             }
         }
 
-        walk(c->__index + 1, fc);
-
+        walk(c->__index + 1, fc, stop_loop, stop_procedure);
         __last_cur_i = 0;
-        __stop_procedure = false;
 
         if (need_return) {
             DataType* r = __variables[sfc + "__ret__"];
@@ -131,7 +131,7 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
                 delete(__variables[p]);
                 __variables.erase(p);
             }
-            
+
             return r;
         } else {
             // Garbage collector
@@ -183,6 +183,8 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
             vector<AST*> params = func->__parameters;
             __last_cur_i = __cur_i;
             uint_fast32_t default_caller_id = 1;
+            bool stop_loop = false;
+            bool stop_procedure = false;
 
             if (params.size() < f->__required_params) {
                 error_message_params(cm->__name + "::construct", f->__required_params);
@@ -214,10 +216,8 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
                 }
             }
 
-            walk(c->__index + 1, fc);
-
+            walk(c->__index + 1, fc, stop_loop, stop_procedure);
             __last_cur_i = 0;
-            __stop_procedure = false;
 
 
             // Garbage collector
@@ -278,6 +278,8 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
         vector<AST*> params = func->__parameters;
         __last_cur_i = __cur_i;
         uint_fast32_t default_caller_id = 1;
+        bool stop_loop = false;
+        bool stop_procedure = false;
 
         if (params.size() < f->__required_params) {
             error_message_params(fo->__name + "::" + func->__identifier, f->__required_params);
@@ -311,10 +313,9 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
             }
         }
 
-        walk(c->__index + 1, fc);
+        walk(c->__index + 1, fc, stop_loop, stop_procedure);
 
         __last_cur_i = 0;
-        __stop_procedure = false;
         delete(dfo);
 
         if (need_return) {

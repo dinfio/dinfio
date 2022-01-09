@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -35,6 +35,8 @@ int main(int argc, char* argv[]) {
     try {
         uint_fast32_t caller_id = 1;
         uint_fast32_t start = 0;
+        bool stop_loop = false;
+        bool stop_procedure = false;
         
         if (!__default_mode) {
             parse_code(argv[1]);
@@ -48,15 +50,13 @@ int main(int argc, char* argv[]) {
         parse_function_class();
         init_builtin(argc, argv);
 
-        walk(start, caller_id);
+        walk(start, caller_id, stop_loop, stop_procedure);
 
         if (__gui_event_loop != 0) {
-            __stop_procedure = false;
             uint_fast32_t caller_id_gui = 1;
             __gui_module->__call(__gui_event_loop, NULL, NULL, caller_id_gui);
         } else {
             if (__event_loop != NULL) {
-                __stop_procedure = false;
                 uint_fast32_t caller_id_el = 1;
                 call_function(__event_loop, caller_id_el);
             }

@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -549,6 +549,10 @@ namespace core {
 
             return result;
         } else if (func == __execute) {
+            #ifdef __DINFIO_PLAYGROUND__
+                error_message("execute(): this function is disabled");
+            #endif
+
             if (params.size() < 1) error_message_param("execute");
             DataType* d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_STRING__) error_message("execute(): parameter #1 must be a string");

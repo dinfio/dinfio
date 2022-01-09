@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -583,6 +583,23 @@ vector<string> parse_function_parameters(string& name) {
     }
 
     return result;
+}
+
+AST_Parameter* parse_import_declaration(string& expression) {
+    vector<string> parameters = parse_function_parameters(expression);
+    AST_Parameter* r = new AST_Parameter();
+
+    for (int i = 0; i < parameters.size(); i++) {
+        string p = parameters[i];
+
+        if (left(p, 1) == "\"" && right(p, 1) == "\"") {
+            r->__parameters.push_back(new AST_Variable(p.substr(1, p.length() - 2)));
+        } else {
+            r->__parameters.push_back(new AST_Variable(p));
+        }
+    }
+
+    return r;
 }
 
 bool is_there_object(string& expression) {

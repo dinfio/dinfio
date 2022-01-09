@@ -4,15 +4,13 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
  Data Type & Variable Layer
 ------------------------------------------------------------
 */
-
-unordered_map<string, DataType*> __variables;
 
 DataType::DataType(uint_fast8_t type) {
     __type = type;
@@ -519,10 +517,10 @@ DataType* get_value(AST* expression, uint_fast32_t& caller_id) {
         return e->__value;
     
     } else if (type == __AST_NULL__) {
-        return new DataType(__TYPE_NULL__);
+        return __nothing_value;
     }
 
-    return new DataType(__TYPE_NULL__);
+    return __nothing_value;
 }
 
 void declare_variables(AST* l, AST* r, uint_fast32_t& caller_id, bool is_local) {
@@ -557,18 +555,6 @@ void declare_variables(AST* l, AST* r, uint_fast32_t& caller_id, bool is_local) 
         __variables[c + ((AST_Variable*) vr)->__identifier] = d;
         remove_garbage(vl, g);
     }
-}
-
-DataType* get_variable_value(string& name, uint_fast32_t& caller_id) {
-    string c = to_string(caller_id);
-
-    DataType* d = __variables[c + name];
-    if (d != NULL) return d;
-
-    d = new DataType(__TYPE_DOUBLE__);
-    __variables[c + name] = d;
-
-    return d;
 }
 
 DataType* get_array_value(AST* expression, uint_fast32_t& caller_id) {

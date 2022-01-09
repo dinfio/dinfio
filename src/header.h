@@ -4,7 +4,7 @@
  Version: 3.1
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2021. All Rights Reserved.
+ Copyright (C) 2014-2022. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -66,8 +66,8 @@ const string __DINFIO_VERSION_MAJOR__ = "3";
 const string __DINFIO_VERSION_MINOR__ = "1";
 const string __DINFIO_VERSION_REVISION__ = "06";
 const string __DINFIO_VERSION__ =  __DINFIO_VERSION_MAJOR__ + "." + __DINFIO_VERSION_MINOR__ + "." + __DINFIO_VERSION_REVISION__;
-const string __DINFIO_BUILD_DATE_RAW__ = "2021-12-22";
-const string __DINFIO_BUILD_DATE__ = "22 December 2021";
+const string __DINFIO_BUILD_DATE_RAW__ = "2022-01-07";
+const string __DINFIO_BUILD_DATE__ = "7 January 2022";
 const string __MODULES_PATH__ = __DINFIO_PATH__ + "modules/";
 
 
@@ -186,9 +186,11 @@ public:
     DataType(uint_fast8_t type);
 };
 
+unordered_map<string, DataType*> __variables;
+DataType* __nothing_value = new DataType(__TYPE_NULL__);
+
 DataType* get_value(AST*, uint_fast32_t&);
 void declare_variables(AST*, AST*, uint_fast32_t&, bool);
-DataType* get_variable_value(string&, uint_fast32_t&);
 DataType* get_array_value(AST*, uint_fast32_t&);
 void set_array_value(DataType*, AST_Array*, DataType*, uint_fast32_t&);
 DataType* get_object_value(AST*, uint_fast32_t&);
@@ -218,6 +220,7 @@ AST_Parameter* parse_parameters(string&);
 vector<string> parse_array_elements(string&);
 vector<string> parse_object_attributes(string&);
 vector<string> parse_function_parameters(string&);
+AST_Parameter* parse_import_declaration(string&);
 bool is_there_object(string&);
 string __remove_unused_parentheses(string&);
 bool __parentheses_symmetric(string&);
@@ -228,12 +231,10 @@ int __get_precedence(string&);
 // Flow Controls
 
 vector<Code*> __flow_controls;
-bool __stop_loop = false;
-bool __stop_procedure = false;
 
-void loop_for(AST*, uint_fast8_t&, uint_fast8_t&, uint_fast32_t&);
-void loop_while(AST*, uint_fast32_t&, uint_fast32_t&);
-void branch_if(AST*, uint_fast32_t&, uint_fast32_t&, bool, uint_fast32_t&);
+void loop_for(AST*, uint_fast32_t&, uint_fast8_t&, uint_fast8_t&, uint_fast32_t&, bool&, bool&);
+void loop_while(AST*, uint_fast32_t&, uint_fast32_t&, uint_fast32_t&, bool&, bool&);
+void branch_if(AST*, uint_fast32_t&, uint_fast32_t&, uint_fast32_t&, bool, uint_fast32_t&, bool&, bool&);
 void parse_flow_control();
 
 
@@ -273,7 +274,7 @@ void parse_function_class();
 
 // AST Walker
 
-void walk(uint_fast32_t, uint_fast32_t&);
+void walk(uint_fast32_t, uint_fast32_t&, bool&, bool&);
 void assignment(AST*, AST*, uint_fast32_t&);
 
 
