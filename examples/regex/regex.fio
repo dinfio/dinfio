@@ -1,0 +1,13 @@
+' Regular Expression example
+
+import regex
+
+start
+    a = regex_match("\w+@\w+\.org", "faruq@dinfio.org")
+    b = regex_search("(\w+)@(\w+)\.com", "fn@yahoo.com; faruq@gmail.com mfn@hotmail.com")
+    c = regex_replace("(\w+)@(\w+)\.com", "fn@yahoo.com; faruq@gmail.com mfn@hotmail.com", "$1@email")
+
+    writer(a)
+    writer(b)
+    writer(c)
+stop
