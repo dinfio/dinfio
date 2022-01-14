@@ -3,7 +3,7 @@
 start
     aisha = student("Aisha", 19, "Universitas Indonesia")
     clara = employee("Clara", 23, "Fio Corporation")
-    sarah = freelancer("Sarah", 24, "Edinburgh University", "Fio Corporation")
+    sarah = freelancer("Sarah", 24, "The University of Edinburgh", "Fio Corporation")
 
     writer(aisha)
     writer(clara)

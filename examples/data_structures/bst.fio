@@ -1,0 +1,86 @@
+' Binary Search Tree
+
+start
+    var tree = binarysearchtree()
+    
+    tree.insert(6); tree.insert(4); tree.insert(10); tree.insert(1); tree.insert(23)
+    
+    tree.preorder()
+    writeln()
+    tree.inorder()
+    writeln()
+    tree.postorder()
+stop
+
+class binarynode
+    field element
+    field binarynode: left, right
+    
+    function construct(element)
+        this.left = nothing
+        this.right = nothing
+        this.element = element
+    stop
+endclass
+
+class binarysearchtree
+    field binarynode: root
+    
+    function construct()
+        this.root = nothing
+    stop
+    
+    function insert(x)
+        this.root = this.doinsert(x, this.root)
+    stop
+    
+    function doinsert(x, binarynode: t)
+        if is_nothing(t)
+            t = binarynode(x)
+        elseif x < t.element
+            t.left = this.doinsert(x, t.left)
+        elseif x > t.element
+            t.right = this.doinsert(x, t.right)
+        else
+            ' Duplicate
+        endif
+        
+        return t
+    stop
+    
+    function preorder()
+        this.dopreorder(this.root)
+    stop
+    
+    function dopreorder(binarynode: t)
+        if !is_nothing(t)
+            write(t.element & " ")
+            this.dopreorder(t.left)
+            this.dopreorder(t.right)
+        endif
+    stop
+    
+    function inorder()
+        this.doinorder(this.root)
+    stop
+    
+    function doinorder(binarynode: t)
+        if !is_nothing(t)
+            this.doinorder(t.left)
+            write(t.element & " ")
+            this.doinorder(t.right)
+        endif
+    stop
+    
+    function postorder()
+        this.dopostorder(this.root)
+    stop
+    
+    function dopostorder(binarynode: t)
+        if !is_nothing(t)
+            this.dopostorder(t.left)
+            this.dopostorder(t.right)
+            write(t.element & " ")
+        endif
+    stop
+endclass

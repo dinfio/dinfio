@@ -1,0 +1,81 @@
+' Queue implementation in Dinfio
+
+start
+    var queue = queue()
+
+    queue.push(10); queue.push(12); queue.push(8); queue.push(20); queue.push(4)
+
+    while !queue.isempty()
+        writeln(queue.pop())
+    endwhile
+stop
+
+class node
+    field node: next
+    field element
+endclass
+
+class queue
+    field node: head, tail
+    field size
+
+    function construct()
+        this.head = nothing
+        this.tail = nothing
+    stop
+
+    function push(element)
+        var node = node()
+
+        node.element = element
+        this.size += 1
+
+        if is_nothing(this.tail)
+            this.head = node
+            this.tail = node
+
+            return
+        endif
+
+        this.tail.next = node
+        this.tail = node
+    stop
+
+    function pop()
+        if is_nothing(this.head)
+            return nothing
+        endif
+        
+        var node = this.head
+        this.head = this.head.next
+
+        if is_nothing(this.head)
+            this.tail = nothing
+        endif
+        
+        this.size -= 1
+        return node.element
+    stop
+
+    function top()
+        if is_nothing(this.head)
+            return nothing
+        endif
+        
+        return this.head.element
+    stop
+
+    function getsize()
+        return this.size
+    stop
+
+    function isempty()
+        return this.size == 0
+    stop
+
+    function makeempty()
+        this.head = nothing
+        this.tail = nothing
+        this.size = 0
+    stop
+endclass

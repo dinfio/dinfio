@@ -1,0 +1,71 @@
+' Stack implementation in Dinfio
+
+start
+    var stack = stack()
+
+    stack.push(10); stack.push(12); stack.push(8); stack.push(20); stack.push(4)
+
+    while !stack.isempty()
+        writeln(stack.pop())
+    endwhile
+stop
+
+class node
+    field node: next
+    field element
+endclass
+
+class stack
+    field node: head
+    field size
+
+    function construct()
+        this.head = node()
+        this.head.next = nothing
+    stop
+
+    function push(element)
+        var node = node()
+        
+        node.element = element
+        node.next = this.head.next
+        
+        this.head.next = node
+        
+        this.size += 1
+    stop
+
+    function pop()
+        if is_nothing(this.head.next)
+            return nothing
+        endif
+        
+        var node = this.head.next
+        this.head.next = this.head.next.next
+        
+        this.size -= 1
+        
+        return node.element
+    stop
+
+    function top()
+        if is_nothing(this.head.next)
+            return nothing
+        endif
+        
+        return this.head.next.element
+    stop
+
+    function getsize()
+        return this.size
+    stop
+
+    function isempty()
+        return this.size == 0
+    stop
+
+    function makeempty()
+        this.head.next = nothing
+        this.size = 0
+    stop
+endclass
