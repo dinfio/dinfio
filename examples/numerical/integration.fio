@@ -1,0 +1,28 @@
+' Numerical Integration using Trapezoidal and Simpson
+
+start
+    writeln("Trapezoidal = " & trapezoidal(f(), 2, 5, 1000))
+    writeln("Simpson = " & simpson(f(), 2, 5))
+stop
+
+function f(x)
+    return x ^ 2
+stop
+
+function simpson(ref: f, a, b)
+    h = (b - a) / 2
+    return (h / 3) * (eval(f, a) + 4 * eval(f, a + h) + eval(f, b))
+stop
+
+function trapezoidal(ref: f, a, b, iteration)
+    h = (b - a) / iteration
+    integral = 0
+
+    for i, 1, iteration
+        ai = (a - h) + (i * h)
+        bi = ai + h 
+        integral += (h / 2) * (eval(f, ai) + eval(f, bi))
+    endfor
+
+    return integral
+stop

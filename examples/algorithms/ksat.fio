@@ -1,0 +1,62 @@
+' k-SAT Naive Solver
+
+start
+    result = solve(3, cnf())
+    writer(result)
+stop
+
+function cnf(v)
+    ' DIMACS-CNF 3-SAT
+    '
+    ' p cnf 3 5
+    ' -1 -2 -3 0
+    ' 1 -2 3 0
+    ' 1 2 -3 0
+    ' 1 -2 -3 0
+    ' -1 2 3 0
+
+    return (
+        (!v[0] || !v[1] || !v[2]) &&
+        ( v[0] || !v[1] ||  v[2]) &&
+        ( v[0] ||  v[1] || !v[2]) &&
+        ( v[0] || !v[1] || !v[2]) &&
+        (!v[0] ||  v[1] ||  v[2])
+    )
+stop
+
+function solve(n, ref: cnf)
+    global __satisfied = []
+    global __expression = cnf
+    
+    permute(n, array(n), 0)
+    return __satisfied
+stop
+
+function permute(n, a, i)
+    if i == n
+        if eval(__expression, a)
+            append(__satisfied, to_one_zero(a))
+        endif
+
+        return
+    endif
+
+    a[i] = false
+    permute(n, a, i + 1)
+    a[i] = true
+    permute(n, a, i + 1)
+stop
+
+function to_one_zero(a)
+    result = ""
+
+    for i, 0, size(a) - 1
+        if a[i]
+            result &= "1"
+        else
+            result &= "0"
+        endif
+    endfor
+
+    return result
+stop

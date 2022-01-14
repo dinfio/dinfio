@@ -1,0 +1,16 @@
+' Tower of Hanoi
+
+start
+    tower(4, "A", "B", "C")
+stop
+
+function tower(n, from, to, aux)
+    if n == 1
+        writeln("Move disk 1 from " & from & " to " & to)
+        return
+    endif
+
+    tower(n - 1, from, aux, to)
+    writeln("Move disk " & n & " from " & from & " to " & to)
+    tower(n - 1, aux, to, from)
+stop

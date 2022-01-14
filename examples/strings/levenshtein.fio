@@ -1,0 +1,33 @@
+' Correct spelling of a word using Levenshtein method
+
+import string
+
+start
+    words = get_words()
+    word = "aple"
+
+    dist = levenshtein(word, words[0])
+    similar = words[0]
+
+    for i, 1, size(words) - 1
+        d = levenshtein(word, words[i])
+
+        if d < dist
+            dist = d
+            similar = words[i]
+        endif
+    endfor
+
+    writeln("Word: " & word)
+    writeln("Did you mean " & similar & "?")
+stop
+
+function get_words()
+    return [
+        "apple", "orange", "banana", "melon",
+        "car", "train", "bicycle", "motor", "ship", "airplane",
+        "spinach", "cabbage", "carrot", "tomato",
+        "instagram", "facebook", "twitter",
+        "cat", "kitten", "lion", "tiger", "cow", "eagle",
+    ]
+stop

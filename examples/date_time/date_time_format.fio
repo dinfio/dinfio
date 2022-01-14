@@ -1,0 +1,17 @@
+' Date time format example
+
+import time
+
+start
+    date = now()
+
+    writeln(datetime("%A, %e %B %Y - %H:%M:%S", date))
+
+    set_timelocale("de_DE.utf8")
+    writeln(datetime("%A, %e. %B %Y - %H:%M:%S", date))
+
+    set_timelocale("id_ID.utf8")
+    writeln(datetime("%A, %e %B %Y - %H:%M:%S", date))
+
+    writeln("\nTimezone: " & get_timezone())
+stop

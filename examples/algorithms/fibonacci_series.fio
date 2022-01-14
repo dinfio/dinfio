@@ -1,0 +1,9 @@
+' Fibonacci series using Destructured Assignment
+
+a = 0
+b = 1
+
+while a < 1000000
+    writeln(a)
+    [a, b] = [b, a + b]   ' Multiple assignment using Destructured Assignment
+endwhile

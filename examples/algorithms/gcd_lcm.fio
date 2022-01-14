@@ -1,0 +1,21 @@
+' Greatest Common Divisor & Least Common Multiple
+
+start
+    a = 100
+    b = 36
+
+    writeln("GCD = " & gcd(a, b))
+    writeln("LCM = " & lcm(a, b))
+stop
+
+function lcm(a, b)
+    return (a * b) / gcd(a, b)
+stop
+
+function gcd(a, b)
+    if b != 0
+        return gcd(b, a % b)
+    else
+        return a
+    endif
+stop

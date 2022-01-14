@@ -1,0 +1,28 @@
+' Infinite Nested Array
+
+start
+    ' Joke #1
+    
+    a = []
+    
+    a[0] = a
+    a[1] = "Hi!"
+    
+    writeln(a[1])
+    writeln(a[0][0][0][0][0][0][0][0][0][0][0][0][1])
+    
+    writeln()
+    
+    
+    ' Joke #2
+    
+    a = []
+    b = []
+    
+    a[0] = b
+    b[0] = a
+    
+    writeln(equal(a[0], b))
+    writeln(equal(a[0][0], a))
+    writeln(equal(a[0][0][0], b))
+stop

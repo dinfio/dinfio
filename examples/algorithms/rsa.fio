@@ -1,0 +1,55 @@
+' RSA Algorithm in Cryptography
+
+import string
+
+start
+    message = "C"
+    p = 13
+    q = 17
+
+
+    ' Find the public key
+
+    n = p * q
+    phi = (p - 1) * (q - 1)
+
+    e = 2
+
+    while e < phi
+        if gcd(e, phi) == 1
+            break
+        else
+            e += 1
+        endif
+    endwhile
+
+
+    ' Find the private key
+
+    d = 1 / e
+    d = d % phi
+
+
+    ' Encrypt & decrypt the message
+
+    encrypted = toascii(message) ^ e
+    decrypted = fromascii(encrypted ^ d % n)
+    encrypted = fromascii(encrypted % n)
+
+    writeln("Message: " & message & " (" & toascii(message) & ")")
+    writeln("Encrypted: " & encrypted & " (" & toascii(encrypted) & ")")
+    writeln("Decrypted: " & decrypted & " (" & toascii(decrypted) & ")" & "\n")
+    writeln("Public Key: (" & e & ", " & n & ")")
+    writeln("Private Key: (" & d & ", " & n & ")\n")
+    writeln("p: " & p)
+    writeln("q: " & q)
+    writeln("phi: " & phi)
+stop
+
+function gcd(a, b)
+    if b != 0
+        return gcd(b, a % b)
+    else
+        return a
+    endif
+stop

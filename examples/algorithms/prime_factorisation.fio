@@ -1,0 +1,30 @@
+' Prime Factorisation
+
+import math
+
+start
+    factors = prime_factors(1001)
+    writer(factors)
+stop
+
+function prime_factors(n)
+    result = []
+
+    while n % 2 == 0
+        append(result, 2)
+        n \= 2
+    endwhile
+
+    for i, 3, int(sqrt(n)), 2
+        while n % i == 0
+            append(result, i)
+            n \= i
+        endwhile
+    endfor
+
+    if n > 2
+        append(result, n)
+    endif
+
+    return result
+stop
