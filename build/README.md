@@ -1,3 +1,3 @@
 # Build Directory
 
-This directory is empty, but is used when Dinfio is built
+The subdirectories are empty, but are used when Dinfio is built
