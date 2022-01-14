@@ -1,0 +1,38 @@
+' nth Prime Number using Sieve of Eratosthenes
+
+import string
+
+start
+    max_size = 1000000
+    nth = 50000
+    primes = []
+    is_prime = []
+
+    sieve_of_eratosthenes()
+    
+    writeln(format("%d", nth) & "th prime number is " & format("%d", primes[nth - 1]))
+stop
+
+function sieve_of_eratosthenes()
+    for i, 0, max_size
+        is_prime[i] = true
+    endfor
+
+    p = 2
+
+    while p * p < max_size
+        if is_prime[p]
+            for i, p * p, max_size - 1, p
+                is_prime[i] = false
+            endfor
+        endif
+
+        p += 1
+    endwhile
+
+    for p, 2, max_size - 1
+        if is_prime[p]
+            append(primes, p)
+        endif
+    endfor
+stop
