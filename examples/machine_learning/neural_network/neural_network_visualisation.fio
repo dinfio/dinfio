@@ -1,0 +1,110 @@
+' Artificial Neural Network + Visualisation example in Dinfio
+' Using simple Perceptron
+
+import math, gui
+import lib/perceptron, lib/trainer, lib/hyperplane
+
+var xmin = 0, xmax = 300, ymin = 0, ymax = 260
+var train_index = -1
+var learning_factor = 0.01
+
+start
+    perceptron = perceptron(2, [], learning_factor)
+    training = array(100)
+
+    for i, 0, size(training) - 1
+        x = random(xmin, xmax)
+        y = random(ymin, ymax)
+        label = iif(y < line(x), 1, -1)
+
+        training[i] = trainer(x, y, label)
+    endfor
+
+    create_gui()
+stop
+
+function draw()
+    train_index += 1
+
+    if train_index >= size(training)
+        timer.pause()
+        return
+    endif
+
+    canvas.draw_clear()
+    
+    canvas.draw_setpen(colour_grey, 1, pen.dash)
+    canvas.draw_setbrush(colour.white, brush.transparent)
+    canvas.draw_line(xmin, line(xmin), xmax + 20, line(xmax + 20))
+    canvas.draw_setpen(colour_teal, 2)
+    canvas.draw_line(
+        xmin,
+        (-perceptron.weights[2] - perceptron.weights[0] * xmin) / perceptron.weights[1],
+        xmax + 20,
+        (-perceptron.weights[2] - perceptron.weights[0] * (xmax + 20)) / perceptron.weights[1]
+    )
+
+
+    ' Train the perceptron
+
+    perceptron.train(training[train_index].input, training[train_index].desired)
+
+
+    ' Draw data
+
+    error = 0
+
+    for i, 0, size(training) - 1
+        if training[i].desired == 1
+            canvas.draw_setpen(colour_grey, 1)
+            canvas.draw_setbrush(colour.white, brush.transparent)
+        else
+            canvas.draw_setpen(colour_grey, 1)
+            canvas.draw_setbrush(colour_grey)
+        endif
+
+        canvas.draw_circle(training[i].input[0], training[i].input[1], 6)
+
+        guess = perceptron.feed_forward(training[i].input)
+        if guess != training[i].desired; error += 1; endif
+
+        canvas.draw_setpen(colour_grey, 0)
+        canvas.draw_setbrush(iif(guess == training[i].desired, colour.green, colour.red))
+        canvas.draw_circle(training[i].input[0], training[i].input[1], 3)
+    endfor
+
+    label_it.settext("Total Iteration = " & train_index)
+    label_error.settext("Accuracy = " & ((size(training) - error) / size(training)) * 100 & "%")
+
+    canvas.refresh()
+stop
+
+function create_gui()
+    global window = gui_window("Neural Network + Visualisation in Dinfio", 560, 360)
+    global canvas = gui_panel(window, 0, 0, 320, 280, true)
+    global timer = gui_timer(250, draw())
+    global label_lf = gui_label("Learning Factor = " & learning_factor, window, 340, 14)
+    global label_it = gui_label("Total Iteration = " & train_index, window, 340, 36)
+    global label_error = gui_label("Accuracy = " & train_index, window, 340, 58)
+
+    global colour_grey = colour.hex("a0a0a0")
+    global colour_teal = colour.hex("00c0c0")
+
+    label_lf.setfontsize(16)
+    label_it.setfontsize(16)
+    label_error.setfontsize(16)
+
+    window.show()
+    window.addevent(event.mouseleftdown, toggle())
+
+    draw()
+    timer.run()
+stop
+
+function toggle()
+    if timer.isrunning()
+        timer.pause()
+    else
+        timer.run()
+    endif
+stop

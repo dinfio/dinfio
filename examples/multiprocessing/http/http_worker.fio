@@ -1,0 +1,19 @@
+import multiprocess
+import url
+
+start
+    for i, 1, process_arguments[0]
+        request()
+    endfor
+stop
+
+function request()
+    response = url.get("https://httpbin.org/uuid")
+
+    if response.code == 200
+        data = json.decode(response.body)
+        process_yield(data.uuid)
+    else
+        process_yield("Error " & response.code)
+    endif
+stop

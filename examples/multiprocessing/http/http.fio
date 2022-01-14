@@ -1,0 +1,40 @@
+' Example of parallel HTTP requests using multiprocess module
+
+' Note: You need to install multiprocess module first:
+' $ dima install multiprocess
+
+import multiprocess
+
+start
+    accumulated = []
+    n_process = 100
+    n_request = 100
+    n_request_process = n_request \ n_process
+
+    for i, 1, n_process
+        process("http_worker", [n_request_process], updated())
+    endfor
+
+    set_done_callback(done_time())
+    writeln("Started")
+
+    s = current_millis()
+stop
+
+function updated(data)
+    append(accumulated, data)
+stop
+
+function done()
+    writeln("Result:")
+    writer(accumulated)
+    writeln("Total processes: " & n_process)
+    writeln("Total requests: " & n_request)
+stop
+
+function done_time()
+    done()
+
+    e = current_millis() - s
+    writeln("Total: " & e & " ms")
+stop

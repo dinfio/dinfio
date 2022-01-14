@@ -1,0 +1,187 @@
+' Simple Text Editor using Dinfio
+
+import gui
+import fileio, string
+
+global document = ""
+global document_title = "Untitled"
+global last_edited = ""
+
+start
+    window = gui_window(document_title & " - Simple Text Editor", 600, 400)
+    stack = gui_stack(vertical, window)
+    text = gui_textarea("", window, 0, 0, 100, 100, false)
+    stack.add(text, true, true, padding.all, -1)
+
+
+    ' Menubar
+
+    menubar = gui_menubar(window)
+
+    menu_file = gui_menu()
+    menu_edit = gui_menu()
+    menu_help = gui_menu()
+
+    menu_new = menu_file.append("&New\tCtrl+N", menu.normal, new())
+    menu_open = menu_file.append("&Open...\tCtrl+O", menu.normal, open())
+    menu_file.appendseparator()
+    menu_save = menu_file.append("&Save\tCtrl+S", menu.normal, save())
+    menu_saveas = menu_file.append("&Save As...\tCtrl+Shift+S", menu.normal, saveas())
+    menu_file.appendseparator()
+    menu_exit = menu_file.append("E&xit", menu.exit, quit())
+
+    menu_cut = menu_edit.append("Cu&t\tCtrl+X", menu.normal, cut())
+    menu_copy = menu_edit.append("&Copy\tCtrl+C", menu.normal, copy())
+    menu_paste = menu_edit.append("&Paste\tCtrl+V", menu.normal, paste())
+
+    menu_help_help = menu_help.append("Show Help", menu.normal, help())
+    menu_about = menu_help.append("About Simple Text Editor", menu.about, about())
+
+    menubar.append(menu_file, "&File")
+    menubar.append(menu_edit, "&Edit")
+    if dinfio.is_mac; menubar.append(gui_menu(), "&Window"); endif
+    menubar.append(menu_help, "&Help")
+
+    if dinfio.is_mac
+        text.setfont("menlo")
+        text.setfontsize(12)
+    endif
+
+    window.addevent(event.close, quit())
+    window.show()
+    
+    text.setfocus()
+stop
+
+function new()
+    if last_edited != text.gettext()
+        i = messagebox("Do you want to save the changes made to the document \q" & document_title & "\q?", "Simple Text Editor", message.yesnocancel)
+
+        if i == message.cancel
+            return
+        elseif i == message.yes
+            if !save()
+                return
+            endif
+        endif
+    endif
+
+    document = ""
+    document_title = "Untitled"
+    last_edited = ""
+    text.settext("")
+    window.settitle(document_title & " - Simple Text Editor")
+stop
+
+function open()
+    if last_edited != text.gettext()
+        i = messagebox("Do you want to save the changes made to the document \q" & document_title & "\q?", "Simple Text Editor", message.yesnocancel)
+
+        if i == message.cancel
+            return
+        elseif i == message.yes
+            if !save()
+                return
+            endif
+        endif
+    endif
+
+    path = dialog.open(window, "Open", "Text files (*.txt)|*.txt|All files (*.*)|*.*")
+
+    if path != ""
+        document = path
+        pos = findlast(path, "/")
+        if pos == -1; pos = findlast(path, "\"); endif
+        document_title = substring(path, pos + 1)
+        
+        text.settext(filecontent(path))
+
+        window.settitle(document_title & " - Simple Text Editor")
+        last_edited = text.gettext()
+    endif
+stop
+
+function save()
+    if document == ""
+        return saveas()
+    else
+        f = file(document, file_write)
+        f.write(text.gettext())
+        f.close()
+
+        last_edited = text.gettext()
+        return true
+    endif
+stop
+
+function saveas()
+    path = dialog.save(window, "Save As", "Text files (*.txt)|*.txt|All files (*.*)|*.*")
+
+    if path != ""
+        document = path
+        pos = findlast(path, "/")
+        if pos == -1; pos = findlast(path, "\"); endif
+        document_title = substring(path, pos + 1)
+        
+        f = file(document, file_write)
+        f.write(text.gettext())
+        f.close()
+
+        window.settitle(document_title & " - Simple Text Editor")
+        last_edited = text.gettext()
+
+        return true
+    else
+        return false
+    endif
+stop
+
+function cut()
+    sel = text.getseltext()
+
+    if sel != ""
+        clipboard.set(sel)
+        text.setseltext("")
+    endif
+stop
+
+function copy()
+    sel = text.getseltext()
+
+    if sel != ""
+        clipboard.set(sel)
+    endif
+stop
+
+function paste()
+    clip = clipboard.get()
+
+    if clip != ""
+        text.setseltext(clip)
+    endif
+stop
+
+function about()
+    messagebox("Simple Text Editor using Dinfio\nVersion: 1.0.0", "About Simple Text Editor")
+stop
+
+function help()
+    messagebox("Hello! This is a simple text editor application made using Dinfio Programming Language.", "Simple Text Editor")
+stop
+
+function quit()
+    if last_edited != text.gettext()
+        i = messagebox("Do you want to save the changes made to the document \q" & document_title & "\q?", "Simple Text Editor", message.yesnocancel)
+
+        if i == message.cancel
+            return false
+        elseif i == message.yes
+            if !save()
+                return false
+            endif
+        endif
+    endif
+
+    exit()
+    return true
+stop

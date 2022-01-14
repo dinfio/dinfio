@@ -1,0 +1,35 @@
+' Artificial Neural Network example in Dinfio
+' Simple AND Gate
+
+import math
+import lib/perceptron
+import lib/trainer
+
+start
+    perceptron = perceptron(2, [], 1)   ' Total inputs: 2, learning factor: 1
+    training = array(4)
+
+    training[0] = trainer(-1, -1, -1)
+    training[1] = trainer(-1, 1, -1)
+    training[2] = trainer(1, -1, -1)
+    training[3] = trainer(1, 1, 1)
+
+
+    ' Train the Perceptron
+
+    for i, 1, 100
+        j = randomint(0, 3)
+        perceptron.train(training[j].input, training[j].desired)
+    endfor
+
+
+    ' Test the Perceptron
+
+    testing = training[randomint(0, 3)]
+    prediction = perceptron.feed_forward(testing.input)
+
+    writeln("Prediction = " & prediction)
+    writeln("Actual = " & testing.desired)
+    write("Perceptron's weights after training = ")
+    writer(perceptron.weights)
+stop

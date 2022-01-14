@@ -1,0 +1,107 @@
+' GUI Menu example
+
+import gui
+
+start
+    window = gui_window("GUI", 450, 300)
+    menubar = gui_menubar(window)
+
+    menu_file = gui_menu()
+    menu_edit = gui_menu()
+    menu_view = gui_menu()
+    menu_tools = gui_menu()
+    menu_help = gui_menu()
+
+    i = 1
+
+    menu_new = menu_file.append("&New File\tCtrl+N", menu.normal, new(i))
+    menu_open = menu_file.append("&Open...\tCtrl+O", menu.normal, open(i + 2))
+    menu_file.appendseparator()
+    menu_save = menu_file.append("&Save\tCtrl+S", menu.normal, save(i / 2))
+    menu_saveas = menu_file.append("&Save As...\tCtrl+Shift+S", menu.normal, save(i / 4))
+    menu_file.appendseparator()
+    menu_exit = menu_file.append("", menu.exit, quit())
+
+    menu_about = menu_help.append("About Dinfio", menu.about, about())
+    menu_pref = menu_edit.append("", menu.preferences, pref())
+
+    menu_sidebar = menu_view.append("Show Sidebar", menu.check, sidebar())
+    menu_view.appendseparator()
+
+    menu_option = []
+    menu_option[0] = menu_view.append("Option 1", menu.radio, option(0))
+    menu_option[1] = menu_view.append("Option 2", menu.radio, option(1))
+    menu_option[2] = menu_view.append("Option 3", menu.radio, option(2))
+
+    if dinfio.is_mac; menu_view.appendseparator(); endif
+
+    menu_sub = gui_menu()
+    menu_sub1 = menu_sub.append("Submenu 1")
+    menu_sub2 = menu_sub.append("Submenu 2")
+    menu_sub3 = menu_sub.append("Submenu 3")
+    menu_tools.appendsubmenu(menu_sub, "Submenu")
+
+    menu_sub2 = gui_menu()
+    menu_sub4 = menu_sub2.append("Submenu 4")
+
+    menu_tool1 = menu_tools.insert(0, "Menu 1")
+    menu_tool2 = menu_tools.insert(1, "Menu 2", menu.normal, about())
+    menu_toolsep = menu_tools.insertseparator(2)
+    menu_toolsubx = menu_tools.insertsubmenu(3, menu_sub2, "Submenu X")
+
+    menu_tools.remove(menu_toolsubx)
+
+    menubar.append(menu_file, "&File")
+    menubar.append(menu_edit, "&Edit")
+    menubar.append(menu_view, "&View")
+    if dinfio.is_mac; menubar.append(gui_menu(), "&Window"); endif
+    menubar.append(menu_help, "&Help")
+
+    menubar.insert(3, menu_tools, "&Tools")
+    menubar.insert(4, gui_menu(), "&Project")
+    menubar.remove(4)
+
+    window.show()
+
+    writeln(menu_file.getlabel(menu_open))
+    writeln(menu_file.getlabel(menu_open, true))
+    menu_file.setlabel(menu_open, "&Open File...\tCtrl+O")
+
+    menu_file.setenable(menu_save, false)
+    menu_view.setchecked(menu_sidebar, true)
+    menu_view.setchecked(menu_option[2], true)
+    writeln(menu_file.isenable(menu_save))
+stop
+
+function new(x)
+    writeln("New " & x)
+stop
+
+function open(x)
+    writeln("Open " & x)
+stop
+
+function save(x)
+    writeln("Save " & x)
+stop
+
+function sidebar()
+    writeln(menu_view.ischecked(menu_sidebar))
+stop
+
+function option(x)
+    writeln(menu_view.ischecked(menu_option[x]))
+stop
+
+function about()
+    messagebox("Dinfio Programming Language")
+stop
+
+function pref()
+    messagebox("App Preferences")
+stop
+
+function quit()
+    i = messagebox("Are you sure you want to exit?", "Dinfio", message.yesno, message.question)
+    if i == message.yes; exit(); endif
+stop

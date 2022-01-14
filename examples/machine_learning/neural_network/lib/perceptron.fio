@@ -1,0 +1,58 @@
+''
+' Simple Perceptron
+''
+class perceptron
+    field weights
+    field learning_rate
+
+    function construct(n_weights, weights, learning_rate)
+        this.learning_rate = learning_rate
+
+        if size(weights) == 0
+            this.weights = array(n_weights + 1)
+
+            ' Start with random weights
+
+            for i, 0, n_weights
+                this.weights[i] = random(-1, 1)
+            endfor
+        else
+            this.weights = weights
+        endif
+    stop
+
+
+    ''
+    ' Train the perceptron
+    ''
+    function train(input, desired)
+        prediction = this.feed_forward(input)
+        error = desired - prediction
+
+        for i, 0, size(this.weights) - 1
+            this.weights[i] += this.learning_rate * error * input[i]
+        endfor
+    stop
+
+
+    ''
+    ' The Feedforward function
+    ''
+    function feed_forward(input)
+        sum = 0
+    
+        for i, 0, size(this.weights) - 1
+            sum += input[i] * this.weights[i]
+        endfor
+
+        return this.activate(sum)
+    stop
+
+
+    ''
+    ' The activation function. Using simple sign(x)
+    ''
+    function activate(x)
+        return sign(x)
+    stop
+endclass

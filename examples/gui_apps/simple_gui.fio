@@ -1,0 +1,18 @@
+' Simple GUI Programming
+
+import gui
+
+start
+    window = gui_window("Hello!", 260, 130)
+
+    label = gui_label("Your name: ", window, 20, 20)
+    textbox = gui_textbox("", window, 100, 17)
+    button = gui_button("OK", window, 100, 56)
+
+    button.addevent(event.click, button_click())
+    window.show()
+stop
+
+function button_click()
+    messagebox(textbox.gettext())
+stop

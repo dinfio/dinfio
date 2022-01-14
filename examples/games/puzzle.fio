@@ -1,0 +1,121 @@
+' Fifteen Puzzle Game
+' Author: CalmoSoft
+
+import math, string, gui
+
+start
+    create_gui()
+    button_map = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, "", "Scramble", "Reset"]
+stop
+
+function create_gui()
+    global gui_window: window
+    global gui_button: button = []
+    global gui_button: button_scramble, button_reset
+    global button_map = []
+
+    window = gui_window("CalmoSoft Fifteen Puzzle Game", 250, 400)
+
+    for row, 1, 4
+        for col, 1, 4
+            item = (row - 1) * 4 + col        
+            button_map[item] = item
+            button[item] = gui_button(str(item), window, col * 40, row * 40, 40, 40)
+            button[item].addevent(event.click, button_click(item))
+        endfor
+    endfor
+
+    button[16].settext("")
+    button[16].setvisible(false)
+    button_scramble = gui_button("Scramble", window, 40, 200, 160, 40)
+    button_scramble.addevent(event.click, scramble())             
+    button_reset = gui_button("Reset", window, 40, 240, 160, 40)
+    button_reset.addevent(event.click, reset())
+
+    window.show()
+stop
+
+function button_click(empty)
+    for row, 1, 4 
+        for col, 1, 4 
+            tile = (row - 1) * 4 + col
+
+            if str(button_map[tile]) == ""
+                up = (empty == (tile - 4))
+                down = (empty == (tile + 4))
+                left = ((empty == tile - 1) && (tile % 4 != 1))
+                right = ((empty == tile + 1) && (tile % 4 != 0))
+                move = (up || down || left || right)
+
+                if move == true
+                    button_map[tile] = button_map[empty]
+                    button_map[empty] = ""
+                    tile = empty
+                endif
+            endif
+        endfor
+    endfor
+
+    for row, 1, 4 
+        for col, 1, 4 
+            item = (row - 1) * 4 + col
+            button[item].settext(str(button_map[item]))
+
+            if str(button_map[item]) == ""
+                button[item].setvisible(false)
+            else
+                button[item].setvisible(true)
+            endif
+        endfor
+    endfor
+stop
+
+function scramble()
+    var used = array(16)
+
+    for i, 0, 15
+        used[i] = false
+    endfor
+
+    for row, 1, 4 
+        for col, 1, 4 
+            rand = randomint(0, 15)
+
+            while used[rand]
+                rand = randomint(0, 15)
+            endwhile
+
+            used[rand] = true
+            item = (row - 1) * 4 + col
+
+            if rand == 0
+                button_map[item] = ""
+            else
+                button_map[item] = rand
+            endif
+
+            button[item].settext(str(button_map[item]))
+
+            if str(button_map[item]) == ""
+                button[item].setvisible(false)
+            else
+                button[item].setvisible(true)
+            endif
+        endfor
+    endfor
+stop
+
+function reset()
+    for row, 1, 4 
+        for col, 1, 4 
+            item = (row - 1) * 4 + col
+            button_map[item] = item
+            button[item].settext(str(item))
+            button[item].setvisible(true)
+        endfor
+    endfor
+
+    button_map[16] = ""
+    button[16].settext("")
+    button[item].setvisible(false)
+stop

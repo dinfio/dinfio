@@ -1,0 +1,4 @@
+function line(x)
+    ' y = mx + b
+    return 0.7 * x
+stop

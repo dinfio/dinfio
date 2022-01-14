@@ -1,0 +1,35 @@
+' Artificial Neural Network example in Dinfio
+' Using simple Perceptron
+
+import math
+import lib/perceptron, lib/trainer, lib/hyperplane
+
+start
+    perceptron = perceptron(2, [], 0.01)   ' Total inputs: 2, learning factor: 0.01
+    training = array(1000)
+
+    writeln("------------------------")
+    writeln("Neural Network in Dinfio")
+    writeln("------------------------")
+    write("Training...\r")
+
+
+    ' Train the Perceptron
+
+    for i, 0, size(training) - 1
+        x = random(0, 100)
+        y = random(0, 100)
+        label = iif(y < line(x), 1, -1)
+
+        training[i] = trainer(x, y, label)
+        perceptron.train(training[i].input, training[i].desired)
+    endfor
+
+    testing = training[10]
+    prediction = perceptron.feed_forward(testing.input)
+
+    writeln("Prediction = " & prediction)
+    writeln("Actual = " & testing.desired)
+    write("Perceptron's weights after training = ")
+    writer(perceptron.weights)
+stop

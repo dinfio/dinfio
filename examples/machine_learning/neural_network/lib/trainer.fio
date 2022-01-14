@@ -1,0 +1,12 @@
+''
+' The trainer
+''
+class trainer
+    field input
+    field desired
+
+    function construct(x, y, label)
+        this.input = [x, y, 1]
+        this.desired = label
+    stop
+endclass

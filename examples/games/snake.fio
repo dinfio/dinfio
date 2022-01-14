@@ -1,0 +1,143 @@
+' Snake Game in Dinfio
+
+import math, gui
+
+var n = 16
+var box_size = 16
+var margin = 1
+
+var head_x = 8, head_y = 8
+var apple_x = 5, apple_y = 5
+var vx = 0, vy = 0
+var trail = [], tail = 1
+
+var box = array2d(n + 1, n + 1)
+var speed = 200
+var score = 0
+var window_width = 420
+var window_height = 326
+
+var snake_colour = colour.hex("0000ff")
+var apple_colour = colour.hex("ff0052")
+
+start
+    create_gui()
+    game_loop()
+stop
+
+function create_gui()
+    global window = gui_window("Snake in Dinfio", window_width, window_height)
+
+    for i, 1, n
+        for j, 1, n
+            x = j * box_size + margin * j
+            y = i * box_size + margin * i
+
+            box[i][j] = gui_panel(window, x, y, box_size, box_size)
+            box[i][j].setenable(false)
+        endfor
+    endfor
+
+    global label_score = gui_label("Score: 0", window, 304, 16, 140, 32)
+    label_score.setfontsize(16)
+    label_score.setfontbold(true)
+
+    global timer = gui_timer(speed, game_loop())
+    timer.run()
+
+    if !dinfio.is_windows
+        window.addevent(event.keydown, keypress())
+    else
+        window.addevent(event.keyup, keypress())
+    endif
+
+    window.show()
+stop
+
+function game_loop()
+    for i, 1, n
+        for j, 1, n
+            box[i][j].setbackgroundcolour(colour.white)
+        endfor
+    endfor
+
+    head_x += vx
+    head_y += vy
+
+    if head_x < 1
+        head_x = n
+    endif
+    if head_x > n
+        head_x = 1
+    endif
+    if head_y < 1
+        head_y = n
+    endif
+    if head_y > n
+        head_y = 1
+    endif
+
+    box[apple_y][apple_x].setbackgroundcolour(apple_colour)
+
+    if apple_x == head_x && apple_y == head_y
+        tail += 1
+        score += 10
+
+        apple_x = randomint(1, n)
+        apple_y = randomint(1, n)
+    endif
+
+    for i, 0, size(trail) - 1
+        box[trail[i].y][trail[i].x].setbackgroundcolour(snake_colour)
+
+        if trail[i].x == head_x && trail[i].y == head_y
+            tail = 1
+            score = 0
+
+            vx = 0
+            vy = 0
+        endif
+    endfor
+
+    append(trail, {
+        x: head_x,
+        y: head_y
+    })
+
+    while size(trail) > tail
+        pop(trail)
+    endwhile
+
+    label_score.settext("Score: " & score)
+    window.refresh()
+stop
+
+function keypress()
+    key = getkeycode()
+
+    if key == keycode.space
+        if timer.isrunning()
+            timer.pause()
+            window.settitle("Snake in Dinfio - Paused")
+        else
+            timer.run()
+            window.settitle("Snake in Dinfio")
+        endif
+    endif
+
+    if timer.isrunning()
+        if key == keycode.up && vy != 1
+            vx = 0
+            vy = -1
+        elseif key == keycode.down && vy != -1
+            vx = 0
+            vy = 1
+        elseif key == keycode.left && vx != 1
+            vx = -1
+            vy = 0
+        elseif key == keycode.right && vx != -1
+            vx = 1
+            vy = 0
+        endif
+    endif
+stop

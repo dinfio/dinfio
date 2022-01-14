@@ -1,0 +1,150 @@
+'  k-Nearest Neighbours classifier
+'  Dataset: Iris
+
+import math
+import string, fileio
+
+start
+    var knn = KNN(3)
+    
+    dataset = knn.load_dataset("iris")
+    test_index = 4
+    testing = dataset.testing.features[test_index]
+
+    knn.train(dataset.training.features, dataset.training.labels)
+    prediction = knn.predict(testing)
+
+    print()
+stop
+
+class KNN
+    field x_train, y_train
+    field k
+
+    function construct(k)
+        this.k = k
+    stop
+ 
+    function train(features, labels)
+        this.x_train = features
+        this.y_train = labels
+    stop
+ 
+    function predict(test)
+        best_distance = this.distance(this.x_train[0], test)
+        prediction = this.y_train[0]
+        
+        for i, 1, size(this.x_train) - 1
+            dist = this.distance(this.x_train[i], test)
+
+            if dist < best_distance
+                best_distance = dist
+                prediction = this.y_train[i]
+            endif
+        endfor
+
+        return {label: prediction, distance: best_distance}
+    stop
+
+    function distance(point_1, point_2)
+        sum = 0
+
+        for i, 0, size(point_1) - 1
+            sum += (point_1[i] - point_2[i]) ^ 2
+        endfor
+
+        return sum ^ 0.5
+    stop
+
+    function load_dataset(dataset)
+        training_features = []; training_labels = []
+        testing_features = []; testing_labels = []
+
+
+        ' Load training data
+
+        path = getfoldername(getcurrentfile()) & "/dataset/" & dataset & "-training.data"
+        f = file(path, file_read)
+
+        iif(f == nothing, error("Training data not found"), nothing)
+        
+        i = -1
+
+        while !f.eof()
+            d = split(f.readln(), ",")
+            
+            if i == -1
+                header = d
+            else
+                c = size(d) - 1
+                temp = []
+
+                for j, 0, c - 1
+                    temp[j] = getnumber(d[j])
+                endfor
+
+                training_features[i] = temp
+                training_labels[i] = d[c]
+            endif
+            
+            i += 1
+        endwhile
+
+
+        ' Load testing data
+
+        path = getfoldername(getcurrentfile()) & "/dataset/" & dataset & "-testing.data"
+        f = file(path, file_read)
+
+        iif(f == nothing, error("Testing data not found"), nothing)
+
+        i = -1
+
+        while !f.eof()
+            d = split(f.readln(), ",")
+            
+            if i != -1
+                c = size(d) - 1
+                temp = []
+
+                for j, 0, c - 1
+                    temp[j] = getnumber(d[j])
+                endfor
+
+                testing_features[i] = temp
+                testing_labels[i] = d[c]
+            endif
+            
+            i += 1
+        endwhile
+
+        return {
+            header: header,
+            training: {
+                features: training_features,
+                labels: training_labels
+            },
+            testing: {
+                features: testing_features,
+                labels: testing_labels
+            }
+        }
+    stop
+endclass
+
+function print()
+    writeln("-----------------------")
+    writeln(" kNN Example in Dinfio")
+    writeln("-----------------------")
+    writeln("\nInput:")
+    
+    for i, 0, size(dataset.header) - 2
+        writeln(dataset.header[i] & " = " & testing[i])
+    endfor
+    
+    writeln()
+    writeln("Prediction result: " & prediction.label)
+    writeln("Actual result: " & dataset.testing.labels[test_index])
+    writeln("Euclidean distance: " & prediction.distance)
+    writeln("Total training data: " & size(dataset.training.features))
+stop

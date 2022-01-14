@@ -1,0 +1,29 @@
+' Calculating Monte Carlo Pi using multiprocess module
+
+' Note: You need to install multiprocess module first:
+' $ dima install multiprocess
+
+import multiprocess
+
+n_process = 2
+interval = 10000 \ n_process
+circles = 0
+square = 0
+finished = 0
+
+start
+    for i, 1, n_process
+        process("pi_worker", [interval], nothing, accumulate())
+    endfor
+stop
+
+function accumulate(data)
+    circles += data[0]
+    square += data[1]
+    finished += 1
+
+    if finished == n_process
+        pi = 4 * circles / square
+        writeln("Pi = " & pi)
+    endif
+stop

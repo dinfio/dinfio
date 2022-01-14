@@ -1,0 +1,20 @@
+import math
+import multiprocess
+
+interval = process_arguments[0]
+circles = 0
+square = 0
+
+start
+    for i, 1, interval
+        dist = random(-1, 1) ^ 2 + random(-1, 1) ^ 2
+
+        if dist <= 1
+            circles += 1
+        endif
+
+        square += 1
+    endfor
+
+    process_return([circles, square])
+stop
