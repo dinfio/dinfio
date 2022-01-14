@@ -161,7 +161,7 @@ public:
 
     AST_Variable(string identifier): AST(__AST_VARIABLE__) {
         __identifier = identifier;
-        __caller_id = -1;
+        __caller_id = 0;
     }
 };
 
@@ -174,7 +174,7 @@ public:
 
     AST_Array(string identifier): AST(__AST_ARRAY__) {
         __identifier = identifier;
-        __caller_id = -1;
+        __caller_id = 0;
     }
 };
 
@@ -188,7 +188,7 @@ public:
 
     AST_Object(string identifier): AST(__AST_OBJECT__) {
         __identifier = identifier;
-        __caller_id = -1;
+        __caller_id = 0;
     }
 };
 
