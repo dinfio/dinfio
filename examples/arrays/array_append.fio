@@ -1,0 +1,16 @@
+' Array append
+
+a = []
+
+a[size(a)] = 23     ' Add new element to the end of an array
+
+append(a, 20)       ' Faster way: use function append()
+append(a, 10)
+append(a, "Clara")
+
+append(a, {
+    x: 20,
+    y: 30
+})
+
+writer(a)

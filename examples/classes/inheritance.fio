@@ -1,0 +1,48 @@
+' OOP Inheritance
+
+start
+    aisha = student("Aisha", 19, "Universitas Indonesia")
+    clara = employee("Clara", 23, "Fio Corporation")
+    sarah = freelancer("Sarah", 24, "Edinburgh University", "Fio Corporation")
+
+    writer(aisha)
+    writer(clara)
+    writer(sarah)
+stop
+
+class person
+    field name
+    field age
+
+    function construct(name, age)
+        this.name = name
+        this.age = age
+    stop
+endclass
+
+class student: person   ' class student inherits to class person
+    field campus
+
+    function construct(name, age, campus)
+        extend(this, person(name, age))
+
+        this.campus = campus
+    stop
+endclass
+
+class employee: person   ' class employee inherits to class person
+    field office
+
+    function construct(name, age, office)
+        extend(this, person(name, age))
+
+        this.office = office
+    stop
+endclass
+
+class freelancer: student, employee   ' class freelancer inherits to class student and employee
+    function construct(name, age, campus, office)
+        extend(this, student(name, age, campus))
+        extend(this, employee(name, age, office))
+    stop
+endclass

@@ -1,0 +1,19 @@
+' Object oriented programming
+
+start
+    u = user("Clara", 23)
+    v = user("Clark", 20)
+
+    writer(u)
+    writer(v)
+stop
+
+class user
+    field name
+    field age
+
+    function construct(name, age)
+        this.name = name
+        this.age = age
+    stop
+endclass
