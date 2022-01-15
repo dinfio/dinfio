@@ -23,6 +23,8 @@
 #include <wx/dirdlg.h>
 #include <wx/clipbrd.h>
 
+#include <sstream>
+
 #include "dinfio_module.h"
 
 #define __GUI_WINDOW__ 1

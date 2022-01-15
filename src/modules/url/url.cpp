@@ -18,6 +18,7 @@ NOTE: Add this if your libcurl version >= 7.56
 */
 
 #include <curl/curl.h>
+#include <sstream>
 #include "dinfio_module.h"
 
 Connector* connector;
