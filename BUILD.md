@@ -10,6 +10,18 @@ After the source code downloaded, go to directory `dinfio`:
 $ cd dinfio
 ```
 
+Open file [`src/header.h`](src/header.h), and point to  `__DINFIO_PATH__` constant (at line 44 or 51 or 58, depending on your platform):
+
+``` cpp
+const string __DINFIO_PATH__ = "/usr/local/dinfio/";
+```
+
+Change the constant value with your build path, for example:
+
+``` cpp
+const string __DINFIO_PATH__ = "/home/faruq/Documents/dinfio/build/linux/";
+```
+
 And compile:
 
 - On Linux x86_64:
