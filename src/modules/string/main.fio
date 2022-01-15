@@ -1,0 +1,377 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: String
+' -------------------------------------------------
+
+''
+' This module provides string manipulation functions. e.g. `substring()`, `lcase()`, `replace()`, etc.
+'
+' @brief String manipulation module
+''
+function string::init()
+
+
+''
+' Split a string by `separator`
+'
+' @param string s A string to be splitted
+' @param string separator A boundary string
+' @param number [limit] An integer specifying a limit on the number of substrings to be included in the array.
+' The default value is -1 (no limit)
+'
+' @return array Returns the array of strings
+'
+' @example
+' a = split("Lorem ipsum dolor sit amet", " ")
+' b = split("Lorem ipsum dolor sit amet", " ", 2)
+'
+' ' a is:
+' ' array(
+' '     [0] = "Lorem"
+' '     [1] = "ipsum"
+' '     [2] = "dolor"
+' '     [3] = "sit"
+' '     [4] = "amet"
+' ' )
+' '
+' ' b is:
+' ' array(
+' '     [0] = "Lorem"
+' '     [1] = "ipsum dolor sit amet"
+' ' )
+''
+function split(s, separator, limit = -1)
+
+
+''
+' Convert `value` to a string
+'
+' @param any value A value to be converted
+'
+' @return string Converted string
+'
+' @example
+' str(10)      ' Returns "10"
+' str(10.22)   ' Returns "10.22"
+' str(0x1a)    ' Returns "26"
+' str("OK")    ' Returns "OK"
+' str(true)    ' Returns "true"
+' str(false)   ' Returns "false"
+''
+function str(value)
+
+
+''
+' Get the length of a string
+'
+' @param string s A string
+'
+' @return number Returns the characters count
+'
+' @example
+' length("Hello")          ' Returns 5
+' length("Hello world!")   ' Returns 12
+''
+function length(s)
+
+
+''
+' Convert a character to ASCII code
+'
+' @param string char A single character
+'
+' @return number Returns the ASCII code
+'
+' @example
+' toascii("A")    ' Returns 65
+' toascii("\n")   ' Returns 10
+''
+function toascii(char)
+
+
+''
+' Convert an ASCII code to character
+'
+' @param number ascii_code An ASCII code
+'
+' @return string Returns a single character
+'
+' @example
+' fromascii(65)   ' Returns "A"
+' fromascii(32)   ' Returns " "
+''
+function fromascii(ascii_code)
+
+
+''
+' Strip leading and trailing spaces from a string
+'
+' @param string s A string
+'
+' @return string Returns the trimmed string
+'
+' @example
+' trim("   Hello world   ")   ' Returns "Hello world"
+''
+function trim(s)
+
+
+''
+' Strip leading spaces from a string
+'
+' @param string s A string
+'
+' @return string Returns the trimmed string
+'
+' @example
+' ltrim("   Hello world   ")   ' Returns "Hello world   "
+''
+function ltrim(s)
+
+
+''
+' Strip trailing spaces from a string
+'
+' @param string s A string
+'
+' @return string Returns the trimmed string
+'
+' @example
+' rtrim("   Hello world   ")   ' Returns "   Hello world"
+''
+function rtrim(s)
+
+
+''
+' Convert a string to lowercase
+'
+' @param string s A string
+'
+' @return string Returns the lowercased string
+'
+' @example
+' lcase("Hello World")   ' Returns "hello world"
+''
+function lcase(s)
+
+
+''
+' Convert a string to uppercase
+'
+' @param string s A string
+'
+' @return string Returns the uppercased string
+'
+' @example
+' ucase("Hello World")   ' Returns "HELLO WORLD"
+''
+function ucase(s)
+
+
+''
+' Uppercase the first character of each word in a string
+'
+' @param string s A string
+'
+' @return string Returns the modified string
+'
+' @example
+' fcase("hello world")   ' Returns "Hello World"
+' fcase("HELLO WORLD")   ' Returns "Hello World"
+''
+function fcase(s)
+
+
+''
+' Reverse a string
+'
+' @param string s A string
+'
+' @return string Returns the reversed string
+'
+' @example
+' reverse("Hello World")   ' Returns "dlroW olleH"
+''
+function reverse(s)
+
+
+''
+' Extract a specified number of characters from the left side of a string
+'
+' @param string s A string
+' @param number len How many characters are extracted
+'
+' @return string Returns the extracted string
+'
+' @example
+' subleft("Hello World", 2)   ' Returns "He"
+''
+function subleft(s, len)
+
+
+''
+' Extract a specified number of characters from the right side of a string
+'
+' @param string s A string
+' @param number len How many characters are extracted
+'
+' @return string Returns the extracted string
+'
+' @example
+' subright("Hello World", 2)   ' Returns "ld"
+''
+function subright(s, len)
+
+
+''
+' Extract a specified number of characters starting from a specified position in a string
+'
+' @param string s A string
+' @param number pos Starting position of the character to be extracted
+' @param number [len] How many characters are extracted. If `len` is -1 then all remaining characters will be extracted.
+' The default value is -1
+'
+' @return string Returns the extracted string
+'
+' @example
+' substring("Hello World", 2, 3)   ' Returns "llo"
+' substring("Hello World", 2)      ' Returns "llo World"
+''
+function substring(s, pos, len = -1)
+
+
+''
+' Repeat a string
+'
+' @param string s A string
+' @param number times Number of time the string `s` to be repeated
+'
+' @return string Returns the repeated string
+'
+' @example
+' repeat("ha", 5)   ' Returns "hahahahaha"
+''
+function repeat(s, times)
+
+
+''
+' Find the position of the first occurrence of a substring in a string
+'
+' @param string s A string
+' @param string search A string to search for
+' @param number [start_pos] Where to begin the search. The default value is 0 (at the beginning of `s`)
+'
+' @return number Returns the position of the first character of the first match.
+' Returns -1 if no matches were found
+'
+' @example
+' find("Hello World", "Wo")       ' Returns 6
+' find("Hello World", "Wo", 10)   ' Returns -1
+''
+function find(s, search, start_pos = 0)
+
+
+''
+' Find the position of the last occurrence of a substring in a string
+'
+' @param string s A string
+' @param string search A string to search for
+' @param number [start_pos] Where to begin the search. The default value is `length(s) - 1` (at the end of `s`)
+'
+' @return number Returns the position of the first character of the last match.
+' Returns -1 if no matches were found
+'
+' @example
+' findlast("Hello World", "o")      ' Returns 7
+' findlast("Hello World", "o", 6)   ' Returns 4
+' findlast("Hello World", "o", 2)   ' Returns -1
+''
+function findlast(s, search, start_pos = (length(s) - 1))
+
+
+''
+' Replace all occurrences of the search string with the replacement string
+'
+' @param string s A string
+' @param string search A string to search for
+' @param string replace_to The replacement string
+' @param number [replace_count] The number of replacements performed. If `replace_count` is -1 then all occurrences will be replaced. The default value is -1
+'
+' @return string Returns the replaced string
+'
+' @example
+' replace("Hello World", "l", "y")      ' Returns "Heyyo Woryd"
+' replace("Hello World", "l", "y", 2)   ' Returns "Heyyo World"
+''
+function replace(s, search, replace_to, replace_count = -1)
+
+
+''
+' Calculate Levenshtein distance between two strings (`string_1` and `string_2`)
+'
+' @param string string_1 A string
+' @param string string_2 A string
+'
+' @return number Returns the Levenshtein distance
+'
+' @example
+' levenshtein("kitten", "sitting")   ' Returns 3
+''
+function levenshtein(string_1, string_2)
+
+
+''
+' Calculate Hamming distance between two strings (`string_1` and `string_2`)
+'
+' @param string string_1 A string
+' @param string string_2 A string
+'
+' @return number Returns the Hamming distance
+'
+' @example
+' hamming("10100111", "11001000")   ' Returns 6
+''
+function hamming(string_1, string_2)
+
+
+''
+' Join array elements with `glue` string
+'
+' @param array arr An array
+' @param string [glue] A glue string. The default value is ""
+'
+' @return string Returns the joined string
+'
+' @example
+' a = [
+'     "one",
+'     "two",
+'     "three",
+'     "four",
+'     "five"
+' ]
+'
+' writeln(join(a, "... "))   ' Output: one... two... three... four... five
+''
+function join(arr, glue = "")
+
+
+''
+' Format a number
+'
+' @param string c_format A string that contains C's `printf` format (<a href="http://www.cplusplus.com/reference/cstdio/printf/" target="__blank">see the specifications</a>).
+' Note: this function does not support %s and %c format
+' @param number value A number to be formatted
+'
+' @return string Returns the formatted string
+'
+' @example
+' format("%d", 10.22)     ' Returns "10"
+' format("%x", 10)        ' Returns "a"
+' format("%.5f", 10.22)   ' Returns "10.22000"
+''
+function format(c_format, value)

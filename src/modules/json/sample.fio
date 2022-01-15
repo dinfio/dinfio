@@ -1,0 +1,17 @@
+import json
+
+request = json.encode({
+    "name": "Sarah Zaira",
+    "id": "0122A",
+    "age": 22,
+    "homepage": "https://sarahzaira.com",
+    "hobbies": [
+        "Reading",
+        "Travelling",
+    ]
+})
+
+data = json.decode(request)
+
+writer(data)
+writeln(data.name)

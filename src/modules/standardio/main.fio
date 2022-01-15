@@ -1,0 +1,143 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Standard I/O
+' -------------------------------------------------
+
+''
+' This module provides standard I/O functions. e.g. `write()`, `writeln()`, `read()`, etc.
+' Note: This module is imported by default, you don't need to import it again.
+'
+' @brief Standard I/O module
+''
+function standardio::init()
+    ' Duplicate import
+
+    exit("import standardio: this module is imported by default, you don't need to import it again")
+stop
+
+
+''
+' Print `value` to standard output. This is similar to C++'s `std::cout` function
+'
+' @param any value A value to be printed
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = 23
+' b = "Hello"
+' c = true
+' d = [1, 2, 3]
+' e = {id: "A23", name: "Clara"}
+'
+' write(a)   ' Output: 23
+' write(b)   ' Output: Hello
+' write(c)   ' Output: true
+' write(d)   ' Output: array@0x02    ' Note: 0x02 is the address of array d
+' write(e)   ' Output: object@0x03   ' Note: 0x03 is the address of object e
+''
+function write(value)
+
+
+''
+' Print `value` & new line (`\n`) to standard output.
+'
+' @param any [value] A value to be printed. If `value` is not provided, then only new line is printed.
+' The default value is ""
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = 23
+' b = "Hello"
+' c = true
+' d = [1, 2, 3]
+' e = {id: "A23", name: "Clara"}
+'
+' writeln(a)   ' Output: 23\n
+' writeln(b)   ' Output: Hello\n
+' writeln(c)   ' Output: true\n
+' writeln(d)   ' Output: array@0x02\n    ' Note: 0x02 is the address of array d
+' writeln(e)   ' Output: object@0x03\n   ' Note: 0x03 is the address of object e
+''
+function writeln(value = "")
+
+
+''
+' Read a single sequence from standard input. This is similar to C++'s `std::cin` function
+'
+' @return number|string|boolean Returns single sequence from standard input.
+' The return value is automatically converted to number, string, or boolean based on user's input
+'
+' @example
+' a = read()
+' writeln("Your input is: " & a)
+''
+function read()
+
+
+''
+' Read a single line from standard input
+'
+' @return number|string|boolean Returns single line from standard input.
+' The return value is automatically converted to number, string, or boolean based on user's input
+'
+' @example
+' a = readln()
+' writeln("Your input is: " & a)
+''
+function readln()
+
+
+''
+' Check whether the EOF flag of standard input is set or not. This is similar to C++'s `ios::eof` function
+'
+' @return boolean Returns `true` if the EOF flag is set, and returns `false` if otherwise
+'
+' @version_min 3.1.06
+'
+' @example
+' while !eof()
+'     s = readln()
+'     writeln(s)
+' endwhile
+''
+function eof()
+
+
+''
+' Dump a value (write recursively). This function is useful for debugging
+'
+' @param any value A value to be dumped
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3]
+' b = {id: "A23", name: "Clara"}
+' c = 23
+' d = "Hello"
+'
+' writer(a)
+' writer(b)
+' writer(c)
+' writer(d)
+' 
+' ' Output:
+' ' array(
+' '     [0] = 1
+' '     [1] = 2
+' '     [2] = 3
+' ' )
+' ' object(
+' '     .id = "A23"
+' '     .name = "Clara"
+' ' )
+' ' 23
+' ' "Hello"
+''
+function writer(value)

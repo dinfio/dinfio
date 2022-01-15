@@ -1,0 +1,139 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Regex
+' -------------------------------------------------
+
+''
+' This module provides Regular Expression (regex) functions
+'
+' @brief Regular Expression module
+''
+function regex::init()
+    ' This module is not compatible on the Playground
+
+    exit("import regex: this module is not available in this playground")
+stop
+
+
+''
+' Perform a regular expression match
+'
+' @param string pattern Regex pattern to search for.
+' The pattern follows the <a href="http://www.cplusplus.com/reference/regex/ECMAScript/" target="__blank">ECMAScript syntax</a>
+' @param string subject The target sequence
+' @param boolean [case_sensitive] If `case_sensitive` is `true` then regex is performed with regard to case.
+' The default value is `false`
+'
+' @return boolean Returns `true` if `pattern` is matched against `subject`, and returns `false` if otherwise
+'
+' @example
+' import regex
+'
+' regex_match("\w+@\w+\.org", "faruq@dinfio.org")    ' Returns true
+' regex_match("\w+@\w+\.org", "faruq@example.com")   ' Returns false
+''
+function regex_match(pattern, subject, case_sensitive = false)
+
+
+''
+' Perform a regular expression search
+'
+' @param string pattern Regex pattern to search for.
+' The pattern follows the <a href="http://www.cplusplus.com/reference/regex/ECMAScript/" target="__blank">ECMAScript syntax</a>
+' @param string subject The target sequence
+' @param boolean [case_sensitive] If `case_sensitive` is `true` then regex is performed with regard to case.
+' The default value is `false`
+'
+' @return regex[] Returns array of `regex` object that contains regex search result
+'
+' @example
+' import regex
+'
+' a = regex_search("(\w+)@(\w+)\.com", "clara@gmail.com; sarah@gmail.com")
+' b = a[0].value            ' b = "clara@gmail.com"
+' c = a[1].group[0].value   ' c = "sarah"
+'
+' ' a is:
+' ' array(
+' '     [0] = regex(
+' '         .group = array(
+' '             [0] = regex_group(
+' '                 .position = 0
+' '                 .value = "clara"
+' '             )
+' '             [1] = regex_group(
+' '                 .position = 6
+' '                 .value = "gmail"
+' '             )
+' '         )
+' '         .position = 0
+' '         .value = "clara@gmail.com"
+' '     )
+' '     [1] = regex(
+' '         .group = array(
+' '             [0] = regex_group(
+' '                 .position = 17
+' '                 .value = "sarah"
+' '             )
+' '             [1] = regex_group(
+' '                 .position = 23
+' '                 .value = "gmail"
+' '             )
+' '         )
+' '         .position = 17
+' '         .value = "sarah@gmail.com"
+' '     )
+' ' )
+''
+function regex_search(pattern, subject, case_sensitive = false)
+
+
+''
+' Perform a regular expression replace
+'
+' @param string pattern Regex pattern to search for.
+' The pattern follows the <a href="http://www.cplusplus.com/reference/regex/ECMAScript/" target="__blank">ECMAScript syntax</a>
+' @param string subject The target sequence
+' @param string replacement The replacement string
+' @param boolean [case_sensitive] If `case_sensitive` is `true` then regex is performed with regard to case.
+' The default value is `false`
+'
+' @return string Returns the replaced string
+'
+' @example
+' import regex
+'
+' pattern = "(\w+)@(\w+)\.com"
+' subject = "clara@yahoo.com; sarah@gmail.com; ana@icloud.com"
+' replace_to = "$1 on email $2"
+'
+' regex_replace(pattern, subject, replace_to)
+'
+' ' Returns "clara on email yahoo; sarah on email gmail; ana on email icloud"
+''
+function regex_replace(pattern, subject, replacement, case_sensitive = false)
+
+
+''
+' This class stores regex result of function `regex_search()`<!---->.
+' Note: This class has no instantiation (constructor) method
+''
+class regex
+    field value
+    field position
+    field regex_group[]: group
+endclass
+
+
+''
+' This class stores regex group result of function `regex_search()`<!---->.
+' Note: This class has no instantiation (constructor) method
+''
+class regex_group
+    field value
+    field position
+endclass

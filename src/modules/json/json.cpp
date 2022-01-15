@@ -10,13 +10,10 @@
 -------------------------------------------------------------------
  Module - JSON Parser & Builder (RFC 8259)
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include "json.hpp"
-#include "module.h"
+#include "dinfio_module.h"
 
 using json = nlohmann::json;
 

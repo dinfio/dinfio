@@ -1,0 +1,65 @@
+import url
+
+
+' Simple HTTP GET
+
+response = url.get("https://example.com/")
+
+if response.code == 200
+    writeln(response.body)                    ' Success
+elseif response.code != 0
+    writeln("Error: HTTP " & response.code)   ' HTTP error
+else
+    writeln(response.error_string)            ' Connection or other error
+endif
+
+
+' HTTP GET with headers and params
+
+headers = {
+    "Authorization": "Basic QWxhZGRpbjpPcGVuU2VzYW1l",
+    "User-Agent": "myapp/1.0.0"
+}
+
+params = {
+    "id": "A0110",
+    "name": "Sarah Zaira"
+}
+
+response = url.get("https://faruq.id/misc/get.php", params, headers)
+
+if response.code == http.ok
+    writeln(response.body)
+elseif response.code != 0
+    writeln("Error: HTTP " & response.code)
+else
+    writeln(response.error_string)
+endif
+
+
+' Upload files using multipart form data
+
+params = {
+    "id": "U1234",
+    "file1": file_data("data.txt"),   ' Upload a file
+    "file2": file_data("some.zip")    ' Upload another file
+}
+
+response = url.post("https://faruq.id/misc/post.php", params, true)
+
+if response.code == 200
+    writeln("Upload complete!")
+else
+    writeln(response.error_string)
+endif
+
+
+' Simple example how to download a file
+
+response = url.get("https://dinfio.org/releases/files/3.1.03/dinfio-3.1.03-macos.pkg", "", {}, "file.pkg")
+
+if response.code == 200
+    writeln("Download complete!")
+else
+    writeln(response.error_string)
+endif

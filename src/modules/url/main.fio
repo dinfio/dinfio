@@ -1,0 +1,553 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: URL
+' -------------------------------------------------
+
+''
+' This module provides URL and HTTP request functions.
+' This module uses beautiful library <a href="https://curl.se/libcurl/" target="__blank">libcurl</a> as its backend
+'
+' @brief URL and HTTP request module
+' @example_file sample.fio
+''
+function url::init()
+    ''
+    ' The default instance of class `url`
+    '
+    ' @example
+    ' import url
+    '
+    ' response = url.get("https://example.com/")
+    ''
+    global url: url
+
+
+    ''
+    ' The default instance of class `http` and provides common HTTP status codes
+    '
+    ' @example
+    ' import url
+    '
+    ' response = url.get("https://example.com/")
+    '
+    ' if response.code == http.ok
+    '     writeln(response.body)
+    ' endif
+    ''
+    global http: http
+
+
+    ' This module is not available on the Playground
+
+    exit("import url: this module is not available in this Playground")
+stop
+
+
+''
+' Get formatted bytes unit
+'
+' @param number bytes Bytes to be formatted
+'
+' @return string A formatted bytes unit
+'
+' @example
+' import url
+'
+' bytes_unit(1024)      ' Returns "1 kB"
+' bytes_unit(4194304)   ' Returns "4 MB"
+''
+function bytes_unit(bytes)
+
+
+''
+' Main class that implements HTTP GET request, HTTP POST request, etc<!---->.
+' Note: This class is not instantiatable, please use constant `url` instead
+''
+class url
+    ''
+    ' Perform HTTP GET request
+    '
+    ' @param string url A URL string
+    ' @param string|object [request_params] Params to be requested. The default value is ""
+    ' @param object [headers] HTTP headers. The default value is `nothing`
+    ' @param string [downloaded_to] If `downloaded_to` is set, then the response body will be saved to a file.
+    ' The default value is ""
+    ' @param function_call [progress_callback] A function call to catch current download and upload progress.
+    ' The default value is `nothing`
+    '
+    ' @return response Returns `response` object
+    '
+    ' @example
+    ' import url
+    '
+    '
+    ' ' Simple usage example
+    '
+    ' response = url.get("https://example.com/")
+    '
+    ' if response.code == http.ok
+    '     writeln(response.body)                    ' Success
+    ' elseif response.code != 0
+    '     writeln("Error: HTTP " & response.code)   ' HTTP error
+    ' else
+    '     writeln(response.error_string)            ' Connection or other error
+    ' endif
+    '
+    '
+    ' ' HTTP GET with headers and params
+    '
+    ' headers = {
+    '     "Authorization": "Basic QWxhZGRpbjpPcGVuU2VzYW1l",
+    '     "User-Agent": "myapp/1.0.0"
+    ' }
+    '
+    ' params = {
+    '     "id": "A0110",
+    '     "name": "Sarah Zaira"
+    ' }
+    '
+    ' response = url.get("https://faruq.id/misc/get.php", params, headers)
+    '
+    ' if response.code == 200
+    '     writeln(response.body)
+    ' elseif response.code != 0
+    '     writeln("Error: HTTP " & response.code)
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    '
+    '
+    ' ' Simple example how to download a file
+    '
+    ' response = url.get("https://dinfio.org/releases/files/3.1.03/dinfio-3.1.03-macos.pkg", "", {}, "file.pkg")
+    '
+    ' if response.code == 200
+    '     writeln("Download complete!")
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    '
+    '
+    ' ' Downloading a file with progress callback
+    '
+    ' response = url.get("https://dinfio.org/releases/files/3.1.03/dinfio-3.1.03-macos.pkg", "", {}, "file.pkg", progress())
+    '
+    ' if response.code == 200
+    '     writeln("Download complete!")
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    '
+    ' function progress(downloaded, total_download, uploaded, total_upload)
+    '     write("Downloading... " & bytes_unit(downloaded) & " of " & bytes_unit(total_download))
+    '
+    '     return 0   ' Note: 0 to continue downloading/uploading progress
+    '                '       1 to stop the progress
+    ' stop
+    ''
+    function get(url, request_params = "", headers = nothing, downloaded_to = "", progress_callback = nothing)
+
+
+    ''
+    ' Perform HTTP POST request
+    '
+    ' @param string url A URL string
+    ' @param string|object [request_params] Params to be requested. The default value is ""
+    ' @param boolean [multipart] Use multipart/form-data rather than application/x-www-form-urlencoded as the POST data request.
+    ' When `multipart` is set to `true`, then the `request_params` must be an object. The default value is `false`
+    ' @param object [headers] HTTP headers. The default value is `nothing`
+    ' @param string [downloaded_to] If `downloaded_to` is set, then the response body will be saved to a file.
+    ' The default value is ""
+    ' @param function_call [progress_callback] A function call to catch current download and upload progress.
+    ' The default value is `nothing`
+    '
+    ' @return response Returns `response` object
+    '
+    ' @example
+    ' import url
+    '
+    '
+    ' ' Simple HTTP POST example
+    '
+    ' response = url.post("https://faruq.id/misc/post.php", {
+    '     "id": "A0110",
+    '     "name": "Sarah Zaira",
+    '     "age": 23
+    ' })
+    '
+    ' if response.code == 200
+    '     writeln(response.body)                    ' Success
+    ' elseif response.code != 0
+    '     writeln("Error: HTTP " & response.code)   ' HTTP error
+    ' else
+    '     writeln(response.error_string)            ' Connection or other error
+    ' endif
+    '
+    '
+    ' ' HTTP POST with multipart form data
+    '
+    ' params = {
+    '     "id": "A23",
+    '     "name": "Clara Sarah",
+    '     "age": 23
+    ' }
+    '
+    ' response = url.post("https://faruq.id/misc/post.php", params, true)
+    '
+    ' if response.code == 200
+    '     writeln(response.body)
+    ' elseif response.code != 0
+    '     writeln("Error: HTTP " & response.code)
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    '
+    '
+    ' ' Upload files using multipart form data (we will use function file_data())
+    '
+    ' params = {
+    '     "id": "U1234",
+    '     "file1": file_data("data.txt"),   ' Upload a file
+    '     "file2": file_data("some.zip")    ' Upload another file
+    ' }
+    '
+    ' response = url.post("https://faruq.id/misc/post.php", params, true)
+    '
+    ' if response.code == 200
+    '     writeln("Upload complete!")
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    '
+    '
+    ' ' JSON request & response example
+    '
+    ' import json
+    '
+    ' request = json.encode({
+    '     "id": 23,
+    '     "name": "Clara Zaira",
+    '     "age": 20,
+    '     "hobbies": [
+    '         "Reading",
+    '         "Travelling",
+    '         "Music"
+    '     ]
+    ' })
+    '
+    ' response = url.post("https://faruq.id/misc/json.php", request, false, {"Content-Type": "application/json"})
+    '
+    ' if response.code == 200
+    '     writer(json.decode(response.body))
+    ' elseif response.code != 0
+    '     writeln("Error: HTTP " & response.code)
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    ''
+    function post(url, request_params = "", multipart = false, headers = nothing, downloaded_to = "", progress_callback = nothing)
+
+
+    ''
+    ' Convert a string to URL encoded string
+    '
+    ' @param string s A URL string
+    '
+    ' @return string An encoded URL string
+    '
+    ' @example
+    ' import url
+    '
+    ' url.encode("name = Clara Sarah")   ' Returns "name%20%3D%20Clara%20Sarah"
+    ''
+    function encode(s)
+
+
+    ''
+    ' Convert an encoded URL string to plain string
+    '
+    ' @param string s An encoded URL string
+    '
+    ' @return string Plain string
+    '
+    ' @example
+    ' import url
+    '
+    ' url.decode("name%20%3D%20Clara%20Sarah")   ' Returns "name = Clara Sarah"
+    ''
+    function decode(s)
+
+    
+    ''
+    ' Global configuration: set verbose mode on or off<!---->. The default configuration is off
+    '
+    ' @param boolean use_verbose Verbose mode
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.verbose(true)
+    ' url.get("https://example.com/")
+    ''
+    function verbose(use_verbose)
+
+
+    ''
+    ' Global configuration: set the HTTP 3xx follow redirects on or off<!---->. The default configuration is on
+    '
+    ' @param boolean follow Use follow
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.follow_location(false)
+    ' url.get("https://example.com/")
+    ''
+    function follow_location(follow)
+
+
+    ''
+    ' Global configuration: set the verify of the peer's SSL certificate<!---->. The default configuration is 1
+    '
+    ' @param number verify_peer Verify peer's SSL certificate option.
+    ' <a href="https://curl.se/libcurl/c/CURLOPT_SSL_VERIFYPEER.html" target="__blank">More information</a>
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.ssl_verify_peer(1)
+    ' url.get("https://example.com/")
+    ''
+    function ssl_verify_peer(verify_peer)
+
+
+    ''
+    ' Global configuration: set the verify of the SSL certificate's name against host<!---->. The default configuration is 2
+    '
+    ' @param number verify_peer Verify host's SSL certificate option.
+    ' <a href="https://curl.se/libcurl/c/CURLOPT_SSL_VERIFYHOST.html" target="__blank">More information</a>
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.ssl_verify_host(2)
+    ' url.get("https://example.com/")
+    ''
+    function ssl_verify_host(verify_host)
+
+
+    ''
+    ' Global configuration: set the path to Certificate Authority (CA) bundle
+    '
+    ' @param string ca_info CA bundle path.
+    ' <a href="https://curl.se/libcurl/c/CURLOPT_CAINFO.html" target="__blank">More information</a>
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.ssl_cainfo("/etc/certs/cabundle.pem")
+    ' url.get("https://example.com/")
+    ''
+    function ssl_cainfo(ca_info)
+
+
+    ''
+    ' Global configuration: set the directory that holds CA certificates
+    '
+    ' @param string ca_path The directory.
+    ' <a href="https://curl.se/libcurl/c/CURLOPT_CAPATH.html" target="__blank">More information</a>
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.ssl_capath("/etc/certs")
+    ' url.get("https://example.com/")
+    ''
+    function ssl_capath(ca_path)
+
+
+    ''
+    ' Global configuration: set the proxy to use
+    '
+    ' @param string proxy_string The proxy string.
+    ' <a href="https://curl.se/libcurl/c/CURLOPT_PROXY.html" target="__blank">More information</a>
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import url
+    '
+    ' url.proxy("http://192.168.0.220:80")
+    ' url.get("https://example.com/")
+    ''
+    function proxy(proxy_string)
+endclass
+
+
+''
+' This class provides common HTTP status codes<!---->.
+' Note: This class is not instantiatable, please use constant `http` instead
+''
+class http
+    ''
+    ' HTTP OK (200)
+    ''
+    field ok
+
+
+    ''
+    ' HTTP Not Found (404)
+    ''
+    field not_found
+
+
+    ''
+    ' HTTP Bad Request (400)
+    ''
+    field bad_request
+
+
+    ''
+    ' HTTP Unauthorised (401)
+    ''
+    field unauthorised
+
+
+    ''
+    ' HTTP Forbidden (403)
+    ''
+    field forbidden
+
+
+    ''
+    ' HTTP Internal Server Error (500)
+    ''
+    field internal_server_error
+
+
+    ''
+    ' HTTP Bad Gateway (502)
+    ''
+    field bad_gateway
+
+
+    ''
+    ' HTTP Service Unavailable (503)
+    ''
+    field service_unavailable
+
+
+    ''
+    ' HTTP Gateway Timeout (504)
+    ''
+    field gateway_timeout
+endclass
+
+
+''
+' This class provides MIME file data
+''
+class file_data
+    ''
+    ' This attribute stores the filename
+    ''
+    field filename
+
+
+    ''
+    ' The constructor. Create an instance of class `file_data` and create MIME file data
+    '
+    ' @param string filename Path to file
+    '
+    ' @return file_data Returns the instance of class `file_data`
+    '
+    ' @example
+    ' params = {
+    '     "file": file_data("data.txt")   ' Upload a file
+    ' }
+    '
+    ' response = url.post("https://faruq.id/misc/post.php", params, true)
+    '
+    ' if response.code == 200
+    '     writeln("Upload complete!")
+    ' else
+    '     writeln(response.error_string)
+    ' endif
+    ''
+    function construct(filename)
+endclass
+
+
+''
+' This class stores HTTP response from function `url.get()` and `url.post()`
+''
+class response
+    ''
+    ' This attribute stores HTTP response status code
+    '
+    ' @example
+    ' import url
+    '
+    ' response = url.get("https://example.com/")
+    ' writer(response.code)   ' Prints 200
+    ''
+    field code
+
+
+    ''
+    ' This attribute stores HTTP response body
+    '
+    ' @example
+    ' import url
+    '
+    ' response = url.get("https://example.com/")
+    ' writer(response.body)   ' Prints the response body of https://example.com/
+    ''
+    field body
+
+
+    ''
+    ' This attribute stores HTTP request error code
+    '
+    ' @example
+    ' import url
+    '
+    ' response = url.get("https://invalid-address")
+    ' writer(response.error)   ' Prints 6
+    '
+    ' response = url.get("https://example.com/")
+    ' writer(response.error)   ' Prints 0
+    ''
+    field error
+
+
+    ''
+    ' This attribute stores HTTP request error string
+    '
+    ' @example
+    ' import url
+    '
+    ' response = url.get("https://invalid-address")
+    ' writer(response.error_string)   ' Prints "Couldn't resolve host name"
+    '
+    ' response = url.get("https://example.com/")
+    ' writer(response.error_string)   ' Prints ""
+    ''
+    field error_string
+endclass

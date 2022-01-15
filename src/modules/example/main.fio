@@ -1,0 +1,45 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Example
+' -------------------------------------------------
+
+import math     ' You can import standard library
+import helper   ' Load helper.fio
+
+
+' Place your init code inside this function.
+' All constants and global variables must be declared inside this function
+' Function name must be <module_name>::init
+
+function example::init()
+    ' An example constant
+
+    global example_data = {
+        x: 10,
+        y: 20,
+        z: 30
+    }
+stop
+
+
+''
+' An example function.
+' @param number a An example parameter
+' @param number b Another example parameter
+' @return string An example string
+''
+function get_stuff(a, b)
+    return "Hello, this is example module. a * b is " & (a * b)
+stop
+
+
+''
+' Another example function.
+''
+function print_stuff()
+    writeln(do_stuff(example_data.x))
+stop

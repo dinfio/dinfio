@@ -1,0 +1,847 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Core
+' -------------------------------------------------
+
+''
+' Core module of Dinfio, this module provides core functions. e.g. `array()`, `object()`, `size()`, etc.
+' Note: This module is imported by default, you don't need to import it again.
+'
+' @brief Provides core functions
+''
+function core::init()
+    ''
+    ' A default instance of class `dinfio_info`. This constant stores all of Dinfio information
+    '
+    ' @example
+    ' ' Assuming you are running Dinfio 3.1.06 on Linux
+    '
+    ' writeln(dinfio.version)    ' Output: 3.1.06
+    '
+    ' if dinfio.is_linux
+    '     writeln("It's Linux")
+    ' endif
+    ''
+    global dinfio_info: dinfio
+
+
+    ''
+    ' An array that stores command line arguments
+    '
+    ' @example
+    ' writeln(arguments[1])   ' Output: hello
+    '                         ' if you are run: $ dinfio sample.fio hello
+    ''
+    global arguments
+
+
+    ' Duplicate import
+
+    exit("import core: this module is imported by default, you don't need to import it again")
+stop
+
+
+''
+' Create an array with `n` elements
+'
+' @param number [n] Total elements. The default value is 0
+'
+' @return array An array with `n` elements
+'
+' @example
+' a = array(5)
+'
+' ' a is:
+' ' array(
+' '    [0] = 0,
+' '    [1] = 0,
+' '    [2] = 0,
+' '    [3] = 0,
+' '    [4] = 0
+' ' )
+'
+' b = array()
+'
+' ' b is:
+' ' array(
+' ' )
+''
+function array(n = 0)
+
+
+''
+' Create two-dimensional array
+'
+' @param number rows Total rows
+' @param number columns Total columns
+'
+' @return array Two-dimensional array with total rows is `rows` and total columns is `columns`
+'
+' @example
+' a = array2d(3, 3)
+'
+' ' a is:
+' ' array(
+' '     [0] = array(
+' '         [0] = 0
+' '         [1] = 0
+' '         [2] = 0
+' '     )
+' '     [1] = array(
+' '         [0] = 0
+' '         [1] = 0
+' '         [2] = 0
+' '     )
+' '     [2] = array(
+' '         [0] = 0
+' '         [1] = 0
+' '         [2] = 0
+' '     )
+' ' )
+''
+function array2d(rows, columns)
+
+
+''
+' Create an empty object
+'
+' @param string [name] Object name. The default value is ""
+'
+' @return object An empty object
+'
+' @example
+' a = object("myobj")
+'
+' ' a is:
+' ' myobj(
+' ' )
+'
+' b = object()
+'
+' ' b is:
+' ' object(
+' ' )
+''
+function object(name = "")
+
+
+''
+' Get the number of elements of an array
+'
+' @param array arr An array
+'
+' @return number Returns the number of elements of `arr`
+'
+' @example
+' a = [10, 20, 30, 40, 50]
+' b = size(a)   ' b = 5
+''
+function size(arr)
+
+
+''
+' Add new element to the end of an array
+'
+' @param array arr An array
+' @param any value Value to be added to `arr`
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3]
+' append(a, 4)
+' append(a, 5)
+'
+' ' a is:
+' ' array(
+' '    [0] = 1,
+' '    [1] = 2,
+' '    [2] = 3,
+' '    [3] = 4,
+' '    [4] = 5
+' ' )
+''
+function append(arr, value)
+
+
+''
+' Remove the first element of an array
+'
+' @param array arr An array
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3, 4, 5, 6]
+' pop(a)
+' pop(a)
+'
+' ' a is:
+' ' array(
+' '    [0] = 3,
+' '    [1] = 4,
+' '    [2] = 5,
+' '    [3] = 6
+' ' )
+''
+function pop(arr)
+
+
+''
+' Remove all of the elements of an array
+'
+' @param array arr An array
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3]
+' clear(a)
+'
+' ' a is:
+' ' array(
+' ' )
+''
+function clear(arr)
+
+
+''
+' Check whether `value` is `nothing` or not
+'
+' @param any value A value
+'
+' @return boolean Returns `true` if `value` is `nothing`, returns `false` if otherwise
+'
+' @example
+' a = nothing
+' b = 23
+'
+' is_nothing(a)   ' Returns true
+' is_nothing(b)   ' Returns false
+''
+function is_nothing(value)
+
+
+''
+' Extend `obj_1` to `obj_2`. All of attributes and functions of `obj_2` will be inherited to `obj_1`
+'
+' @param object obj_1 An object
+' @param object obj_2 An object
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = some_object()
+' b = another_object()
+'
+' extend(a, b)
+''
+function extend(obj_1, obj_2)
+
+
+''
+' Check whether `value_1` and `value_2` have the same address
+'
+' @param array|object value_1 An array or an object
+' @param array|object value_2 An array or an object
+'
+' @return boolean Returns `true` if both addresses are equal, returns `false` if otherwise
+'
+' @example
+' a = array()
+' b = array()
+' c = a
+'
+' equal(a, b)   ' Returns false
+' equal(a, c)   ' Returns true
+''
+function equal(value_1, value_2)
+
+
+''
+' Get the name of an object
+'
+' @param object obj An object
+'
+' @return string Returns the `obj`'s name
+'
+' @example
+' a = object("myobj")
+' object_name(a)   ' Returns "myobj"
+''
+function object_name(obj)
+
+
+''
+' Get the address of an array or an object
+'
+' @param array|object value An array or an object
+'
+' @return number Returns the `value`'s address
+'
+' @example
+' a = object("myobj")
+' address(a)
+''
+function address(value)
+
+
+''
+' Get the inheritance of an object
+'
+' @param object obj An object
+'
+' @return string Returns the `obj`'s inheritance
+'
+' @example
+' a = object("myobj1")
+' b = object("myobj2")
+' c = object("myobj3")
+'
+' extend(a, b)
+' extend(a, c)
+'
+' inherits(a)   ' Returns "myobj2 myobj3"
+''
+function inherits(obj)
+
+
+''
+' Get the attributes of an object
+'
+' @param object obj An object
+'
+' @return array Returns an array that contains `obj`'s attributes
+'
+' @example
+' a = {
+'     id: "A23",
+'     name: "Clara",
+'     age: 20,
+'     campus: "ITB"
+' }
+'
+' b = attributes(a)
+'
+' ' b is:
+' ' array(
+' '     [0] = "campus"
+' '     [1] = "age"
+' '     [2] = "name"
+' '     [3] = "id"
+' ' )
+''
+function attributes(obj)
+
+
+''
+' Check whether the object `obj` has attribute `attr` or not 
+'
+' @param object obj An object
+' @param string attr Attribute name
+'
+' @return boolean Returns `true` if the object `obj` has attribute `attr`, and returns `false` if otherwise
+'
+' @version_min 3.1.06
+'
+' @example
+' a = {
+'     x: 10,
+'     y: 20
+' }
+'
+' attribute_exists(a, "x")   ' Returns true
+' attribute_exists(a, "z")   ' Returns false
+''
+function attribute_exists(obj, attr)
+
+
+''
+' Set value to the object's attribute 
+'
+' @param object obj An object
+' @param string attr Attribute name
+' @param any value Value to be set
+'
+' @return boolean Always returns `true`
+'
+' @version_min 3.1.06
+'
+' @example
+' a = {
+'     x: 10,
+'     y: 20
+' }
+'
+' attribute_set(a, "z", 30)
+' attribute_set(a, "x", 12)
+''
+function attribute_set(obj, attr, value)
+
+
+''
+' Get the value of the object's attribute 
+'
+' @param object obj An object
+' @param string attr Attribute name
+'
+' @return any|nothing Returns the value of attribute `attr` or returns `nothing` if attribute `attr` does not exist
+'
+' @version_min 3.1.06
+'
+' @example
+' a = {
+'     x: 10,
+'     y: 20
+' }
+'
+' attribute_get(a, "x")   ' Returns 10
+' attribute_get(a, "z")   ' Returns nothing
+''
+function attribute_get(obj, attr)
+
+
+''
+' Get the data type of `value`
+'
+' @param any value A value
+'
+' @return string Returns the `value`'s data type
+'
+' @example
+' type(23)                         ' Returns "number"
+' type("Hello")                    ' Returns "string"
+' type(true)                       ' Returns "boolean"
+' type([1, 2, 3])                  ' Returns "array"
+' type({data: 20, status: "OK"})   ' Returns "object"
+' type(nothing)                    ' Returns "nothing"
+''
+function type(value)
+
+
+''
+' Exit from the program
+'
+' @param number|string code An exit code or a message. If `code` is a string then the message
+' will be printed before exiting program. The default value is 0
+'
+' @return boolean Always returns `true`
+'
+' @example
+' exit()
+' exit(1)
+' exit("See you again!")
+''
+function exit(code = 0)
+
+
+''
+' Inline `if` function
+'
+' @param boolean expression An expression to be evaluated
+' @param any true_part A value
+' @param any false_part A value
+'
+' @return any Returns `true_part` if the `expression` is `true`, returns `false_part` if otherwise
+'
+' @example
+' iif(10 > 5, 20, 30)          ' Returns 20
+' iif(20 > 100, "OK", "NOK")   ' Returns "NOK"
+''
+function iif(expression, true_part, false_part)
+
+
+''
+' Choose value based on the operating system
+'
+' @param any linux_value A value
+' @param any mac_value A value
+' @param any windows_value A value
+'
+' @return any Returns `linux_value` if the operating system is Linux, returns `mac_value` if the operating system is macOS,
+' and returns `windows_value` if the operating system is Windows
+'
+' @example
+' platform(23, 33, 43)   ' Returns 23 if your operating system is Linux
+''
+function platform(linux_value, mac_value, windows_value)
+
+
+''
+' Choose value based on your operating system is Linux or not
+'
+' @param any true_part A value
+' @param any false_part A value
+'
+' @return any Returns `true_part` if your operating system is Linux, and returns `false_part` if otherwise
+'
+' @example
+' platform_linux(23, 33)   ' Returns 23 if your operating system is Linux
+''
+function platform_linux(true_part, false_part)
+
+
+''
+' Choose value based on your operating system is macOS or not
+'
+' @param any true_part A value
+' @param any false_part A value
+'
+' @return any Returns `true_part` if your operating system is macOS, and returns `false_part` if otherwise
+'
+' @example
+' platform_mac(23, 33)   ' Returns 23 if your operating system is macOS
+''
+function platform_mac(true_part, false_part)
+
+
+''
+' Choose value based on your operating system is Windows or not
+'
+' @param any true_part A value
+' @param any false_part A value
+'
+' @return any Returns `true_part` if your operating system is Windows, and returns `false_part` if otherwise
+'
+' @example
+' platform_windows(23, 33)   ' Returns 23 if your operating system is Windows
+''
+function platform_windows(true_part, false_part)
+
+
+''
+' Get the keys of an array<!--->.
+' Warning: this function is now deprecated, and will be removed on the future release
+'
+' @param array arr An array
+'
+' @return array Returns an array that contains `arr`'s keys
+'
+' @example
+' a = []
+' a["id"] = "A23"
+' a["name"] = "Clara"
+' a["age"] = 20
+' a["campus"] = "ITB"
+'
+' b = keys(a)
+'
+' ' b is:
+' ' array(
+' '     [0] = "campus"
+' '     [1] = "age"
+' '     [2] = "name"
+' '     [3] = "id"
+' ' )
+''
+function keys(arr)
+
+
+''
+' Create an array filled with random numbers
+'
+' @param number n Total elements to be generated
+' @param number min The lowest value
+' @param number max The highest value
+'
+' @return array Returns an array filled with generated random numbers between `min` and `max`
+'
+' @example
+' a = array_random(5, 1, 1000)
+'
+' ' Array a is possibly filled with:
+' ' array(
+' '    [0] = 14,
+' '    [1] = 274,
+' '    [2] = 21,
+' '    [3] = 306,
+' '    [4] = 802
+' ' )
+''
+function array_random(n, min, max)
+
+
+''
+' Execute system command. This is similar to C/C++'s `system()` function
+'
+' @param string command Command to be executed
+' @param boolean wait Wait for command to finish. The default value is `true`
+'
+' @return number Returns status code returned by the called command if `wait` is `true`.
+' And always returns 0 if `wait` is `false`
+'
+' @example
+' execute("ls -al")
+''
+function execute(command, wait = true)
+
+
+''
+' Call the function that stored in `f` (`ref` object)
+'
+' @param ref f A `ref` object
+' @param any [params] Parameters to be passed to the function stored in `f`
+'
+' @example
+' f = ref(some_func())
+' call(f, 4, 10, 2)
+'
+' function some_func(x, y, z)
+'     writeln(x ^ 2 + y + z)
+' stop
+'
+' ' Output:
+' ' 28
+'
+'
+' ' Another example
+'
+' do_something(writeln())
+'
+' function do_something(ref: f)
+'     call(f, "Hello")
+' stop
+''
+function call(ref: f, params)
+
+
+''
+' Call the function that stored in `f` (`ref` object) and return its value
+'
+' @param ref f A `ref` object
+' @param any [params] Parameters to be passed to the function stored in `f`
+'
+' @return any Returns value returned by the function stored in `f`
+'
+' @example
+' f = ref(some_func())
+' a = eval(f, 4, 10, 2)    ' a = 28
+'
+' function some_func(x, y, z)
+'     return x ^ 2 + y + z
+' stop
+'
+'
+' ' Another example
+'
+' do_something(sind())
+'
+' function do_something(ref: f)
+'     a = eval(f, 30)    ' a = 0.5
+' stop
+''
+function eval(ref: f, params)
+
+
+''
+' Check whether a variable is declared or not
+'
+' @param variable var_name Variable name
+'
+' @return boolean Returns `true` if variable is declared, and returns `false` if otherwise
+'
+' @example
+' var a, b
+' c = 10
+'
+' var_exists(a)    ' Returns true
+' var_exists(b)    ' Returns true
+' var_exists(c)    ' Returns true
+' var_exists(d)    ' Returns false
+''
+function var_exists(var_name)
+
+
+''
+' Register user defined event loop
+'
+' @param function_call f An event loop function
+'
+' @return boolean Returns `true` if event loop successfully registered
+'
+' @example
+' register_event_loop(my_event_loop())
+''
+function register_event_loop(function_call: f)
+
+
+''
+' Perform bitwise NOT operation for the given number `x`. Every bit of `x` will be inverted
+'
+' @param number x A number
+' @param number [bit_width] The given number `x` and the returned value will be cast to `bit_width`-bit integer.
+' `bit_width` must be in between 1 and 32. The default value is 32
+' @param boolean [unsigned] If `unsigned` is `true` then the sign bit of `x` and the returned value will be ignored.
+' The default value is `false`
+'
+' @return number Returns the inverted value of `x`
+'
+' @version_min 3.1.06
+'
+' @example
+' a = bnot(0)               ' a = -1  -> Where the negation of 00000000000000000000000000000000 is 11111111111111111111111111111111 (-1 in signed 32-bit)
+' b = bnot(0, 8, true)      ' b = 255 -> Where the negation of 00000000 is 11111111 (255 in unsigned 8-bit)
+' c = bnot(0x0f, 8, true)   ' c = 240 -> Where the negation of 00001111 is 11110000 (240 in unsigned 8-bit)
+''
+function bnot(x, bit_width = 32, unsigned = false)
+
+
+''
+' Perform bitwise AND operation for the every bit of the given number `x` and `y`
+'
+' @param number x A number
+' @param number y A number
+' @param number [bit_width] The given number `x`, `y`, and the returned value will be cast to `bit_width`-bit integer.
+' `bit_width` must be in between 1 and 32. The default value is 32
+' @param boolean [unsigned] If `unsigned` is `true` then the sign bit of `x`, `y`, and the returned value will be ignored.
+' The default value is `false`
+'
+' @return number Returns the value of bitwise AND operation of `x` and `y`
+'
+' @version_min 3.1.06
+'
+' @example
+' a = band(5, 9)                  ' a = 1 -> Where 00000000000000000000000000000101 AND 00000000000000000000000000001001 is 00000000000000000000000000000001 (1 in signed 32-bit)
+' b = band(0xff, 0x03, 8, true)   ' b = 3 -> Where 11111111 AND 00000011 is 00000011 (3 in unsigned 8-bit)
+''
+function band(x, y, bit_width = 32, unsigned = false)
+
+
+''
+' Perform bitwise OR operation for the every bit of the given number `x` and `y`
+'
+' @param number x A number
+' @param number y A number
+' @param number [bit_width] The given number `x`, `y`, and the returned value will be cast to `bit_width`-bit integer.
+' `bit_width` must be in between 1 and 32. The default value is 32
+' @param boolean [unsigned] If `unsigned` is `true` then the sign bit of `x`, `y`, and the returned value will be ignored.
+' The default value is `false`
+'
+' @return number Returns the value of bitwise OR operation of `x` and `y`
+'
+' @version_min 3.1.06
+'
+' @example
+' a = bor(5, 9, 8, true)   ' a = 13 -> Where 00000101 OR 00001001 is 00001101 (13 in unsigned 8-bit)
+''
+function bor(x, y, bit_width = 32, unsigned = false)
+
+
+''
+' Perform bitwise XOR operation for the every bit of the given number `x` and `y`
+'
+' @param number x A number
+' @param number y A number
+' @param number [bit_width] The given number `x`, `y`, and the returned value will be cast to `bit_width`-bit integer.
+' `bit_width` must be in between 1 and 32. The default value is 32
+' @param boolean [unsigned] If `unsigned` is `true` then the sign bit of `x`, `y`, and the returned value will be ignored.
+' The default value is `false`
+'
+' @return number Returns the value of bitwise XOR operation of `x` and `y`
+'
+' @version_min 3.1.06
+'
+' @example
+' a = bxor(5, 9, 8, true)   ' a = 12 -> Where 00000101 XOR 00001001 is 00001100 (12 in unsigned 8-bit)
+''
+function bxor(x, y, bit_width = 32, unsigned = false)
+
+
+''
+' Perform left shift operation for the every bit of the given number `x` by `y` places<!--->.
+' The given number `y` decides the number of places to shift.
+'
+' @param number x A number
+' @param number y A number
+' @param number [bit_width] The given number `x`, `y`, and the returned value will be cast to `bit_width`-bit integer.
+' `bit_width` must be in between 1 and 32. The default value is 32
+' @param boolean [unsigned] If `unsigned` is `true` then the sign bit of `x`, `y`, and the returned value will be ignored.
+' The default value is `false`
+'
+' @return number Returns the value of left shift operation of `x` by `y` places
+'
+' @version_min 3.1.06
+'
+' @example
+' a = bls(5, 1, 8, true)   ' a = 10 -> Where 00000101 << 1 is 00001010 (10 in unsigned 8-bit)
+''
+function bls(x, y, bit_width = 32, unsigned = false)
+
+
+''
+' Perform right shift operation for the every bit of the given number `x` by `y` places<!--->.
+' The given number `y` decides the number of places to shift.
+'
+' @param number x A number
+' @param number y A number
+' @param number [bit_width] The given number `x`, `y`, and the returned value will be cast to `bit_width`-bit integer.
+' `bit_width` must be in between 1 and 32. The default value is 32
+' @param boolean [unsigned] If `unsigned` is `true` then the sign bit of `x`, `y`, and the returned value will be ignored.
+' The default value is `false`
+'
+' @return number Returns the value of right shift operation of `x` by `y` places
+'
+' @version_min 3.1.06
+'
+' @example
+' a = brs(5, 1, 8, true)   ' a = 2 -> Where 00000101 >> 1 is 00000010 (2 in unsigned 8-bit)
+''
+function brs(x, y, bit_width = 32, unsigned = false)
+
+
+''
+' This class stores all of Dinfio information.
+' Note: This class has no instantiation (constructor) method, please use constant `dinfio` instead
+'
+' @example
+' ' Assuming you are running Dinfio 3.1.06 on Linux
+'
+' writeln(dinfio.version)    ' Output: 3.1.06
+'
+' if dinfio.is_linux
+'     writeln("It's Linux")
+' endif
+''
+class dinfio_info
+    field version
+    field version_major
+    field version_minor
+    field version_revision
+    field platform
+    field build_date
+    field path
+    field is_linux
+    field is_mac
+    field is_windows
+endclass
+
+
+''
+' This class stores function address for further use
+''
+class ref
+    ''
+    ' The constructor. Create an instance of class `ref` and store address of a function.
+    ' To call the function, use function `call()` or `eval()`
+    '
+    ' @param ref|function_call fn Function to be stored its address
+    '
+    ' @return ref Returns the instance of class `ref`
+    '
+    ' @example
+    ' f = ref(some_func())
+    ' call(f, 4)
+    '
+    ' function some_func(x)
+    '     writeln(x ^ 2)
+    ' stop
+    '
+    ' ' Output:
+    ' ' 16
+    ''
+    function construct(fn)
+endclass

@@ -1,0 +1,17 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Example
+' -------------------------------------------------
+
+''
+' An example helper function.
+' @param number x An example parameter
+' @return number An example return value
+''
+function do_stuff(x)
+    return random(1, x)
+stop

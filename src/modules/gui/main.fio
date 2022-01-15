@@ -1,0 +1,428 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: GUI
+' -------------------------------------------------
+
+''
+' Cross platform and native Graphical User Interface (GUI) module.
+' <i>This documentation page is under construction</i>
+'
+' @brief Graphical User Interface module
+''
+function gui::init()
+    global message: message
+    global event: event
+    global gui_colours: colour
+    global keycode: keycode
+    global alignment: align
+    global scale_mode: scale
+    global pen_style: pen
+    global brush_style: brush
+
+    global menu_type: menu
+    global padding: padding
+    global dialog: dialog
+    global clipboard: clipboard
+
+    global vertical = 0
+    global horizontal = 1
+
+
+    ' This module is not available on the Playground
+
+    exit("import gui: this module is not available in this Playground")
+stop
+
+function messagebox(msg, title = "", style = message.ok + message.info)
+function getkeycode()
+
+class gui
+    function gettext()
+    function settext(text)
+    function getoverx()
+    function getovery()
+    function getx()
+    function gety()
+    function setx(x)
+    function sety(y)
+    function getheight()
+    function getwidth()
+    function setheight(height)
+    function setwidth(width)
+    function getinnerheight()
+    function getinnerwidth()
+    function setvisible(visible)
+    function isvisible()
+    function setenable(enable)
+    function isenable()
+
+    function setfont(font_name)
+    function setfontsize(font_size)
+    function setfontbold(bold)
+    function setfontlight(light)
+    function setfontitalic(italic)
+    function setfontunderline(underline)
+    function setfontstrikethrough(strikethrough)
+    function getfont()
+    function getfontsize()
+    function isfontbold()
+    function isfontlight()
+    function isfontitalic()
+    function isfontunderline()
+    function isfontstrikethrough()
+    function setfocus(focus)
+    function settooltip(text)
+    function gettooltip()
+
+    function centre()
+    function centrehorizontal()
+    function centrevertical()
+    function right(margin = 0)
+    function bottom(margin = 0)
+    function stretch(margin_left = 0, margin_right = 0, margin_top = 0, margin_bottom = 0)
+    function stretchwidth(margin_left = 0, margin_right = 0)
+    function stretchheight(margin_top = 0, margin_bottom = 0)
+
+    function setbackgroundcolour(colour)
+    function setforegroundcolour(colour)
+    function getbackgroundcolour()
+    function getforegroundcolour()
+
+    function refresh()
+
+    function addevent(event, function_call: f)
+endclass
+
+class gui_window: gui
+    function construct(title = "", width = 220, height = 160, resizable = true, minimisable = true, closable = true)
+
+    function show()
+    function close()
+    function settitle(title)
+    function gettitle()
+    function isminimised()
+    function ismaximised()
+    function setfullscreen(fullscreen)
+    function isfullscreen()
+endclass
+
+class gui_panel: gui
+    function construct(gui: parent, x = 0, y = 0, width = 0, height = 0, canvas_mode = false)
+
+    function draw_clear()
+    function draw_setpen(gui_colour: colour, width = 1, style = pen.solid)
+    function draw_setbrush(gui_colour: colour, style = brush.solid)
+    function draw_setfont(size, face = "", bold = false, italic = false)
+    function draw_settextcolour(gui_colour: colour)
+    function draw_setbackgroundcolour(gui_colour: colour)
+    function draw_line(x1, y1, x2, y2)
+    function draw_rectangle(x, y, width, height)
+    function draw_roundedrectangle(x, y, width, height, radius)
+    function draw_text(text, x, y, rotation_angle = 0)
+    function draw_circle(x, y, radius)
+    function draw_point(x, y)
+    function draw_ellipse(x, y, width, height)
+    function draw_arc(x_start, y_start, x_end, y_end, x_centre, y_centre)
+    function draw_ellipticarc(x, y, width, height, start_angle, end_angle)
+    function draw_polygon(array: points, x_offset = 0, y_offset = 0, fill_mode = 0)
+    function draw_spline(array: points)
+    function draw_lines(array: points)
+    function draw_gettextwidth(text)
+    function draw_gettextheight(text)
+    function draw_save(file_path, use_alpha = false)
+
+    function update()
+endclass
+
+class gui_labeled_panel: gui
+    function construct(label, gui: parent, x = 0, y = 0, width = 0, height = 0)
+endclass
+
+class gui_tab: gui
+    function construct(gui: parent, x = 0, y = 0, width = 0, height = 0)
+
+    function addpage(label, gui_panel: panel, selected)
+    function removepage(page)
+    function getpage()
+    function setpage(page)
+endclass
+
+class gui_button: gui
+    function construct(label, gui: parent, x = 0, y = 0, width = 80, height = 20)
+endclass
+
+class gui_label: gui
+    function construct(label, gui: parent, x = 0, y = 0, width = 0, height = 0, alignment = align.left)
+endclass
+
+class gui_textbox: gui
+    function construct(text, gui: parent, x = 0, y = 0, width = 0, height = 0, is_password = false)
+
+    function appendtext(text)
+    function setlocked(locked)
+    function islocked()
+    function setmaxlength(max_length)
+    function setsel(begin_pos, end_pos)
+    function getselbegin()
+    function getselend()
+    function setseltext(text)
+    function getseltext()
+endclass
+
+class gui_textarea: gui_textbox, gui
+    function construct(text, gui: parent, x = 0, y = 0, width = 160, height = 80, wrap = true)
+endclass
+
+class gui_checkbox: gui
+    function construct(label, gui: parent, checked = false, x = 0, y = 0, width = 0, height = 0)
+
+    function ischecked()
+    function setchecked(checked)
+endclass
+
+class gui_radiobox: gui
+    function construct(label, gui: parent, start_group = false, checked = false, x = 0, y = 0, width = 0, height = 0)
+
+    function ischecked()
+    function setchecked(checked)
+endclass
+
+class gui_listbox: gui
+    function construct(gui: parent, list = [], multiple_selection = false, x = 0, y = 0, width = 160, height = 80)
+
+    function add(text, index = -1)
+    function remove(index)
+    function clear()
+    function size()
+    function get(index)
+    function set(index, text)
+    function getindex()
+    function setindex(index)
+    function getselections()
+endclass
+
+class gui_combobox: gui
+    function construct(gui: parent, list = [], editable = false, x = 0, y = 0, width = 0, height = 0)
+
+    function add(text, index = -1)
+    function remove(index)
+    function clear()
+    function size()
+    function get(index)
+    function set(index, text)
+    function getindex()
+    function setindex(index)
+endclass
+
+class gui_imagebox: gui
+    function construct(image_path, gui: parent, x = 0, y = 0, width = 0, height = 0)
+
+    function setimage(image_path)
+    function getimage()
+    function getoriginalwidth()
+    function getoriginalheight()
+    function setscalemode(scale_mode: mode)
+endclass
+
+class gui_timer
+    function construct(interval, function_call: event)
+
+    function run()
+    function pause()
+    function isrunning()
+    function getinterval()
+    function setinterval(interval)
+endclass
+
+class gui_stack
+    function construct(orientation, attach_to)
+    function add(gui, vertical_stretch = false, horizontal_stretch = false, flags = 0, padding = 0)
+    function addspacer(size, stretch = false)
+endclass
+
+class gui_grid
+    function construct(rows, cols, attach_to, vertical_gap = 0, horizontal_gap = 0, grow_all = falseo)
+    function add(gui, stretch = false, flags = 0, padding = 0)
+    function addgrowablecol(index)
+    function addgrowablerow(index)
+endclass
+
+class gui_menubar
+    function construct(gui_window: parent)
+    function append(gui_menu: menu, label)
+    function insert(position, gui_menu: menu, label)
+    function remove(position)
+endclass
+
+class gui_menu
+    function construct()
+    function append(label, type = menu.normal, function_call: action = nothing)
+    function appendseparator()
+    function appendsubmenu(gui_menu, label)
+    function insert(position, label, type = menu.normal, function_call: action = nothing)
+    function insertseparator(position)
+    function insertsubmenu(position, gui_menu, label)
+    function remove(item_id)
+    function setlabel(item_id, label)
+    function getlabel(item_id, complete_label = false)
+    function setenable(item_id, boolean)
+    function setchecked(item_id, boolean)
+    function isenable(item_id)
+    function ischecked(item_id)
+endclass
+
+class message
+    field ok
+    field yes
+    field no
+    field yesno
+    field cancel
+    field yesnocancel
+    field nodefault
+    field info
+    field warning
+    field question
+    field error
+
+    function show(msg, title = "", style = message.ok + message.info)
+endclass
+
+class event
+    field tabchange
+    field click
+    field doubleclick
+    field change
+    field activate
+    field deactivate
+    field resize
+    field minimise
+    field maximise
+    field close
+    field mouseleftup
+    field mouseleftdown
+    field mouserightup
+    field mouserightdown
+    field mouseenter
+    field mouseleave
+    field mouseover
+    field keyup
+    field keydown
+endclass
+
+class keycode
+    field backspace
+    field tab
+    field return
+    field escape
+    field space
+    field delete
+    field shift
+    field alt
+    field control
+    field left
+    field right
+    field up
+    field down
+    field f1
+    field f2
+    field f3
+    field f4
+    field f5
+    field f6
+    field f7
+    field f8
+    field f9
+    field f10
+    field f11
+    field f12
+
+    function get()
+endclass
+
+class gui_colours
+    field gui_colour: red
+    field gui_colour: green
+    field gui_colour: blue
+    field gui_colour: white
+    field gui_colour: black
+    field gui_colour: transparent
+    
+    function rgba(red, green, blue, alpha)
+    function rgb(red, green, blue)
+    function hex(hex_string)
+endclass
+
+class gui_colour
+
+endclass
+
+class alignment
+    field left
+    field right
+    field centre
+    field top
+    field bottom
+    field centre_horizontal
+    field centre_vertical
+endclass
+
+class scale_mode
+    field none
+    field fill
+    field aspectfit
+    field aspectfill
+endclass
+
+class pen_style
+    field solid
+    field dot
+    field dash
+    field shortdash
+    field dotdash
+endclass
+
+class brush_style
+    field solid
+    field bdiagonal
+    field cdiagonal
+    field fdiagonal
+    field cross
+    field horizontal
+    field vertical
+    field transparent
+endclass
+
+class menu_type
+    field normal
+    field check
+    field radio
+    field exit
+    field about
+    field preferences
+endclass
+
+class padding
+    field left
+    field right
+    field top
+    field bottom
+    field all
+endclass
+
+class dialog
+    function open(parent, title = "Open", wildcard = "All files (*.*)|*.*", default_directory = "", default_filename = "")
+    function open_multiple(parent, title = "Open", wildcard = "All files (*.*)|*.*", default_directory = "", default_filename = "")
+    function save(parent, title = "Save", wildcard = "All files (*.*)|*.*", default_directory = "", default_filename = "")
+    function directory(parent, title = "Choose a directory", default_directory = "")
+endclass
+
+class clipboard
+    function available()
+    function set(text)
+    function get()
+    function clear()
+endclass

@@ -1,0 +1,15 @@
+' Simple example how to get the resolution of a JPEG image
+
+import fileio
+
+f = file("image.jpg", file_binary + file_read)
+
+if !is_nothing(f)
+    height = f.readbyte(0xa3) * 0x100 + f.readbyte(0xa4)
+    width = f.readbyte(0xa5) * 0x100 + f.readbyte(0xa6)
+
+    writeln("Resolution: " & width & " x " & height)
+    f.close()
+else
+    writeln("Failed to open the file")
+endif

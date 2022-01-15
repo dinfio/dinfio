@@ -1,0 +1,4 @@
+import math
+
+y = sin(30)        ' Calculates sine of 30 (in radians)
+writeln(math_pi)   ' Prints mathematical π constant

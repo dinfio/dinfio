@@ -1,0 +1,131 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Advanced Readline
+' -------------------------------------------------
+
+''
+' Advanced readline module. This module uses <a href="https://github.com/yhirose/cpp-linenoise" target="__blank">cpp-linenoise</a> library as its backend
+'
+' @brief Advanced readline module
+' @version_min 3.1.06
+''
+function rl::init()
+    ' This module is not compatible on the Playground
+
+    exit("import rl: this module is not available in this playground")
+stop
+
+
+''
+' Read a single line from the terminal with `prompt` displayed
+'
+' @param string [prompt] The prompt to be displayed
+'
+' @return string|nothing Returns the inputted string, or returns `nothing` if `rl()` is interrupted by a Ctrl+C keypress or by a SIGINT signal
+'
+' @example
+' import rl
+'
+' line = rl("Insert text: ")
+' writeln(line)
+''
+function rl(prompt = "")
+
+
+''
+' Load the history from the specified file
+'
+' @param string file_path A file path that contains history list to be loaded
+'
+' @return boolean Returns `true` if `file_path` exists and operation succeeded, and returns `false` if otherwise
+'
+' @example
+' import rl
+'
+' rl_loadhistory("history.txt")
+''
+function rl_loadhistory(file_path)
+
+
+''
+' Add a new entry to the history
+'
+' @param string text A string to be added
+'
+' @return boolean Returns `true` if operation succeeded, and returns `false` if otherwise
+'
+' @example
+' import rl
+'
+' rl_addhistory("hello")
+''
+function rl_addhistory(text)
+
+
+''
+' Save the history to the specified file
+'
+' @param string file_path A file path to be saved
+'
+' @return boolean Returns `true` if operation succeeded, and returns `false` if otherwise
+'
+' @example
+' import rl
+'
+' rl_savehistory("history.txt")
+''
+function rl_savehistory(file_path)
+
+
+''
+' Set the completion list
+'
+' @param array list An array
+'
+' @return boolean Always returns `true`
+'
+' @example
+' import rl
+'
+' rl_setcompletion([
+'     "class ", "for ", "if ", "else", "elseif ", "while ", "function ", "import ",
+'     "endfor", "endif", "endwhile", "endclass", "stop",
+'     "return", "yield", "break",
+'     "help", "clear", "editor", "exit", "run ",
+'     "field ", "var ", "global ",
+'     "done", "cancel", "reset"
+' ])
+''
+function rl_setcompletion(list)
+
+
+''
+' Add a new entry to the completion list
+'
+' @param string text A string to be added
+'
+' @return boolean Always returns `true`
+'
+' @example
+' import rl
+'
+' rl_addcompletion("hello")
+''
+function rl_addcompletion(text)
+
+
+''
+' Clear the completion list
+'
+' @return boolean Always returns `true`
+'
+' @example
+' import rl
+'
+' rl_clearcompletion()
+''
+function rl_clearcompletion()

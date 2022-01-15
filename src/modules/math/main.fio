@@ -1,0 +1,503 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Math
+' -------------------------------------------------
+
+''
+' This module provides mathematical and random number generator functions
+'
+' @brief Mathematical and random number generator module
+' @example_file sample.fio
+''
+function math::init()
+    ''
+    ' Mathematical <span style="font-family: serif;">π</span> constant
+    ''
+    global math_pi = 3.14159265358979
+
+
+    ''
+    ' Mathematical <span style="font-family: serif;"><i>e</i></span> constant
+    ''
+    global math_e = 2.71828182845905
+stop
+
+
+''
+' Convert `value` to a number
+'
+' @param any value A value to be converted
+'
+' @return number Converted value. If `value` is cannot be converted, then 0 is returned
+'
+' @example
+' getnumber("10")      ' Returns 10
+' getnumber("10.22")   ' Returns 10.22
+' getnumber("0x1a")    ' Returns 26
+' getnumber("1abc")    ' Returns 1
+' getnumber("OK")      ' Returns 0
+' getnumber(true)      ' Returns 1
+' getnumber(false)     ' Returns 0
+''
+function getnumber(value)
+
+
+''
+' Calculate sine of `x` in radians
+'
+' @param number x An angle expressed in radians
+'
+' @return number Returns the sine of `x` in radians
+'
+' @example
+' sin(30)   ' Returns -0.988032
+''
+function sin(x)
+
+
+''
+' Calculate cosine of `x` in radians
+'
+' @param number x An angle expressed in radians
+'
+' @return number Returns the cosine of `x` in radians
+'
+' @example
+' cos(60)   ' Returns -0.952413
+''
+function cos(x)
+
+
+''
+' Calculate tangent of `x` in radians
+'
+' @param number x An angle expressed in radians
+'
+' @return number Returns the tangent of `x` in radians
+'
+' @example
+' tan(45)   ' Returns 1.61978
+''
+function tan(x)
+
+
+''
+' Calculate sine of `x` in degrees
+'
+' @param number x An angle expressed in degrees
+'
+' @return number Returns the sine of `x` in degrees
+'
+' @example
+' sind(30)   ' Returns 0.5
+''
+function sind(x)
+
+
+''
+' Calculate cosine of `x` in degrees
+'
+' @param number x An angle expressed in degrees
+'
+' @return number Returns the cosine of `x` in degrees
+'
+' @example
+' cosd(60)   ' Returns 0.5
+''
+function cosd(x)
+
+
+''
+' Calculate tangent of `x` in degrees
+'
+' @param number x An angle expressed in degrees
+'
+' @return number Returns the tangent of `x` in degrees
+'
+' @example
+' tand(45)   ' Returns 1
+''
+function tand(x)
+
+
+''
+' Calculate inverse sine of `x`, expressed in radians
+'
+' @param number x A value between -1 and 1
+'
+' @return number Returns the inverse sine of `x`, expressed in radians
+'
+' @example
+' asin(0.5)   ' Returns 0.523599
+''
+function asin(x)
+
+
+''
+' Calculate inverse cosine of `x`, expressed in radians
+'
+' @param number x A value between -1 and 1
+'
+' @return number Returns the inverse cosine of `x`, expressed in radians
+'
+' @example
+' acos(0.5)   ' Returns 1.0472
+''
+function acos(x)
+
+
+''
+' Calculate inverse tangent of `x`, expressed in radians
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the inverse tangent of `x`, expressed in radians
+'
+' @example
+' atan(1)   ' Returns 0.785398
+''
+function atan(x)
+
+
+''
+' Calculate inverse sine of `x`, expressed in degrees
+'
+' @param number x A value between -1 and 1
+'
+' @return number Returns the inverse sine of `x`, expressed in degrees
+'
+' @example
+' asind(0.5)   ' Returns 30
+''
+function asind(x)
+
+
+''
+' Calculate inverse cosine of `x`, expressed in degrees
+'
+' @param number x A value between -1 and 1
+'
+' @return number Returns the inverse cosine of `x`, expressed in degrees
+'
+' @example
+' acosd(0.5)   ' Returns 60
+''
+function acosd(x)
+
+
+''
+' Calculate inverse tangent of `x`, expressed in degrees
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the inverse tangent of `x`, expressed in degrees
+'
+' @example
+' atand(1)   ' Returns 45
+''
+function atand(x)
+
+
+''
+' Calculate hyperbolic sine of `x`
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the hyperbolic sine of `x`
+'
+' @example
+' sinh(1)   ' Returns 1.1752
+''
+function sinh(x)
+
+
+''
+' Calculate hyperbolic cosine of `x`
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the hyperbolic cosine of `x`
+'
+' @example
+' cosh(1)   ' Returns 1.54308
+''
+function cosh(x)
+
+
+''
+' Calculate hyperbolic tangent of `x`
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the hyperbolic tangent of `x`
+'
+' @example
+' tanh(1)   ' Returns 0.761594
+''
+function tanh(x)
+
+
+''
+' Calculate inverse hyperbolic sine of `x`
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the inverse hyperbolic sine of `x`
+'
+' @example
+' asinh(1.1752)   ' Returns 0.999999
+''
+function asinh(x)
+
+
+''
+' Calculate inverse hyperbolic cosine of `x`
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the inverse hyperbolic cosine of `x`
+'
+' @example
+' acosh(1.54308)   ' Returns 0.999999
+''
+function acosh(x)
+
+
+''
+' Calculate inverse hyperbolic tangent of `x`
+'
+' @param number x A value to be calculated
+'
+' @return number Returns the inverse hyperbolic tangent of `x`
+'
+' @example
+' atanh(0.761594)   ' Returns 1
+''
+function atanh(x)
+
+
+''
+' Get absolute value of `x`
+'
+' @param number x A value
+'
+' @return number Returns the absolute value of `x`
+'
+' @example
+' abs(-20)   ' Returns 20
+' abs(20)    ' Returns 20
+''
+function abs(x)
+
+
+''
+' Get sign of a number
+'
+' @param number x A value
+'
+' @return number Returns 1 if `x` > 0, returns -1 if `x` < 0, and returns 0 if `x` = 0
+'
+' @example
+' sign(-20)   ' Returns -1
+' sign(20)    ' Returns 1
+' sign(0)     ' Return 0
+''
+function sign(x)
+
+
+''
+' Calculate square root of `x`
+'
+' @param number x A value
+'
+' @return number Returns the square root of `x`
+'
+' @example
+' sqrt(16)   ' Returns 4
+''
+function sqrt(x)
+
+
+''
+' Calculate base-<span style="font-family: serif;"><i>e</i></span> exponential function of `x`.
+' <span style="font-family: serif;">exp(<i>x</i>) = <i>e<sup>x</sup></i></span>
+'
+' @param number x Value of the exponent
+'
+' @return number Returns the exponential of `x`
+'
+' @example
+' exp(2)   ' Returns 7.38906
+''
+function exp(x)
+
+
+''
+' Calculate natural logarithm (base-<span style="font-family: serif;"><i>e</i></span>) of `x`
+'
+' @param number x A value
+'
+' @return number Returns the natural logarithm of `x`
+'
+' @example
+' ln(math_e)   ' Returns 1
+''
+function ln(x)
+
+
+''
+' Calculate base-10 logarithm of `x`
+'
+' @param number x A value
+'
+' @return number Returns the base-10 logarithm of `x`
+'
+' @example
+' log(10)   ' Returns 1
+''
+function log(x)
+
+
+''
+' Calculate base-`n` logarithm of `x`
+'
+' @param number x A value to be calculated
+' @param number n Base value
+'
+' @return number Returns the base-`n` logarithm of `x`
+'
+' @example
+' logn(8, 2)   ' Returns 3
+''
+function logn(x, n)
+
+
+''
+' Round `x` downward
+'
+' @param number x A value
+'
+' @return number Returns the value of `x` rounded downward
+'
+' @example
+' floor(23.6)   ' Returns 23
+' 
+' ' The difference between floor, ceil, round, and int
+'
+' ' x       floor(x)   ceil(x)   round(x, 0)   int(x)
+' ' -----   --------   -------   -----------   ------
+' '  2.3     2          3         2             2
+' '  3.8     3          4         4             3
+' '  5.5     5          6         6             5
+' ' -2.3    -3         -2        -2            -2
+' ' -3.8    -4         -3        -4            -3
+' ' -5.5    -6         -5        -6            -5
+''
+function floor(x)
+
+
+''
+' Round `x` upward
+'
+' @param number x A value
+'
+' @return number Returns the value of `x` rounded upward
+'
+' @example
+' ceil(23.6)   ' Returns 24
+' 
+' ' The difference between floor, ceil, round, and int
+'
+' ' x       floor(x)   ceil(x)   round(x, 0)   int(x)
+' ' -----   --------   -------   -----------   ------
+' '  2.3     2          3         2             2
+' '  3.8     3          4         4             3
+' '  5.5     5          6         6             5
+' ' -2.3    -3         -2        -2            -2
+' ' -3.8    -4         -3        -4            -3
+' ' -5.5    -6         -5        -6            -5
+''
+function ceil(x)
+
+
+''
+' Round `x` to specified `precision`
+'
+' @param number x A value
+' @param number [precision] Precision value. The default value is 0
+'
+' @return number Returns the rounded value
+'
+' @example
+' round(23.6)        ' Returns 24
+' round(23.728, 2)   ' Returns 23.73
+' 
+' ' The difference between floor, ceil, round, and int
+'
+' ' x       floor(x)   ceil(x)   round(x, 0)   int(x)
+' ' -----   --------   -------   -----------   ------
+' '  2.3     2          3         2             2
+' '  3.8     3          4         4             3
+' '  5.5     5          6         6             5
+' ' -2.3    -3         -2        -2            -2
+' ' -3.8    -4         -3        -4            -3
+' ' -5.5    -6         -5        -6            -5
+''
+function round(x, precision = 0)
+
+
+''
+' Convert `x` to integer value
+'
+' @param number x A value
+'
+' @return number Returns the integer value of `x`
+'
+' @example
+' int(23.6)    ' Returns 23
+' int(-23.2)   ' Returns -23
+' 
+' ' The difference between floor, ceil, round, and int
+'
+' ' x       floor(x)   ceil(x)   round(x, 0)   int(x)
+' ' -----   --------   -------   -----------   ------
+' '  2.3     2          3         2             2
+' '  3.8     3          4         4             3
+' '  5.5     5          6         6             5
+' ' -2.3    -3         -2        -2            -2
+' ' -3.8    -4         -3        -4            -3
+' ' -5.5    -6         -5        -6            -5
+''
+function int(x)
+
+
+''
+' Get random value between `min` and `max`
+'
+' @param number min Minimum value
+' @param number max Maximum value
+'
+' @return number Returns the random value
+'
+' @example
+' random(1, 100)   ' Returns random value between 1 and 100
+''
+function random(min, max)
+
+
+''
+' Get random integer value between `min` and `max`
+'
+' @param number min Minimum value
+' @param number max Maximum value
+'
+' @return number Returns the random integer value
+'
+' @example
+' randomint(1, 100)   ' Returns random integer value between 1 and 100
+''
+function randomint(min, max)

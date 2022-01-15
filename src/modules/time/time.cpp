@@ -10,9 +10,6 @@
 -------------------------------------------------------------------
  Module - Date and Time
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include <chrono>
@@ -27,7 +24,7 @@
     #include "mingw.thread.h"
 #endif
 
-#include "module.h"
+#include "dinfio_module.h"
 
 using namespace std::chrono;
 

@@ -10,9 +10,6 @@
 -------------------------------------------------------------------
  Module - GUI using wxWidgets
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include <map>
@@ -26,7 +23,7 @@
 #include <wx/dirdlg.h>
 #include <wx/clipbrd.h>
 
-#include "module.h"
+#include "dinfio_module.h"
 
 #define __GUI_WINDOW__ 1
 #define __GUI_PANEL__ 2

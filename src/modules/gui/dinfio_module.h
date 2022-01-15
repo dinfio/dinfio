@@ -15,12 +15,10 @@
 ------------------------------------------------------------
 */
 
-#ifndef __MODULE_H__
-#define __MODULE_H__
+#ifndef __DINFIO_MODULE_H__
+#define __DINFIO_MODULE_H__
 
 #include <iostream>
-#include <ostream>
-#include <sstream>
 #include <string>
 #include <vector>
 #include <unordered_map>

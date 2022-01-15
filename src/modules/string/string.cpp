@@ -10,13 +10,10 @@
 -------------------------------------------------------------------
  Module - String
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include <map>
-#include "module.h"
+#include "dinfio_module.h"
 
 Connector* connector;
 uint_fast16_t __string_split, __string_length, __string_toascii, __string_fromascii, __string_trim, __string_ltrim, __string_rtrim;

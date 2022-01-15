@@ -10,9 +10,6 @@
 -------------------------------------------------------------------
  Module - Math
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include <random>
@@ -21,7 +18,7 @@
 #include <chrono>
 #endif
 
-#include "module.h"
+#include "dinfio_module.h"
 
 Connector* connector;
 uint_fast16_t __math_getnumber, __math_sin, __math_cos, __math_tan, __math_sind, __math_cosd, __math_tand;

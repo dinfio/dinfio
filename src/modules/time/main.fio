@@ -1,0 +1,322 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: Date and Time
+' -------------------------------------------------
+
+''
+' This module provides date and time functions. e.g. `now()`, `datetime()`, `current_millis()`, etc.
+'
+' @brief Date and Time module
+''
+function time::init()
+
+
+''
+' Get current Unix timestamp in seconds
+'
+' @return number Current Unix timestamp in seconds
+'
+' @example
+' import time
+'
+' date = now()
+' get_year(date)   ' Returns 2021 (current year)
+''
+function now()
+
+
+''
+' Get current Unix timestamp in milliseconds
+'
+' @return number Current Unix timestamp in milliseconds
+'
+' @example
+' import time
+'
+' s = current_millis()
+' ' Do stuff
+' e = current_millis() - s
+'
+' writeln("Elapsed time: " & e & " ms")
+''
+function current_millis()
+
+
+''
+' Calculate the difference in seconds between two dates (`date1` and `date2`)
+'
+' @param number date1 Date 1 (Unix timestamp in seconds)
+' @param number date2 Date 2 (Unix timestamp in seconds)
+'
+' @return number The result of difference in seconds
+'
+' @example
+' import time
+'
+' date1 = create_datetime(2021, 12, 22, 2, 45, 9)
+' date2 = create_datetime(2021, 12, 20, 2, 45, 9)
+'
+' writeln(time_diff(date1, date2) & " seconds")                 ' 172800 seconds
+' writeln(time_diff(date1, date2) \ 60 & " minutes")            ' 2880 minutes
+' writeln(time_diff(date1, date2) \ (60 * 60) & " hours")       ' 48 hours
+' writeln(time_diff(date1, date2) \ (24 * 60 * 60) & " days")   ' 2 days
+''
+function time_diff(date1, date2)
+
+
+''
+' Format a date time
+'
+' @param string format Date time format. The format follows <a href="https://en.cppreference.com/w/c/chrono/strftime" target="__blank">C/C++ std::strftime() format</a>. The default value is `"%F %T"`
+' @param number [timestamp] Unix timestamp in seconds. The default value is current date time (`now()`)
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return string Returns formatted date time
+'
+' @example
+' import time
+'
+' datetime("%A, %e %B %Y - %H:%M:%S %Z")   ' Returns "Saturday, 17 April 2021 - 09:51:22 WIB"
+'                                          ' (current date time)
+''
+function datetime(format = "%F %T", timestamp = now(), utc = false)
+
+
+''
+' Create a Unix timestamp (in seconds)<!---> from the given year, month, day, hour, minute, and second
+'
+' @param number year Year value
+' @param number month Month value (1 to 12)
+' @param number day Day value (1 to 31)
+' @param number [hour] Hour value (0 to 23). The default value is 0
+' @param number [minute] Minute value (0 to 59). The default value is 0
+' @param number [second] Second value (0 to 59). The default value is 0
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns Unix timestamp in seconds
+'
+' @example
+' import time
+'
+' date1 = create_datetime(2021, 12, 22)
+' date2 = create_datetime(2021, 12, 20, 2, 45, 9)
+''
+function create_datetime(year, month, day, hour = 0, minute = 0, second = 0, utc = false)
+
+
+''
+' Set date time locale
+'
+' @param string locale System-specific locale identifier. For example: `"id_ID"`
+'
+' @return boolean Always returns `true`
+'
+' @example
+' import time
+'
+' set_timelocale("de_DE")
+' datetime("%A, %e. %B %Y", create_datetime(2021, 3, 10))   ' Returns "Mittwoch, 10. März 2021"
+''
+function set_timelocale(locale)
+
+
+''
+' Get year value from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns year value
+'
+' @example
+' import time
+'
+' get_year()
+' get_year(create_datetime(2021, 12, 22))
+''
+function get_year(timestamp = now(), utc = false)
+
+
+''
+' Get month value (1 to 12) from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns month value
+'
+' @example
+' import time
+'
+' get_month()
+' get_month(create_datetime(2021, 12, 22))
+''
+function get_month(timestamp = now(), utc = false)
+
+
+''
+' Get day value (1 to 31) from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns day value
+'
+' @example
+' import time
+'
+' get_day()
+' get_day(create_datetime(2021, 12, 22))
+''
+function get_day(timestamp = now(), utc = false)
+
+
+''
+' Get week day value (0 to 6, where Sunday is 0)<!---> from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns week day value
+'
+' @example
+' import time
+'
+' get_weekday()
+' get_weekday(create_datetime(2021, 12, 22))
+''
+function get_weekday(timestamp = now(), utc = false)
+
+
+''
+' Get year day value (1 to 365, since January 1st)<!---> from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns year day value
+'
+' @example
+' import time
+'
+' get_yearday()
+' get_yearday(create_datetime(2021, 12, 22))
+''
+function get_yearday(timestamp = now(), utc = false)
+
+
+''
+' Get hour value (0 to 23) from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns hour value
+'
+' @example
+' import time
+'
+' get_hour()
+' get_hour(create_datetime(2021, 12, 22, 8, 30, 56))
+''
+function get_hour(timestamp = now(), utc = false)
+
+
+''
+' Get minute value (0 to 59) from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns minute value
+'
+' @example
+' import time
+'
+' get_minute()
+' get_minute(create_datetime(2021, 12, 22, 8, 30, 56))
+''
+function get_minute(timestamp = now(), utc = false)
+
+
+''
+' Get second value (0 to 59) from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns second value
+'
+' @example
+' import time
+'
+' get_second()
+' get_second(create_datetime(2021, 12, 22, 8, 30, 56))
+''
+function get_second(timestamp = now(), utc = false)
+
+
+''
+' Get Daylight Saving Time flag from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return number Returns Daylight Saving Time flag value
+'
+' @example
+' import time
+'
+' is_dst()
+''
+function is_dst(timestamp = now(), utc = false)
+
+
+''
+' Get timezone abbreviation from the given timestamp
+'
+' @param number [timestamp] Unix timestamp in seconds. The default value is `now()`
+' @param boolean [utc] Timestamp in UTC. The default value is `false`
+'
+' @return string Returns timezone abbreviation value
+'
+' @example
+' import time
+'
+' get_timezone()
+''
+function get_timezone(timestamp = now(), utc = false)
+
+
+''
+' Pause the program for the amount of time (in milliseconds)
+'
+' @param number milliseconds Total milliseconds to sleep
+'
+' @example
+' import asynchronous
+'
+' writeln("Sleep for 1 second")
+' sleep(1000)
+' writeln("Done.")
+''
+function sleep(milliseconds)
+
+
+''
+' Pause the program for the amount of time (in seconds)
+'
+' @param number seconds Total seconds to sleep
+'
+' @example
+' import asynchronous
+'
+' writeln("Sleep for 1 second")
+' sleep_s(1)
+' writeln("Done.")
+''
+function sleep_s(seconds)

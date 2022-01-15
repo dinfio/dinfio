@@ -10,13 +10,10 @@
 -------------------------------------------------------------------
  Module - Advanced Readline
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include "linenoise.hpp"
-#include "module.h"
+#include "dinfio_module.h"
 
 Connector* connector;
 uint_fast16_t __rl, __rl_loadhistory, __rl_addhistory, __rl_savehistory;

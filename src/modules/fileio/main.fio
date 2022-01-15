@@ -1,0 +1,572 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: File I/O
+' -------------------------------------------------
+
+''
+' This module provides file input and output operations
+'
+' @brief File I/O module
+' @example_file sample.fio
+''
+function fileio::init()
+    ''
+    ' File mode: Append. Set the position indicator to the end of the file before each output operation
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_append)
+    ' f.write("Hello")
+    ' f.close()
+    ''
+    global file_append = 0x01
+
+
+    ''
+    ' File mode: Read. Allow input operations on the file
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    ' line = f.readln()
+    ' f.close()
+    ''
+    global file_read = 0x08
+
+
+    ''
+    ' File mode: Write. Allow output operations on the file
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_write)
+    ' f.writeln("Hello!")
+    ' f.close()
+    ''
+    global file_write = 0x10
+
+
+    ''
+    ' File mode: Binary. Open file as binary rather than text<!---->. This mode must be combined with `file_read` and/or `file_write`.
+    ' For example: `file_binary + file_read`, `file_binary + file_write`, or `file_binary + file_read + file_write`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.bin", file_binary + file_read)
+    ' byte = f.readbyte(0)
+    ' f.close()
+    ''
+    global file_binary = 0x04
+
+
+    ''
+    ' File mode: Truncate. When the file is opened, the old contents are immediately removed<!---->. This mode should be combined with `file_write`.
+    ' For example: `file_write + file_truncate`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_write + file_truncate)
+    ' f.writeln("Hello!")
+    ' f.close()
+    ''
+    global file_truncate = 0x20
+
+
+    ' This module is not allowed on the Playground
+
+    exit("import fileio: this module is disabled for security reason")
+stop
+
+
+''
+' Get size of a file (in bytes)
+'
+' @param string filename Path to the file
+'
+' @return number Returns the file size
+'
+' @example
+' import fileio
+'
+' filesize("myfile.txt")
+''
+function filesize(filename)
+
+
+''
+' Check whether a file exists
+'
+' @param string filename Path to the file
+'
+' @return boolean Returns `true` if file is exist, and returns `false` if otherwise
+'
+' @example
+' import fileio
+'
+' fileexists("/path/to/myfile.txt")
+''
+function fileexists(filename)
+
+
+''
+' Get content of a text file
+'
+' @param string filename Path to the file
+'
+' @return string Returns the text file content
+'
+' @example
+' import fileio
+'
+' content = filecontent("myfile.txt")
+''
+function filecontent(filename)
+
+
+''
+' Write content to a file
+'
+' @param string filename Path to the file
+' @param string content Content to be written to `filename`
+' @param boolean [is_append] If `is_append` is `true`, then `content` will be appended to the end of the file.
+' The default value is `false`
+'
+' @return boolean Returns `true` if succeed, and returns `false` if otherwise
+'
+' @version_min 3.1.06
+'
+' @example
+' import fileio
+'
+' fileput("log.txt", "some log\n")
+' fileput("log.txt", "another log\n", true)
+''
+function fileput(filename, content, is_append = false)
+
+
+''
+' Get current executed .fio file
+'
+' @return string Returns the .fio file path
+'
+' @example
+' import fileio
+'
+' writeln(getcurrentfile())
+'
+' ' For example you run:
+' ' clara@clara-pc:~/Documents$ dinfio hello.fio
+' ' /home/clara/Documents/hello.fio
+''
+function getcurrentfile()
+
+
+''
+' Get current working directory
+'
+' @return string Returns the current working directory
+'
+' @example
+' import fileio
+'
+' writeln(getcurrentdirectory())
+'
+' ' For example you run:
+' ' clara@clara-pc:~/Documents$ dinfio hello.fio
+' ' /home/clara/Documents
+''
+function getcurrentdirectory()
+
+
+''
+' Get absolute path
+'
+' @param string path Path to the file/folder
+'
+' @return string Returns the full path of a file/folder
+'
+' @example
+' import fileio
+'
+' getabsolutepath("file.txt")   ' Returns "/path/to/file.txt"
+''
+function getabsolutepath(path)
+
+''
+' Get folder name of a path
+'
+' @param string path Path to the file/folder
+'
+' @return string Returns the folder name
+'
+' @example
+' import fileio
+'
+' getfoldername("/path/to/file.txt")   ' Returns "/path/to"
+''
+function getfoldername(path)
+
+
+''
+' Get file name of a path
+'
+' @param string path Path to the file/folder
+'
+' @return string Returns the file name
+'
+' @example
+' import fileio
+'
+' getfilename("/path/to/file.txt")   ' Returns "file.txt"
+''
+function getfilename(path)
+
+
+''
+' Remove a file
+'
+' @param string path Path to the file
+'
+' @return boolean Returns `true` if file successfully deleted, and returns `false` if otherwise
+'
+' @example
+' import fileio
+'
+' deletefile("/path/to/file.txt")
+''
+function deletefile(path)
+
+
+''
+' Remove a folder<!---->. Note: folder's contents must be empty before deleted
+'
+' @param string path Path to the folder
+'
+' @return boolean Returns `true` if folder successfully deleted, and returns `false` if otherwise
+'
+' @example
+' import fileio
+'
+' deletefolder("/path/to/folder")
+''
+function deletefolder(path)
+
+
+''
+' Get list of directories of a specified path
+'
+' @param string path Path to the directory
+' @param boolean [full_path] If `full_path` is `true` then the result will be prefixed with `path`.
+' The default value is `false`
+'
+' @return array Returns the list of directories
+'
+' @example
+' import fileio
+'
+' dirs = listdirs("/path/to/dir")
+''
+function listdirs(path, full_path = false)
+
+
+''
+' Get list of files of a specified path
+'
+' @param string path Path to the directory
+' @param boolean [full_path] If `full_path` is `true` then the result will be prefixed with `path`.
+' The default value is `false`
+'
+' @return array Returns the list of files
+'
+' @example
+' import fileio
+'
+' files = listfiles("/path/to/dir")
+''
+function listfiles(path, full_path = false)
+
+
+''
+' Provides file operations
+'
+' @example
+' import fileio
+'
+' f = file("data.txt", file_write)
+' f.writeln("Hello!")
+' f.close()
+''
+class file
+    ''
+    ' Store the file name
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    ' writeln(f.name)   ' Output: data.txt
+    ' f.close()
+    ''
+    field name
+
+
+    ''
+    ' Store the file mode
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    ' writeln(f.mode)   ' Output: 8
+    ' f.close()
+    ''
+    field mode
+
+
+    ''
+    ' The constructor. Create an instance of class `file` and open a file
+    '
+    ' @param string filename File name to be opened
+    ' @param number mode File mode
+    '
+    ' @return file Returns the instance of class `file` and handle to the opened file. If file cannot be opened then `nothing` is returned
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_write)
+    '
+    ' if !is_nothing(f)
+    '     ' Success, do something here
+    ' else
+    '     writeln("Failed to open the file")
+    ' endif
+    ''
+    function construct(filename, mode)
+
+
+    ''
+    ' Read a single sequence from the opened file
+    '
+    ' @return number|string|boolean Returns single sequence from the opened file.
+    ' The return value is automatically converted to number, string, or boolean
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    '
+    ' data1 = f.read()
+    ' data2 = f.read()
+    '
+    ' f.close()
+    ''
+    function read()
+
+
+    ''
+    ' Read a single line from the opened file
+    '
+    ' @return number|string|boolean Returns single line from the opened file.
+    ' The return value is automatically converted to number, string, or boolean
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    '
+    ' line1 = f.readln()
+    ' line2 = f.readln()
+    '
+    ' f.close()
+    ''
+    function readln()
+
+
+    ''
+    ' Write `value` to the opened file
+    '
+    ' @param any value A value to be written
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_write)
+    ' f.write("Hello!")
+    ' f.close()
+    ''
+    function write(value)
+
+
+    ''
+    ' Write `value` & new line (`\n`) to the opened file
+    '
+    ' @param any value A value to be written
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_write)
+    ' f.writeln("Hello!")
+    ' f.close()
+    ''
+    function writeln(value)
+
+
+    ''
+    ' Read a single byte from the opened file (binary mode)
+    '
+    ' @param number position Byte position to be read
+    '
+    ' @return number Returns single byte
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.bin", file_binary + file_read)
+    '
+    ' b1 = f.readbyte(0x01)   ' Read 1 byte from the position 1
+    ' b2 = f.readbyte(0x02)   ' Read 1 byte from the position 2
+    '
+    ' f.close()
+    ''
+    function readbyte(position)
+
+
+    ''
+    ' Read multiple bytes from the opened file and convert them to string (binary mode)
+    '
+    ' @param number position Start byte position to be read
+    ' @param number total_bytes Total bytes to be read
+    '
+    ' @return string Returns bytes string
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.bin", file_binary + file_read)
+    ' data = f.readstring(0x01, 8)   ' Read 8 bytes from the position 1
+    ' f.close()
+    ''
+    function readstring(position, total_bytes)
+
+
+    ''
+    ' Write a single byte to the opened file (binary mode)
+    '
+    ' @param number value Byte to be written
+    ' @param number position Position where `value` will be written
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.bin", file_binary + file_write)
+    '
+    ' f.writebyte(0x0a, 0x00)   ' Write 1 byte to the position 0
+    ' f.writebyte(0x0f, 0x01)   ' Write 1 byte to the position 1
+    '
+    ' f.close()
+    ''
+    function writebyte(value, position)
+
+
+    ''
+    ' Write multiple bytes to the opened file (binary mode)
+    '
+    ' @param string value Bytes to be written (in string sequence)
+    ' @param number position Position where `value` will be written
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.bin", file_binary + file_write)
+    ' f.writestring("Hello", 0x0)   ' Write 5 bytes to the position 0
+    ' f.close()
+    ''
+    function writestring(value, position)
+
+
+    ''
+    ' Check whether file pointer is at the end-of-file (EOF) or not
+    '
+    ' @return boolean Returns `true` if file pointer is at EOF, and returns `false` if otherwise
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    '
+    ' while !f.eof()
+    '     line = f.readln()
+    ' endwhile
+    '
+    ' f.close()
+    ''
+    function eof()
+
+
+    ''
+    ' Get size of the file associated with the handle
+    '
+    ' @return number Returns the file size (in bytes)
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    ' s = f.size()
+    ' f.close()
+    ''
+    function size()
+
+
+    ''
+    ' Close the file associated with the handle and disassociate it
+    '
+    ' @return boolean Always returns `true`
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_read)
+    ' f.close()
+    ''
+    function close()
+
+
+    ''
+    ' Close the current handle and reopen a file
+    '
+    ' @param string filename File name to be opened
+    ' @param number mode File mode
+    '
+    ' @return boolean Returns `true` if file can be opened, and returns `false` if otherwise
+    '
+    ' @version_min 3.1.06
+    '
+    ' @example
+    ' import fileio
+    '
+    ' f = file("data.txt", file_write)     ' f is associated to file data.txt
+    ' f.reopen("another.txt", file_read)   ' f is now associated to file another.txt
+    ' f.close()
+    ''
+    function reopen(filename, mode)
+endclass

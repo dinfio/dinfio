@@ -10,13 +10,10 @@
 -------------------------------------------------------------------
  Module - Regular Expression (Regex)
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 #include <regex>
-#include "module.h"
+#include "dinfio_module.h"
 
 Connector* connector;
 uint_fast16_t __regex_match, __regex_search, __regex_replace;

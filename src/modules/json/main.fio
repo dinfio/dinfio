@@ -1,0 +1,77 @@
+' -------------------------------------------------
+'  Dinfio Programming Language
+' -------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' -------------------------------------------------
+'  Module: JSON
+' -------------------------------------------------
+
+''
+' JSON encoder and decoder module. This module supports RFC 8259 JSON Standard.
+'
+' @brief JSON encoder and decoder module
+' @example_file sample.fio
+''
+function json::init()
+    ''
+    ' A default instance of class `json`
+    ''
+    global json: json
+stop
+
+
+''
+' Main class that implements encoder, decoder, and error information.
+' Note: This class has no instantiation (constructor) method, please use constant `json` instead
+''
+class json
+    ''
+    ' Convert `value` to a JSON string
+    '
+    ' @param object value An object to be encoded
+    ' @param number [indent] If `indent` > 0, then JSON string will be prettified with that indent level.
+    ' If `indent` is -1, then the most compact JSON string is returned. If `indent` is 0, then no indentation.
+    ' The default value is -1
+    ' @param string [indent_char] The character to be used for indentation. The default value is " "
+    '
+    ' @return string A JSON string
+    '
+    ' @example
+    ' request = json.encode({
+    '     "id": "A23",
+    '     "name": "Clara",
+    '     "age": 23
+    ' })
+    ''
+    function encode(value, indent = -1, indent_char = " ")
+
+
+    ''
+    ' Parse a JSON string
+    '
+    ' @param string json_string A JSON string to be parsed
+    '
+    ' @return any Parsed JSON value. In case of a parse error, it will return `nothing`
+    '
+    ' @example
+    ' response = json.decode("{\qname\q: \qClara\q, \qage\q: 23}")
+    ' writer(response)
+    ''
+    function decode(json_string)
+
+
+    ''
+    ' Get error information if `json.decode()` returns `nothing` (null)
+    '
+    ' @return string An error string
+    '
+    ' @example
+    ' response = json.decode("this is bad json")
+    '
+    ' if is_nothing(response)
+    '     writeln(json.get_error())
+    ' endif
+    ''
+    function get_error()
+endclass

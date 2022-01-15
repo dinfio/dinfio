@@ -10,9 +10,6 @@
 -------------------------------------------------------------------
  Module - URL
 -------------------------------------------------------------------
- Compilation Instruction:
-  - Please see ./compile.sh
--------------------------------------------------------------------
 */
 
 /*
@@ -21,7 +18,7 @@ NOTE: Add this if your libcurl version >= 7.56
 */
 
 #include <curl/curl.h>
-#include "module.h"
+#include "dinfio_module.h"
 
 Connector* connector;
 uint_fast16_t __url_get, __url_post;
