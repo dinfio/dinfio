@@ -1,0 +1,585 @@
+' --------------------------------------------------
+'  Dinfio Programming Language
+'  Version: 3.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Interactive Mode
+' --------------------------------------------------
+
+import fileio, string
+import regex, rl
+
+global __H_EMPTY__ = 0
+global __H_COMMENT__ = 1
+global __H_IF__ = 2
+global __H_ELSE__ = 3
+global __H_ELSE_IF__ = 4
+global __H_END_IF__ = 5
+global __H_WHILE__ = 6
+global __H_END_WHILE__ =  7
+global __H_FOR__ = 10
+global __H_END_FOR__ = 11
+global __H_RETURN__ = 12
+global __H_RETURN_VOID__ = 13
+global __H_YIELD__ = 14
+global __H_STOP__ = 15
+global __H_FUNCTION__ = 16
+global __H_EXIT_LOOP__ = 17
+global __H_VAR__ = 18
+global __H_GLOBAL__ = 19
+global __H_IMPORT__ = 20
+global __H_VARIABLE_ASSIGNMENT__ = 21
+global __H_VARIABLE_ASSIGNMENT_EXTENDED__ = 22
+global __H_PROCEDURE_CALL__ = 23
+global __H_CLASS__ = 24
+global __H_END_CLASS__ = 25
+global __H_FIELD__ = 26
+global __H_OTHER__ = 27
+
+global __STYLE_DEFAULT__ = 0x00
+global __STYLE_BOLD__ = 0x01
+global __STYLE_RED__ = 0x1F
+global __STYLE_GREEN__ = 0x20
+global __STYLE_GREY__ = 0x25
+
+global __BEEP__ = 0x07
+
+global last_commands = ""
+global batch_command = ""
+global printed_command = ""
+global last_functions = ""
+global last_classes = ""
+global functions = ""
+global classes = ""
+global void = ""
+
+global n_if = 0
+global n_for = 0
+global n_while = 0
+global n_function = 0
+global n_class = 0
+
+if dinfio.is_windows
+    global tmp = "__interactive"
+    global history = dinfio.path & "temp/history"
+else
+    global tmp = ".__interactive"
+    global history = unix_home() & ".dinfio_history"
+endif
+
+start
+    init()
+    loop()
+stop
+
+function init()
+    writeln("Welcome to Dinfio Interactive Mode")
+    writeln("Version: " & dinfio.version & " (" & dinfio.platform & ")\n")
+    writeln("Module math, string, time, and fileio are already imported.")
+    writeln("Type \qhelp\q to get help.\n")
+
+    last_commands = "import math, string, time, fileio\n"
+    void = "function __void(_ = 0); return true; stop"
+    
+    rl_loadhistory(history)
+    rl_setcompletion([
+        "class ", "for ", "if ", "else", "elseif ", "while ", "function ", "import ",
+        "endfor", "endif", "endwhile", "endclass", "stop",
+        "return", "yield", "break",
+        "help", "clear", "editor", "exit", "run ",
+        "field ", "var ", "global ",
+        "done", "cancel", "reset",
+        "write(", "writeln(", "writer("
+    ])
+stop
+
+function loop()
+    is_complete = true
+    complete_command = ""
+    
+    editor_mode = false
+    editor_line = 1
+    editor_content = ""
+
+    prompt = ""
+
+    while true
+        if !editor_mode
+            if !is_complete || n_if != 0 || n_for != 0 || n_while != 0 || n_function != 0 || n_class != 0
+                prompt = "   "
+            else
+                prompt = ">> "
+            endif
+        else
+            prompt = get_colourise(__STYLE_GREY__) & pad(str(editor_line), 4) & get_colourise(__STYLE_DEFAULT__) & "   "
+        endif
+
+        command = rl(prompt)
+        command = iif(command == nothing, "exit", remove_tabs(trim(command)))
+
+        if editor_mode || command != ""
+            if !editor_mode
+                if !found_semicolon(command)
+                    complete_command &= command
+                    is_complete = is_bracket_complete(complete_command)
+                    
+                    if is_complete
+                        if command == "exit"
+                            if n_if != 0 || n_for != 0 || n_while != 0 || n_function != 0 || n_class != 0
+                                n_if = 0
+                                n_for = 0
+                                n_while = 0
+                                n_function = 0
+                                n_class = 0
+
+                                batch_command = ""
+                                writeln()
+                            else
+                                rl_savehistory(history)
+                                deletefile(tmp)
+                                exit()
+                            endif
+                        elseif command == "clear"
+                            clear_terminal()
+                        elseif subleft(command, 4) == "run "
+                            colourise(__STYLE_BOLD__)
+                            colourise(__STYLE_GREEN__)
+
+                            run_file(substring(command, 4))
+
+                            colourise(__STYLE_DEFAULT__)
+                        elseif command == "editor"
+                            editor_content = "' You are entering editor mode.\n"
+                            editor_content &= "' Type \qdone\q to finish, or type \qcancel\q to cancel.\n\n"
+                            editor_content &= "import math, string, time, fileio\n"
+
+                            writeln(get_colourise(__STYLE_GREY__) & "   1" & get_colourise(__STYLE_DEFAULT__) & "   ' You are entering editor mode.")
+                            writeln(get_colourise(__STYLE_GREY__) & "   2" & get_colourise(__STYLE_DEFAULT__) & "   ' Type \qdone\q to finish, or type \qcancel\q to cancel.")
+                            writeln(get_colourise(__STYLE_GREY__) & "   3" & get_colourise(__STYLE_DEFAULT__) & "   ")
+                            writeln(get_colourise(__STYLE_GREY__) & "   4" & get_colourise(__STYLE_DEFAULT__) & "   import math, string, time, fileio")
+
+                            editor_line = 4
+                            editor_mode = true
+                        elseif command == "reset"
+                            last_commands = "import math, string, time, fileio\n"
+                            batch_command = ""
+                            printed_command = ""
+                            last_functions = ""
+                            last_classes = ""
+                            functions = ""
+                            classes = ""
+                        elseif command == "help"
+                            show_help()
+                        else
+                            header = parse_code(complete_command)
+
+                            if header == __H_FUNCTION__
+                                n_function += 1
+                            elseif header == __H_CLASS__
+                                n_class += 1
+                            endif
+
+                            if n_class > 0
+                                classes &= complete_command & "\n"
+                                printed_command = ""
+                            elseif n_function > 0
+                                functions &= complete_command & "\n"
+                                printed_command = ""
+                            else
+                                if header == __H_PROCEDURE_CALL__
+                                    if subleft(complete_command, 5) == "write" || n_if != 0 || n_for != 0 || n_while != 0 || n_function != 0 || n_class != 0
+                                        batch_command &= complete_command & "\n"
+                                        printed_command = ""
+                                    else
+                                        printed_command = "writer(" & complete_command & ")\n"
+                                    endif
+                                elseif header == __H_OTHER__
+                                    printed_command = "writer(" & complete_command & ")\n"
+                                else
+                                    batch_command &= complete_command & "\n"
+                                    printed_command = ""
+                                endif
+                            endif
+
+                            if header == __H_IF__
+                                n_if += 1
+                            elseif header == __H_END_IF__
+                                if n_if > 0; n_if -= 1; endif
+                            elseif header == __H_FOR__
+                                n_for += 1
+                            elseif header == __H_END_FOR__
+                                if n_for > 0; n_for -= 1; endif
+                            elseif header == __H_WHILE__
+                                n_while += 1
+                            elseif header == __H_END_WHILE__
+                                if n_while > 0; n_while -= 1; endif
+                            elseif header == __H_STOP__
+                                if n_function > 0; n_function -= 1; endif
+                            elseif header == __H_END_CLASS__
+                                if n_class > 0; n_class -= 1; endif
+                            endif
+
+                            if n_if == 0 && n_for == 0 && n_while == 0 && n_function == 0 && n_class == 0
+                                colourise(__STYLE_BOLD__)
+                                colourise(__STYLE_GREEN__)
+
+                                code = last_commands & batch_command & printed_command & last_functions & functions & last_classes & classes & "\n" & void
+                                result = run_code(code)
+
+                                if result == 0
+                                    last_commands &= clean_code(batch_command)
+                                    last_functions &= functions
+                                    last_classes &= classes
+                                else
+                                    beep()
+                                endif
+
+                                batch_command = ""
+                                functions = ""
+                                classes = ""
+
+                                colourise(__STYLE_DEFAULT__)
+                            endif
+                        endif
+
+                        complete_command = ""
+                    endif
+
+                    rl_addhistory(command)
+                else
+                    writeln("Semicolon (;) delimiter is not supported in interactive mode.")
+                endif
+            else
+                if command == "done"
+                    f = file(tmp, file_write)
+
+                    if f != nothing
+                        f.write(editor_content)
+                        f.close()
+
+                        colourise(__STYLE_BOLD__)
+                        colourise(__STYLE_GREEN__)
+
+                        result = execute("dinfio " & tmp)
+
+                        if result != 0
+                            beep()
+                        endif
+                    else
+                        colourise(__STYLE_DEFAULT__)
+                        colourise(__STYLE_RED__)
+
+                        write("Dinfio Interactive Mode: ")
+                        colourise(__STYLE_DEFAULT__)
+                        writeln("Permission denied on directory '" & getcurrentdirectory() & "'")
+
+                        beep()
+                    endif
+
+                    colourise(__STYLE_DEFAULT__)
+                    editor_mode = false
+                elseif command == "cancel"
+                    editor_mode = false
+                    writeln()
+                elseif command == "exit"
+                    rl_savehistory(history)
+                    deletefile(tmp)
+                    exit()
+                else
+                    editor_content &= command & "\n"
+                endif
+
+                if command != ""
+                    rl_addhistory(command)
+                endif
+            endif
+        endif
+
+        if editor_mode
+            editor_line += 1
+        endif
+    endwhile
+stop
+
+function run_code(code)
+    f = file(tmp, file_write)
+
+    if f == nothing
+        colourise(__STYLE_DEFAULT__)
+        colourise(__STYLE_RED__)
+
+        write("Dinfio Interactive Mode: ")
+        colourise(__STYLE_DEFAULT__)
+        writeln("Permission denied on directory '" & getcurrentdirectory() & "'")
+        beep()
+
+        return 1
+    endif
+
+    f.write(code)
+    f.close()
+
+    return execute("dinfio " & tmp & " -i")
+stop
+
+function run_file(filename)
+    result = execute("dinfio " & filename)
+
+    if result != 0
+        beep()
+    endif
+stop
+
+function clean_code(code)
+    return regex_replace("(write|writeln|writer)(\s*)\(", code, "__void(")
+stop
+
+function parse_code(line)
+    if substring(line, 0, 1) == "'" || substring(line, 0, 1) == "#"
+        header = __H_COMMENT__
+    elseif substring(line, 0, 3) == "if "
+        header = __H_IF__
+    elseif line == "endif"
+        header = __H_END_IF__
+    elseif line == "else"
+        header = __H_ELSE__
+    elseif substring(line, 0, 7) == "elseif "
+        header = __H_ELSE_IF__
+    elseif substring(line, 0, 6) == "while "
+        header = __H_WHILE__
+    elseif line == "endwhile"
+        header = __H_END_WHILE__
+    elseif substring(line, 0, 4) == "for "
+        header = __H_FOR__
+    elseif line == "endfor"
+        header = __H_END_FOR__
+    elseif substring(line, 0, 7) == "return "
+        header = __H_RETURN__
+    elseif substring(line, 0, 6) == "yield "
+        header = __H_YIELD__
+    elseif substring(line, 0, 9) == "function "
+        header = __H_FUNCTION__
+    elseif line == "stop"
+        header = __H_STOP__
+    elseif substring(line, 0, 6) == "class "
+        header = __H_CLASS__
+    elseif line == "endclass"
+        header = __H_END_CLASS__
+    elseif substring(line, 0, 6) == "field "
+        header = __H_FIELD__
+    elseif line == "break"
+        header = __H_EXIT_LOOP__
+    elseif substring(line, 0, 4) == "var "
+        header = __H_VAR__
+    elseif substring(line, 0, 7) == "global "
+        header = __H_GLOBAL__
+    elseif substring(line, 0, 7) == "import "
+        header = __H_IMPORT__
+    elseif line == "start"
+        header = __H_EMPTY__
+    elseif is_variable_assignment(remove_spaces(line))
+        header = __H_VARIABLE_ASSIGNMENT__
+    elseif find(line, "(") != -1 && substring(line, length(line) - 1, 1) == ")"
+        header = __H_PROCEDURE_CALL__
+    else
+        header = __H_OTHER__
+    endif
+
+    return header
+stop
+
+function is_variable_assignment(line)
+    if find(line, "=") != -1
+        s = split(line, "=", 2)
+        
+        if length(s[0]) > 1
+            r = substring(s[0], length(s[0]) - 2, 1)
+        else
+            r = s[0]
+        endif
+
+        if subright(s[0], 1) == "!" || subright(s[0], 1) == ">" || subright(s[0], 1) == "<"
+            return false
+        endif
+
+        if size(s) > 1
+            if subleft(s[1], 1) == "="
+                return false
+            endif
+        endif
+
+        if find(s[0], "(") == -1 || substring(s[0], length(s[0]) - 1, 1) == "]" || r == "]"
+            return true
+        endif
+    endif
+
+    return false
+stop
+
+function remove_spaces(line)
+    in_quotes = false
+    result = ""
+
+    for i, 0, length(line) - 1
+        m = substring(line, i, 1)
+
+        if m == "\q"
+            if in_quotes
+                in_quotes = false
+            else
+                in_quotes = true
+            endif
+        endif
+
+        if !in_quotes
+            if m != " "
+                result &= m
+            endif
+        else
+            result &= m
+        endif
+    endfor
+    
+    return result
+stop
+
+function remove_tabs(line)
+    in_quotes = false
+    result = ""
+
+    for i, 0, length(line) - 1
+        m = substring(line, i, 1)
+
+        if m == "\q"
+            if in_quotes
+                in_quotes = false
+            else
+                in_quotes = true
+            endif
+        endif
+
+        if !in_quotes
+            if m != "\t"
+                result &= m
+            endif
+        else
+            result &= m
+        endif
+    endfor
+    
+    return result
+stop
+
+function found_semicolon(line)
+    in_quotes = false
+    result = false
+
+    for i, 0, length(line) - 1
+        m = substring(line, i, 1)
+
+        if m == "\q"
+            if in_quotes
+                in_quotes = false
+            else
+                in_quotes = true
+            endif
+        endif
+
+        if !in_quotes
+            if m == ";"
+                return true
+            endif
+        endif
+    endfor
+    
+    return false
+stop
+
+function is_bracket_complete(line)
+    in_comment = false
+    in_quotes = false
+    n_parentheses = 0
+
+    for i, 0, length(line) - 1
+        m = substring(line, i, 1)
+
+        if m == "'" || m == "#"
+            if !in_quotes; in_comment = true; endif
+        endif
+
+        if m == "\q"
+            if in_quotes
+                in_quotes = false
+            else
+                in_quotes = true
+            endif
+        endif
+
+        if !in_comment && !in_quotes
+            if m == "("; n_parentheses += 1; endif
+            if m == ")"; n_parentheses -= 1; endif
+            if m == "["; n_parentheses += 1; endif
+            if m == "]"; n_parentheses -= 1; endif
+            if m == "{"; n_parentheses += 1; endif
+            if m == "}"; n_parentheses -= 1; endif
+        endif
+    endfor
+
+    return n_parentheses == 0
+stop
+
+function show_help()
+    writeln("- Type any syntax you want. For example:\n  \qa = 23\q\n  \qcos(a)\q")
+    writeln("- Type \qclear\q to clear terminal window")
+    writeln("- Type \qeditor\q to enter editor mode")
+    writeln("- Type \qrun <file>\q to run .fio file. For example: run hello.fio")
+    writeln("- Type \qreset\q to reset session")
+
+    if dinfio.is_mac
+        writeln("- Type \qexit\q or press ^C to quit from the current session")
+    else
+        writeln("- Type \qexit\q or press Ctrl+C to quit from the current session")
+    endif
+stop
+
+function clear_terminal()
+    if !dinfio.is_windows
+        execute("clear")
+    else
+        execute("cls")
+    endif
+stop
+
+function beep()
+    write(fromascii(__BEEP__))
+stop
+
+function unix_home()
+    execute("echo $HOME > /tmp/__unix_home")
+
+    directory = filecontent("/tmp/__unix_home")
+    deletefile("/tmp/__unix_home")
+
+    return subleft(directory, length(directory) - 1) & "/"
+stop
+
+function pad(str, n)
+    if length(str) >= n; return str; endif
+    return repeat(" ", n - length(str)) & str
+stop
+
+function colourise(colour_code)
+    if !dinfio.is_windows
+        write(fromascii(0x1b) & "[" & colour_code & "m")
+    endif
+stop
+
+function get_colourise(colour_code)
+    if !dinfio.is_windows
+        return fromascii(0x1b) & "[" & colour_code & "m"
+    else
+        return ""
+    endif
+stop

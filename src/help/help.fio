@@ -1,0 +1,19 @@
+' --------------------------------------------------
+'  Dinfio Programming Language
+'  Version: 3.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Help Text
+' --------------------------------------------------
+
+start
+    writeln("Usage: dinfio [file | option] [arg ...]\n")
+    writeln("file          File .fio to run")
+    writeln("arg ...       Arguments passed to programme\n")
+    writeln("Options:")
+    writeln("-h, --help    Print this help text")
+    writeln("-v, --version Show version number, platform, and build date\n")
+    writeln("If file, option, and arg are not provided, Dinfio will run in interactive mode.")
+stop
