@@ -9,7 +9,7 @@ After the source code downloaded, go to directory `dinfio`:
 ```
 $ cd dinfio
 ```
-
+<br>
 Open file [`src/header.h`](src/header.h), and point to  `__DINFIO_PATH__` constant (at line 44 or 51 or 58, depending on your platform):
 
 ``` cpp
@@ -21,7 +21,7 @@ Change the constant value with your build path (absolute path), for example:
 ``` cpp
 const string __DINFIO_PATH__ = "/home/faruq/Documents/dinfio/build/linux/";
 ```
-
+<br>
 And compile:
 
 - On Linux x86_64:
