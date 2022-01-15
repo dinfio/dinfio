@@ -50,6 +50,7 @@ $ ./compile_macos.sh
 ```
 > compile_windows.bat
 ```
+<br>
 
 Once it is compiled, go to your build path (for example: `cd build/linux`), and you can run Dinfio:
 
@@ -58,6 +59,7 @@ $ ./dinfio -v
 ```
 
 If you see the Dinfio version, then Dinfio is successfully compiled.
+<br>
 
 ## Required Build Tools and Libraries
 
