@@ -5,7 +5,7 @@ Before building Dinfio, please make sure you have all the [required build tools 
 $ git clone https://github.com/dinfio/dinfio.git
 ```
 
-After that, go to directory `dinfio`:
+After the source code downloaded, go to directory `dinfio`:
 ```
 $ cd dinfio
 ```
