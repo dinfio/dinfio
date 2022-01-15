@@ -5,10 +5,42 @@ Before building Dinfio, please make sure you have all the [required build tools 
 $ git clone https://github.com/dinfio/dinfio.git
 ```
 
+After that, go to directory `dinfio`:
+```
+$ cd dinfio
+```
+
+And compile:
+
+- On Linux x86_64:
+```
+$ ./compile_linux.sh
+```
+
+- On Linux ARMv7:
+```
+$ ./compile_linux_armv7.sh
+```
+
+- On Linux Docker:
+```
+$ ./compile_linux_docker.sh
+```
+
+- On macOS:
+```
+$ ./compile_macos.sh
+```
+
+- On Windows:
+```
+> compile_windows.bat
+```
+
 ## Required Build Tools and Libraries
 
-- [g++](https://gcc.gnu.org/) >= 4.8 &mdash; If you compile Dinfio on Linux
+- [g++](https://gcc.gnu.org/) >= 5.4 &mdash; If you compile Dinfio on Linux
 - [Clang](https://clang.llvm.org/) >= 9.0.0 &mdash; If you compile Dinfio on macOS
-- [MinGW with g++](https://sourceforge.net/projects/mingw/) >= 4.8 &mdash; If you compile Dinfio on Windows. MSVC is not tested yet
-- [libcurl](https://curl.se/libcurl/)
-- [wxWidgets](https://www.wxwidgets.org/) &mdash; If you want to use GUI module
+- [MinGW with g++](https://sourceforge.net/projects/mingw/) >= 9.2.0 &mdash; If you compile Dinfio on Windows. MSVC is not tested yet
+- [libcurl](https://curl.se/libcurl/) >= 7.47
+- [wxWidgets](https://www.wxwidgets.org/) >= 3.1.4 &mdash; If you want to use GUI module
