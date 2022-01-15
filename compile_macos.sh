@@ -18,7 +18,8 @@ echo "Preparing..."
 [ -d build/$PLATFORM/modules/example ] || mkdir build/$PLATFORM/modules/example
 [ -d build/$PLATFORM/modules/fileio ] || mkdir build/$PLATFORM/modules/fileio
 [ -d build/$PLATFORM/modules/gui ] || mkdir build/$PLATFORM/modules/gui
-[ -d build/$PLATFORM/modules/json ] || mkdir build/$PLATFORM/modules/math
+[ -d build/$PLATFORM/modules/json ] || mkdir build/$PLATFORM/modules/json
+[ -d build/$PLATFORM/modules/math ] || mkdir build/$PLATFORM/modules/math
 [ -d build/$PLATFORM/modules/regex ] || mkdir build/$PLATFORM/modules/regex
 [ -d build/$PLATFORM/modules/rl ] || mkdir build/$PLATFORM/modules/rl
 [ -d build/$PLATFORM/modules/standardio ] || mkdir build/$PLATFORM/modules/standardio
@@ -84,7 +85,7 @@ cp -f src/modules/zip/*.fio build/$PLATFORM/modules/zip/
 
 # Copy interactive and help
 
-cp -f src/interactive/* build/$PLATFORM/
-cp -f src/help/* build/$PLATFORM/
+cp -f src/interactive/*.fio build/$PLATFORM/
+cp -f src/help/*.fio build/$PLATFORM/
 
 echo "Compilation done."
