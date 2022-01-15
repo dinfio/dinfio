@@ -1,37 +1,8 @@
-## Welcome to GitHub Pages
+<p align="center">
+    <img src="https://dinfio.org/images/fio.png" alt="Dinfio" height="120px">
+    <h1 align="center">Dinfio Programming Language</h1>
+</p>
 
-You can use the [editor on GitHub](https://github.com/dinfio/dinfio/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/dinfio/dinfio/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Dinfio is a high-level, general-purpose, interpreted, minimalist, simple, and open source programming language. Dinfio supports multiple paradigms, including imperative, procedural, object-oriented, and event-driven programming.
+<br><br>&mdash;&mdash;<br>
+Repository: [https://github.com/dinfio/dinfio](https://github.com/dinfio/dinfio)
