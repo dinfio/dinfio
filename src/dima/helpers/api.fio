@@ -1,0 +1,81 @@
+' --------------------------------------------------
+'  Dima: Dinfio Module Manager
+'  Version: 1.0.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Helper: API
+' --------------------------------------------------
+
+function api::init()
+    if size(arguments) == 1
+        exit("Dima: Token is not provided")
+    endif
+
+    global __server__ = "https://dima.dinfio.net/api/"
+    global __token__ = arguments[1]
+    global __temp_dir__ = platform_windows(dinfio.path & "temp\", "/tmp/")
+    global __os__ = platform("linux", "macos", "windows")
+    global __gtk_version__ = 0   ' For Linux only
+
+    url::ssl_verify_peer(0)      ' Had to do it since some old machine failed to verify server certificate
+stop
+
+function call_api(request)
+    request.token = __token__
+    request.version = __version__
+    request.dinfio_version = dinfio.version
+    request.os = __os__
+    request.os_full = dinfio.platform
+    request.gtk_version = __gtk_version__
+
+    response = url.post(__server__, request)
+
+    if response.code == 200
+        data = json.decode(response.body)
+
+        if data != nothing
+            if data.rc == "00"
+                return data
+            else
+                exit("Dima: " & data.message)
+            endif
+        else
+            exit("Dima error: " & json.get_error())
+        endif
+    elseif response.code != 0
+        exit("Dima error: Unable to retrieve data from server (HTTP " & response.code & ")")
+    else
+        exit("Dima error: Unable to retrieve data from server (" & response.error_string & ")")
+    endif
+stop
+
+function download_module(module, target)
+    response = url.get(module.zip_url, "", {}, target, __download_progress())
+
+    if response.code == 200
+        writeln()
+    else
+        exit("Dima error: Unable to retrieve data from server (HTTP " & response.code & ")")
+    endif
+stop
+
+function __download_progress(downloaded, total_download, uploaded, total_upload)
+    write("Downloading... " & __bytes_unit(downloaded) & " of " &
+          __bytes_unit(total_download) & "                       \r")
+    
+    return 0
+stop
+
+function __bytes_unit(val)
+    if val >= 1073741824
+        return round(val / 1073741824, 2) & " GB"
+    elseif val >= 1048576
+        return round(val / 1048576, 2) & " MB"
+    elseif val >= 1024
+        return round(val / 1024, 2) & " kB"
+    else
+        return val & " B"
+    endif
+stop

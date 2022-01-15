@@ -1,0 +1,40 @@
+' --------------------------------------------------
+'  Dima: Dinfio Module Manager
+'  Version: 1.0.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Helper: Sorting
+' --------------------------------------------------
+
+function sort(data)
+    __quicksort(data, 0, size(data) - 1)
+    return true
+stop
+
+function __quicksort(data, low, high)
+    if low < high
+        pivot = data[high]
+        i = low - 1
+
+        for j, low, high - 1
+            if data[j] <= pivot
+                i += 1
+
+                temp = data[i]
+                data[i] = data[j]
+                data[j] = temp
+            endif
+        endfor
+
+        temp = data[i + 1]
+        data[i + 1] = data[high]
+        data[high] = temp
+
+        pivot = i + 1
+
+        __quicksort(data, low, pivot - 1)
+        __quicksort(data, pivot + 1, high)
+    endif
+stop

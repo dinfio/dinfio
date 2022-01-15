@@ -1,0 +1,21 @@
+' --------------------------------------------------
+'  Dima: Dinfio Module Manager
+'  Version: 1.0.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Helper: Miscellaneous
+' --------------------------------------------------
+
+function get_answer(possiblities, default, prompt)
+    answer = "\n"
+
+    while find(lcase(possiblities), answer) == -1
+        write(prompt)
+        answer = lcase(trim(readln()))
+        answer = iif(answer == "", default, answer)
+    endwhile
+
+    return answer
+stop

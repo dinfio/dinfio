@@ -1,0 +1,203 @@
+' --------------------------------------------------
+'  Dima: Dinfio Module Manager
+'  Version: 1.0.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Main Programme
+' --------------------------------------------------
+
+import math, string, fileio
+import url, json, zip
+import helpers/sorting
+import helpers/api
+import helpers/parser
+import helpers/misc
+
+global __version__ = "1.0.1"
+global __modules_path__ = platform_windows(dinfio.path & "modules\", dinfio.path & "modules/")
+
+start
+    ' Read the command
+
+    if size(arguments) == 2
+        show_usage()
+    else
+        command = arguments[2]
+
+        if command == "info"
+            get_info()
+        elseif command == "install"
+            install()
+        elseif command == "uninstall"
+            uninstall()
+        elseif command == "list"
+            show_list()
+        elseif command == "version" || command == "-v" || command == "--version"
+            show_version()
+        elseif command == "help" || command == "-h" || command == "--help"
+            show_usage()
+        else
+            exit("Dima: Unknown command " & command)
+        endif
+    endif
+stop
+
+function get_info()
+    if size(arguments) < 4
+        exit("Dima: Expected the module\nUsage: dima info <module>")
+    endif
+
+    request = {
+        command: "info",
+        module: arguments[3]
+    }
+
+    write("Retrieving information from server...\r")
+    data = call_api(request)
+
+    installed = parse(__modules_path__ & arguments[3] & "/main.fio")
+    
+    writeln(arguments[3] & ": " & data.description & "\n")
+    writeln("Latest version: " & data.version)
+
+    if installed == nothing
+        writeln("Installed version: Not installed yet")
+        writeln("Author: " & data.author)
+        writeln("\nSuggestion:\nType \qdima install " & arguments[3] & "\q to install the module")
+    else
+        writeln("Installed version: " & installed.version)
+        writeln("Author: " & data.author)
+
+        if installed.version_number < get_version_number(data.version)
+            if !data.builtin
+                writeln("\nSuggestion:\nType \qdima install " & arguments[3] & "\q to update the module to the latest version")
+            else
+                writeln("\nSuggestion:\nYou are using the older version of Dinfio, please go to https://dinfio.org/ to update")
+            endif
+        endif
+    endif
+stop
+
+function install()
+    if size(arguments) < 4
+        exit("Dima: Expected the module\nUsage: dima install <module>")
+    endif
+
+    module = arguments[3]
+
+    if fileexists(__modules_path__ & module & "/main.fio")
+        installed = parse(__modules_path__ & arguments[3] & "/main.fio")
+        confirmation = get_answer("yn", "n", "Module " & module & " " & installed.version & " is already installed. Do you want to reinstall/update it [y/N]? ")
+
+        if confirmation == "n"; exit(); endif
+    endif
+
+    request = {
+        command: "install",
+        module: module
+    }
+
+    write("Retrieving information from server...\r")
+    data = call_api(request)
+
+    writeln("This operation will install module " & module & " " & data.version &
+            " and " & __bytes_unit(data.zip_size) & " of additional disk space will be used.")
+    
+    confirmation = get_answer("yn", "y", "Do you want to continue [Y/n]? ")
+    if confirmation == "n"; exit(); endif
+    
+    dir = __temp_dir__ & module & "-" & data.version
+    zip_file = __temp_dir__ & data.zip
+    extras = platform_windows(dir & "\" & data.extras, dir & "/" & data.extras)
+    path = platform_windows(dir & "\" & data.path, dir & "/" & data.path)
+
+    if !fileexists(dir); execute("mkdir \q" & dir & "\q"); endif
+    writeln()
+    
+    download_module(data, zip_file)
+    zip.extract(zip_file, dir)
+
+    if !dinfio.is_windows
+        result = execute("sudo cp -rf \q" & path & "\q \q" & __modules_path__ & "\q")
+        if fileexists(extras); execute(extras); endif
+    else
+        if !fileexists(__modules_path__ & module); execute("mkdir \q" & __modules_path__ & module & "\q"); endif
+
+        result = execute("xcopy /E /H /Y /Q \q" & path & "\q \q" & __modules_path__ & module & "\q 1>NUL")
+        if fileexists(extras); execute(extras); endif
+    endif
+
+
+    ' Clean stuff
+
+    if !dinfio.is_windows
+        if fileexists(dir); execute("rm -rf \q" & dir & "\q"); endif
+        if fileexists(zip_file); execute("rm \q" & zip_file & "\q"); endif
+    else
+        if fileexists(dir); execute("rmdir \q" & dir & "\q /s /q"); endif
+        if fileexists(zip_file); execute("del \q" & zip_file & "\q"); endif
+    endif
+    
+    if result == 0
+        writeln("Module " & module & " " & data.version & " was successfully installed.")
+    else
+        writeln("Failed to install module " & module & " " & data.version & ".")
+    endif
+stop
+
+function uninstall()
+    if size(arguments) < 4
+        exit("Dima: Expected the module\nUsage: dima uninstall <module>")
+    endif
+
+    module = parse(__modules_path__ & arguments[3] & "/main.fio")
+    
+    if module == nothing; exit("Dima: Module " & arguments[3] & " is not installed yet."); endif
+    if module.author == ""; exit("Dima: Cannot uninstall built-in module " & arguments[3] & "."); endif
+
+    confirmation = get_answer("yn", "n", "Are you sure you want to uninstall module " & arguments[3] & " [y/N]? ")
+    
+    if confirmation == "y"
+        if !dinfio.is_windows
+            result = execute("sudo rm -rf " & __modules_path__ & arguments[3])
+        else
+            result = execute("rmdir \q" & __modules_path__ & arguments[3] & "\q /s /q")
+        endif
+
+        if result == 0
+            writeln("Module " & arguments[3] & " was successfully uninstalled.")
+        else
+            writeln("Unable to uninstall module " & arguments[3] & ".")
+        endif
+    endif
+stop
+
+function show_list()
+    modules = listdirs(__modules_path__)
+    sort(modules)
+
+    writeln("Installed modules:")
+
+    for i, 0, size(modules) - 1
+        writeln("- " & modules[i])
+    endfor
+stop
+
+function show_usage()
+    writeln("Usage: dima <command>\n")
+    writeln("command is:")
+    writeln("install <module>       Install a module")
+    writeln("info <module>          Show information about a module")
+    writeln("list                   List all installed modules")
+    writeln("uninstall <module>     Uninstall a module")
+    writeln("help, -h, --help       Print this help text")
+    writeln("version, -v, --version Show Dima version")
+stop
+
+function show_version()
+    writeln("Dima: Dinfio Module Manager\n")
+    writeln("Version: " & __version__)
+    writeln("Dinfio version: " & dinfio.version)
+stop

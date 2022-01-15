@@ -1,0 +1,134 @@
+' --------------------------------------------------
+'  Dima: Dinfio Module Manager
+'  Version: 1.0.1
+' --------------------------------------------------
+'  By: Muhammad Faruq Nuruddinsyah
+'  Copyright (C) 2014-2022. All Rights Reserved.
+' --------------------------------------------------
+'  Helper: Module info parser
+' --------------------------------------------------
+
+function parser::init()
+    global __comment__ = 1
+    global __function__ = 2
+stop
+
+function parse(file)
+    if !fileexists(file)
+        return nothing
+    endif
+
+    info = {
+        description: "",
+        brief: "",
+        version: dinfio.version,
+        version_number: get_version_number(dinfio.version),
+        author: "",
+        url: ""
+    }
+
+    current_comment = ""
+    start_doc = false
+
+    content = filecontent(file)
+    code = split(content, "\n")
+
+    for i, 0, size(code) - 1
+        c = __parse_line(trim(code[i]))
+
+        if c.header == __comment__
+            if c.start_doc
+                if !start_doc
+                    start_doc = true
+                    current_comment = ""
+                else
+                    start_doc = false
+                endif
+            else
+                if start_doc
+                    current_comment &= c.body & "\n"
+                endif
+            endif
+        endif
+
+        if c.header == __function__
+            if c.init
+                info = __parse_comment(current_comment)
+                current_comment = ""
+
+                break
+            endif
+        endif
+    endfor
+
+    return info
+stop
+
+function get_version_number(version)
+    return getnumber(replace(version, ".", ""))
+stop
+
+function __parse_line(line)
+    if subleft(line, 1) == "'"
+        return {
+            header: __comment__,
+            body: iif(length(line) > 1, rtrim(substring(line, 2)), ""),
+            start_doc: substring(line, 1, 1) == "'"
+        }
+    elseif subleft(line, 9) == "function "
+        body = trim(substring(line, 9))
+
+        return {
+            header: __function__,
+            init: find(body, "::init") != -1
+        }
+    endif
+
+    return {
+        header: 0
+    }
+stop
+
+function __parse_comment(comment)
+    var c = split(comment, "\n")
+
+    var description = ""
+    var brief = ""
+    var version = dinfio.version
+    var author = ""
+    var url = ""
+    var section = "description"
+
+    for i, 0, size(c) - 1
+        d = c[i]
+
+        if subleft(d, 1) == "@"
+            if subleft(d, 7) == "@brief "
+                brief = trim(substring(d, 7))
+                section = "brief"
+            elseif subleft(d, 9) == "@version "
+                version = trim(substring(d, 9))
+                section = "version"
+            elseif subleft(d, 8) == "@author "
+                author = trim(substring(d, 8))
+                section = "author"
+            elseif subleft(d, 5) == "@url "
+                url = trim(substring(d, 5))
+                section = "url"
+            endif
+        else
+            if section == "description"
+                description &= " " & d
+            endif
+        endif
+    endfor
+
+    return {
+        description: trim(description),
+        brief: brief,
+        version: version,
+        version_number: get_version_number(version),
+        author: author,
+        url: url
+    }
+stop
