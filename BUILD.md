@@ -71,5 +71,5 @@ If you see the Dinfio version, then Dinfio is successfully compiled.
 - [g++](https://gcc.gnu.org/) >= 5.4 &mdash; If you compile Dinfio on Linux
 - [Clang](https://clang.llvm.org/) >= 9.0.0 &mdash; If you compile Dinfio on macOS
 - [MinGW with g++](https://sourceforge.net/projects/mingw/) >= 9.2.0 &mdash; If you compile Dinfio on Windows. MSVC is not tested yet
-- [libcurl](https://curl.se/libcurl/) >= 7.47
-- [wxWidgets](https://www.wxwidgets.org/) >= 3.1.4 &mdash; If you want to use GUI module
+- [libcurl](https://curl.se/libcurl/) >= 7.47 &mdash; If you want to compile `url` module
+- [wxWidgets](https://www.wxwidgets.org/) >= 3.1.4 &mdash; If you want to compile `gui` module
