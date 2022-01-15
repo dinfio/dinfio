@@ -3,7 +3,7 @@
 This is a C++ application to launch Dima main programme.
 When you type `$ dima`, the application will launch `$ dinfio <dima_path>/main.fio`
 
-## Compilation
+## Compiling Dima Launcher
 
 - Linux x86_64:
 ```

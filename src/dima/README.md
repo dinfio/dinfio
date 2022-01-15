@@ -2,7 +2,7 @@
 
 Dima is a module manager for Dinfio. You can install and uninstall modules using Dima.
 
-## Building
+## Building Dima
 
 Please follow these steps to build Dima:
 
