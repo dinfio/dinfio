@@ -10,8 +10,22 @@ When you type `$ dima`, the application will launch `$ dinfio <dima_path>/main.f
 $ ./compile_linux.sh
 ```
 
+- Linux ARMv7:
+```
+$ ./compile_linux_armv7.sh
+```
+
+- Linux Docker:
+```
+$ ./compile_linux_docker.sh
+```
+
 - macOS:
 ```
 $ ./compile_macos.sh
 ```
 
+- Windows:
+```
+> ./compile_windows.bat
+```
