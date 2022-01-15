@@ -16,7 +16,7 @@ Open file [`src/header.h`](src/header.h), and point to  `__DINFIO_PATH__` consta
 const string __DINFIO_PATH__ = "/usr/local/dinfio/";
 ```
 
-Change the constant value with your build path, for example:
+Change the constant value with your build path (absolute path), for example:
 
 ``` cpp
 const string __DINFIO_PATH__ = "/home/faruq/Documents/dinfio/build/linux/";
@@ -48,6 +48,14 @@ $ ./compile_macos.sh
 ```
 > compile_windows.bat
 ```
+
+Once it is compiled, go to your build path (for example: `cd build/linux`), and you can run Dinfio:
+
+```
+$ ./dinfio -v
+```
+
+If you see the Dinfio version, then Dinfio is successfully compiled.
 
 ## Required Build Tools and Libraries
 
