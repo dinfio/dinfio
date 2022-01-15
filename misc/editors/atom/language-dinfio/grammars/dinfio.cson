@@ -1,0 +1,58 @@
+'scopeName': 'source.dinfio'
+'name': 'Dinfio'
+'fileTypes': [
+  'fio'
+]
+'patterns': [
+  {
+    'begin': '\''
+    'end': '\n'
+    'name': 'comment'
+  }
+  {
+    'begin': '#'
+    'end': '\n'
+    'name': 'comment'
+  }
+  {
+    'begin': '\"'
+    'end': '\"'
+    'name': 'string.quoted.double'
+  }
+  {
+    'name': 'text.fio'
+    'match': '\\(|\\)|\\+|\\-|=|/|\\*|%|\\\\|&|\\^|\\||<|>|\\[|\\]|{|}'
+  }
+  {
+    'name': 'constant.numeric'
+    'match': '\\b(?i:(\\d+\\.*\\d*(e[\\-\\+]?\\d+)?))(?=[^[:alpha:]_])\\b'
+  }
+  {
+    'name': 'constant.numeric'
+    'match': '\\b(?i:(0x\\h+))\\b'
+  }
+  {
+    'name': 'constant.numeric'
+    'match': '\\b([01]+b)\\b'
+  }
+  {
+    'match': '\\b(if|else|elseif|while|for|return|yield|field|var|global|import|endif|endfor|endwhile|break|iif|ref|call|eval)\\b'
+    'name': 'keyword.control'
+  }
+  {
+    'match': '\\b(function|stop|class|endclass|start)\\b'
+    'name': 'keyword.control'
+  }
+  {
+    'name': 'constant'
+    'match': '\\b(true|false|this|nothing|inf|nan)\\b'
+  }
+  {
+    'name': 'entity.name.function'
+    'begin': '(?x)\n\\b(?=\n ([[:alpha:]_]\\w*)\\s*(\\()\n)\n'
+    'end': '(\\()'
+    'endCaptures':
+      '0':
+        'name': 'text.fio'
+  }
+]

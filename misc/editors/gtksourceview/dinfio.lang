@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language id="dinfio" _name="Dinfio" version="2.0" _section="Source">
+  <metadata>
+    <property name="globs">*.fio</property>
+    <property name="line-comment-start">'</property>
+  </metadata>
+
+  <styles>
+    <style id="comment" _name="Comment" map-to="def:comment"/>
+    <style id="string" _name="String" map-to="def:string"/>
+    <style id="keyword" _name="Keyword" map-to="def:keyword"/>
+    <style id="special-constant" _name="Special constant" map-to="def:special-constant"/>
+  </styles>
+
+  <default-regex-options case-sensitive="false"/>
+
+  <definitions>
+    <context id="line-comment" style-ref="comment" end-at-line-end="true" class="comment" class-disabled="no-spell-check">
+      <start>'</start>
+      <include>
+        <context ref="def:in-line-comment"/>
+      </include>
+    </context>
+
+    <context id="hash-line-comment" style-ref="comment" end-at-line-end="true" class="comment" class-disabled="no-spell-check">
+      <start>#</start>
+      <include>
+        <context ref="def:in-line-comment"/>
+      </include>
+    </context>
+
+    <context id="string" style-ref="string" end-at-line-end="true" class="string" class-disabled="no-spell-check">
+      <start>"</start>
+      <end>"</end>
+    </context>
+
+    <context id="keywords" style-ref="keyword">
+      <keyword>if</keyword>
+      <keyword>elseif</keyword>
+      <keyword>else</keyword>
+      <keyword>while</keyword>
+      <keyword>for</keyword>
+      <keyword>return</keyword>
+      <keyword>yield</keyword>
+      <keyword>field</keyword>
+      <keyword>var</keyword>
+      <keyword>global</keyword>
+      <keyword>import</keyword>
+      <keyword>endif</keyword>
+      <keyword>endfor</keyword>
+      <keyword>endwhile</keyword>
+      <keyword>break</keyword>
+      <keyword>function</keyword>
+      <keyword>class</keyword>
+      <keyword>start</keyword>
+      <keyword>endclass</keyword>
+      <keyword>stop</keyword>
+      <keyword>ref</keyword>
+      <keyword>eval</keyword>
+      <keyword>call</keyword>
+    </context>
+
+    <context id="special-constants" style-ref="special-constant">
+      <keyword>nothing</keyword>
+      <keyword>true</keyword>
+      <keyword>false</keyword>
+      <keyword>inf</keyword>
+      <keyword>nan</keyword>
+      <keyword>this</keyword>
+    </context>
+
+    <context id="dinfio" class="no-spell-check">
+      <include>
+        <context ref="line-comment"/>
+        <context ref="hash-line-comment"/>
+        <context ref="string"/>
+        <context ref="keywords"/>
+        <context ref="special-constants"/>
+      </include>
+    </context>
+  </definitions>
+</language>

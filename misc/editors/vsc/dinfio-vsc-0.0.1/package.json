@@ -1,0 +1,30 @@
+{
+    "name": "dinfio",
+    "displayName": "Dinfio",
+    "description": "Dinfio Programming Language syntax highlighting",
+    "version": "0.0.1",
+    "publisher": "dinfio",
+	"icon": "images/logo.png",
+    "engines": {
+        "vscode": "^1.49.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "dinfio",
+            "aliases": ["Dinfio", "dinfio"],
+            "extensions": [".fio"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "dinfio",
+            "scopeName": "source.dinfio",
+            "path": "./syntaxes/dinfio.tmLanguage.json"
+        }]
+    },
+    "__metadata": {
+		"publisherDisplayName": "dinfio.org"
+	}
+}
