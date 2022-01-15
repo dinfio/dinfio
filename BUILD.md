@@ -61,6 +61,11 @@ $ ./dinfio -v
 If you see the Dinfio version, then Dinfio is successfully compiled.
 <br>
 
+## Notes
+
+- Module `gui` and `url` are not included in compilation process by default. You can activate it by changing the config in file `compile_linux.sh`, `compile_linux_armv7.sh`, `compile_linux_docker.sh`, `compile_macos.sh`, or `compile_windows.bat`.
+- If you want to compile module `url` and your [libcurl](https://curl.se/libcurl/) version is greater than or equal to 7.56, then add macro definition `#define __NEW_CURL__` to file [`src/modules/url/url.cpp`](src/modules/url/url.cpp).
+
 ## Required Build Tools and Libraries
 
 - [g++](https://gcc.gnu.org/) >= 5.4 &mdash; If you compile Dinfio on Linux
