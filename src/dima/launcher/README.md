@@ -27,5 +27,5 @@ $ ./compile_macos.sh
 
 - Windows:
 ```
-> ./compile_windows.bat
+> compile_windows.bat
 ```
