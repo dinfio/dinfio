@@ -12,6 +12,8 @@ COMPILE_URL_MODULE=false   # Set it to true if you want to compile URL Module
 
 # Preparation
 
+echo "Preparing..."
+
 [ -d build/$PLATFORM/modules/core ] || mkdir build/$PLATFORM/modules/core
 [ -d build/$PLATFORM/modules/example ] || mkdir build/$PLATFORM/modules/example
 [ -d build/$PLATFORM/modules/fileio ] || mkdir build/$PLATFORM/modules/fileio
@@ -28,25 +30,41 @@ COMPILE_URL_MODULE=false   # Set it to true if you want to compile URL Module
 
 # Compile main programme
 
+echo "Compiling Dinfio main programme..."
 g++ -std=c++11 -O3 src/main.cpp -o build/$PLATFORM/dinfio
 
 
 # Compile modules
 
+echo "Compiling module fileio..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/fileio/fileio.cpp -o build/$PLATFORM/modules/fileio/fileio.so
+
+echo "Compiling module json..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/json/json.cpp -o build/$PLATFORM/modules/json/json.so
+
+echo "Compiling module math..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/math/math.cpp -o build/$PLATFORM/modules/math/math.so
+
+echo "Compiling module regex..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/regex/regex.cpp -o build/$PLATFORM/modules/regex/regex.so
+
+echo "Compiling module rl..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/rl/rl.cpp -o build/$PLATFORM/modules/rl/rl.so
+
+echo "Compiling module string..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/string/string.cpp -o build/$PLATFORM/modules/string/string.so
+
+echo "Compiling module time..."
 g++ -std=c++11 -O3 -dynamiclib src/modules/time/time.cpp -o build/$PLATFORM/modules/time/time.so
 
 if [ "$COMPILE_URL_MODULE" = true ]; then
+    echo "Compiling module url..."
     g++ -std=c++11 -O3 -dynamiclib src/modules/url/url.cpp -o build/$PLATFORM/modules/url/url.so -lcurl
     cp -f src/modules/url/*.fio build/$PLATFORM/modules/url/
 fi
 
 if [ "$COMPILE_GUI_MODULE" = true ]; then
+    echo "Compiling module gui..."
     g++ -std=c++11 -O3 -dynamiclib src/modules/gui/gui.cpp -o build/$PLATFORM/modules/gui/gui.so `wx-config --cxxflags --libs core`
     cp -f src/modules/gui/*.fio build/$PLATFORM/modules/gui/
 fi
@@ -68,3 +86,5 @@ cp -f src/modules/zip/*.fio build/$PLATFORM/modules/zip/
 
 cp -f src/interactive/* build/$PLATFORM/
 cp -f src/help/* build/$PLATFORM/
+
+echo "Compilation done."
