@@ -13,6 +13,7 @@
 */
 
 #include <map>
+#include <sstream>
 #include "dinfio_module.h"
 
 Connector* connector;
