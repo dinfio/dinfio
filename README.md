@@ -17,7 +17,7 @@ If you would install Dinfio from pre-compiled binary rather than build from the 
 
 ## Contributing
 
-Contributing to Dinfio is much welcomed. You can contribute to Dinfio by becoming:
+Contributing to Dinfio is much welcomed. You can contribute to Dinfio by become:
 - Core Language Developer
 - Module Developer
 - Issue Reporter
