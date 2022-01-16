@@ -52,7 +52,7 @@ $ ./compile_macos.sh
 ```
 <br>
 
-Once it is compiled, go to your build path (`cd build`), and run Dinfio executable:
+Once it is compiled, go to your build path (`cd build/`), and run Dinfio executable:
 
 ```
 $ ./dinfio -v
