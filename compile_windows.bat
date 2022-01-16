@@ -75,33 +75,33 @@ if %COMPILE_MODULES%==true (
     if %COMPILE_URL_MODULE%==true (
         echo Compiling module url...
         %CC% -std=%CXX% -O3 -shared src\modules\url\url.cpp -o build\modules\url\url.dll -I"%LIBCURL_PATH%\lib\include" -lcurl -L"%LIBCURL_PATH%\lib\lib"
-        xcopy /Y /Q src\modules\url\*.fio build\modules\url\
+        xcopy /Y /Q src\modules\url\*.fio build\modules\url\ 1>NUL
     )
 
     if %COMPILE_GUI_MODULE%==true (
         echo Compiling module gui...
         %CC% -O3 -shared src\modules\gui\gui.cpp -o build\modules\gui\gui.dll -I"%WXWIDGETS_PATH%\include\wx-3.1" -I"%WXWIDGETS_PATH%\lib\wx\include\msw-unicode-3.1" -L"%WXWIDGETS_PATH%\lib" -lwx_mswu_core-3.1 -llibwx_baseu-3.1
-        xcopy /Y /Q src\modules\gui\*.fio build\modules\gui\
+        xcopy /Y /Q src\modules\gui\*.fio build\modules\gui\ 1>NUL
     )
 
-    xcopy /Y /Q src\modules\core\*.fio build\modules\core\
-    xcopy /Y /Q src\modules\standardio\*.fio build\modules\standardio\
-    xcopy /Y /Q src\modules\example\*.fio build\modules\example\
-    xcopy /Y /Q src\modules\fileio\*.fio build\modules\fileio\
-    xcopy /Y /Q src\modules\json\*.fio build\modules\json\
-    xcopy /Y /Q src\modules\math\*.fio build\modules\math\
-    xcopy /Y /Q src\modules\regex\*.fio build\modules\regex\
-    xcopy /Y /Q src\modules\rl\*.fio build\modules\rl\
-    xcopy /Y /Q src\modules\string\*.fio build\modules\string\
-    xcopy /Y /Q src\modules\time\*.fio build\modules\time\
-    xcopy /Y /Q src\modules\zip\*.fio build\modules\zip\
-    xcopy /Y /Q src\modules\zip\*.exe build\modules\zip\
+    xcopy /Y /Q src\modules\core\*.fio build\modules\core\ 1>NUL
+    xcopy /Y /Q src\modules\standardio\*.fio build\modules\standardio\ 1>NUL
+    xcopy /Y /Q src\modules\example\*.fio build\modules\example\ 1>NUL
+    xcopy /Y /Q src\modules\fileio\*.fio build\modules\fileio\ 1>NUL
+    xcopy /Y /Q src\modules\json\*.fio build\modules\json\ 1>NUL
+    xcopy /Y /Q src\modules\math\*.fio build\modules\math\ 1>NUL
+    xcopy /Y /Q src\modules\regex\*.fio build\modules\regex\ 1>NUL
+    xcopy /Y /Q src\modules\rl\*.fio build\modules\rl\ 1>NUL
+    xcopy /Y /Q src\modules\string\*.fio build\modules\string\ 1>NUL
+    xcopy /Y /Q src\modules\time\*.fio build\modules\time\ 1>NUL
+    xcopy /Y /Q src\modules\zip\*.fio build\modules\zip\ 1>NUL
+    xcopy /Y /Q src\modules\zip\*.exe build\modules\zip\ 1>NUL
 )
 
 
 :: Copy interactive and help
 
-xcopy /Y /Q src\interactive\*.fio build\
-xcopy /Y /Q src\help\*.fio build\
+xcopy /Y /Q src\interactive\*.fio build\ 1>NUL
+xcopy /Y /Q src\help\*.fio build\ 1>NUL
 
 echo Compilation done.
