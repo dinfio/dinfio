@@ -1,5 +1,7 @@
 :: Compilation on Windows
 
+@echo off
+
 if not exist "..\..\..\build\dima" (
     mkdir "..\..\..\build\dima"
 )
