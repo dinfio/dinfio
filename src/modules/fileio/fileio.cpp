@@ -66,7 +66,7 @@ string full_path(const char* filename) {
 
 string getcwd_string() {
    char buff[MAX_PATH];
-   getcwd(buff, MAX_PATH);
+   char* temp = getcwd(buff, MAX_PATH);
    string cwd(buff);
 
    return cwd;
@@ -84,8 +84,8 @@ string full_path(const char* filename) {
 }
 
 string getcwd_string() {
-   char buff[PATH_MAX];   // TODO: Win32: MAX_PATH
-   getcwd(buff, PATH_MAX);
+   char buff[PATH_MAX];
+   char* temp = getcwd(buff, PATH_MAX);
    string cwd(buff);
 
    return cwd;
