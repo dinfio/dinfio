@@ -1,4 +1,4 @@
-rem Compilation on Windows
+:: Compilation on Windows
 
 if not exist "..\..\..\build\dima" (
     mkdir "..\..\..\build\dima"
