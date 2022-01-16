@@ -4,7 +4,6 @@
 
 # Config
 
-PLATFORM=macos
 CC=g++
 CXX=c++11
 
@@ -18,80 +17,80 @@ COMPILE_URL_MODULE=false   # Set it to true if you want to compile URL Module
 
 echo "Preparing..."
 
-[ -d build/$PLATFORM/modules/core ] || mkdir build/$PLATFORM/modules/core
-[ -d build/$PLATFORM/modules/example ] || mkdir build/$PLATFORM/modules/example
-[ -d build/$PLATFORM/modules/fileio ] || mkdir build/$PLATFORM/modules/fileio
-[ -d build/$PLATFORM/modules/gui ] || mkdir build/$PLATFORM/modules/gui
-[ -d build/$PLATFORM/modules/json ] || mkdir build/$PLATFORM/modules/json
-[ -d build/$PLATFORM/modules/math ] || mkdir build/$PLATFORM/modules/math
-[ -d build/$PLATFORM/modules/regex ] || mkdir build/$PLATFORM/modules/regex
-[ -d build/$PLATFORM/modules/rl ] || mkdir build/$PLATFORM/modules/rl
-[ -d build/$PLATFORM/modules/standardio ] || mkdir build/$PLATFORM/modules/standardio
-[ -d build/$PLATFORM/modules/string ] || mkdir build/$PLATFORM/modules/string
-[ -d build/$PLATFORM/modules/time ] || mkdir build/$PLATFORM/modules/time
-[ -d build/$PLATFORM/modules/url ] || mkdir build/$PLATFORM/modules/url
-[ -d build/$PLATFORM/modules/zip ] || mkdir build/$PLATFORM/modules/zip
+[ -d build/modules/core ] || mkdir build/modules/core
+[ -d build/modules/example ] || mkdir build/modules/example
+[ -d build/modules/fileio ] || mkdir build/modules/fileio
+[ -d build/modules/gui ] || mkdir build/modules/gui
+[ -d build/modules/json ] || mkdir build/modules/json
+[ -d build/modules/math ] || mkdir build/modules/math
+[ -d build/modules/regex ] || mkdir build/modules/regex
+[ -d build/modules/rl ] || mkdir build/modules/rl
+[ -d build/modules/standardio ] || mkdir build/modules/standardio
+[ -d build/modules/string ] || mkdir build/modules/string
+[ -d build/modules/time ] || mkdir build/modules/time
+[ -d build/modules/url ] || mkdir build/modules/url
+[ -d build/modules/zip ] || mkdir build/modules/zip
 
 
 # Compile main programme
 
 echo "Compiling Dinfio main programme..."
-$CC -std=$CXX -O3 src/main.cpp -o build/$PLATFORM/dinfio
+$CC -std=$CXX -O3 src/main.cpp -o build/dinfio
 
 
 # Compile modules
 
 if [ "$COMPILE_MODULES" = true ]; then
     echo "Compiling module fileio..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/fileio/fileio.cpp -o build/$PLATFORM/modules/fileio/fileio.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/fileio/fileio.cpp -o build/modules/fileio/fileio.so
 
     echo "Compiling module json..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/json/json.cpp -o build/$PLATFORM/modules/json/json.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/json/json.cpp -o build/modules/json/json.so
 
     echo "Compiling module math..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/math/math.cpp -o build/$PLATFORM/modules/math/math.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/math/math.cpp -o build/modules/math/math.so
 
     echo "Compiling module regex..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/regex/regex.cpp -o build/$PLATFORM/modules/regex/regex.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/regex/regex.cpp -o build/modules/regex/regex.so
 
     echo "Compiling module rl..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/rl/rl.cpp -o build/$PLATFORM/modules/rl/rl.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/rl/rl.cpp -o build/modules/rl/rl.so
 
     echo "Compiling module string..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/string/string.cpp -o build/$PLATFORM/modules/string/string.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/string/string.cpp -o build/modules/string/string.so
 
     echo "Compiling module time..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/time/time.cpp -o build/$PLATFORM/modules/time/time.so
+    $CC -std=$CXX -O3 -dynamiclib src/modules/time/time.cpp -o build/modules/time/time.so
 
     if [ "$COMPILE_URL_MODULE" = true ]; then
         echo "Compiling module url..."
-        $CC -std=$CXX -O3 -dynamiclib src/modules/url/url.cpp -o build/$PLATFORM/modules/url/url.so -lcurl
-        cp -f src/modules/url/*.fio build/$PLATFORM/modules/url/
+        $CC -std=$CXX -O3 -dynamiclib src/modules/url/url.cpp -o build/modules/url/url.so -lcurl
+        cp -f src/modules/url/*.fio build/modules/url/
     fi
 
     if [ "$COMPILE_GUI_MODULE" = true ]; then
         echo "Compiling module gui..."
-        $CC -std=$CXX -O3 -dynamiclib src/modules/gui/gui.cpp -o build/$PLATFORM/modules/gui/gui.so `wx-config --cxxflags --libs core`
-        cp -f src/modules/gui/*.fio build/$PLATFORM/modules/gui/
+        $CC -std=$CXX -O3 -dynamiclib src/modules/gui/gui.cpp -o build/modules/gui/gui.so `wx-config --cxxflags --libs core`
+        cp -f src/modules/gui/*.fio build/modules/gui/
     fi
 
-    cp -f src/modules/core/*.fio build/$PLATFORM/modules/core/
-    cp -f src/modules/standardio/*.fio build/$PLATFORM/modules/standardio/
-    cp -f src/modules/example/*.fio build/$PLATFORM/modules/example/
-    cp -f src/modules/fileio/*.fio build/$PLATFORM/modules/fileio/
-    cp -f src/modules/json/*.fio build/$PLATFORM/modules/json/
-    cp -f src/modules/math/*.fio build/$PLATFORM/modules/math/
-    cp -f src/modules/regex/*.fio build/$PLATFORM/modules/regex/
-    cp -f src/modules/rl/*.fio build/$PLATFORM/modules/rl/
-    cp -f src/modules/string/*.fio build/$PLATFORM/modules/string/
-    cp -f src/modules/time/*.fio build/$PLATFORM/modules/time/
-    cp -f src/modules/zip/*.fio build/$PLATFORM/modules/zip/
+    cp -f src/modules/core/*.fio build/modules/core/
+    cp -f src/modules/standardio/*.fio build/modules/standardio/
+    cp -f src/modules/example/*.fio build/modules/example/
+    cp -f src/modules/fileio/*.fio build/modules/fileio/
+    cp -f src/modules/json/*.fio build/modules/json/
+    cp -f src/modules/math/*.fio build/modules/math/
+    cp -f src/modules/regex/*.fio build/modules/regex/
+    cp -f src/modules/rl/*.fio build/modules/rl/
+    cp -f src/modules/string/*.fio build/modules/string/
+    cp -f src/modules/time/*.fio build/modules/time/
+    cp -f src/modules/zip/*.fio build/modules/zip/
 fi
 
 
 # Copy interactive and help
 
-cp -f src/interactive/*.fio build/$PLATFORM/
-cp -f src/help/*.fio build/$PLATFORM/
+cp -f src/interactive/*.fio build/
+cp -f src/help/*.fio build/
 
 echo "Compilation done."

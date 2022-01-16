@@ -20,7 +20,7 @@ const string __DINFIO_PATH__ = "/usr/local/dinfio/";
 Change the constant value with your build path (absolute path), for example:
 
 ``` cpp
-const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/linux/";
+const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 ```
 <br>
 
@@ -52,7 +52,7 @@ $ ./compile_macos.sh
 ```
 <br>
 
-Once it is compiled, go to your build path (for example: `cd build/linux`), and run Dinfio executable:
+Once it is compiled, go to your build path (`cd build`), and run Dinfio executable:
 
 ```
 $ ./dinfio -v
