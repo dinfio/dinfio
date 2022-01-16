@@ -63,8 +63,8 @@ If you see the Dinfio version, then Dinfio is successfully compiled.
 
 ## Notes
 
-- Module `gui` and `url` are not included in compilation process by default. You can activate it by changing the config in file `compile_linux.sh`, `compile_linux_armv7.sh`, `compile_linux_docker.sh`, `compile_macos.sh`, or `compile_windows.bat`, depending on your platform.
-- If you want to compile module `url` and your [libcurl](https://curl.se/libcurl/) version is greater than or equal to 7.56, then add macro definition `#define __NEW_CURL__` to file [`src/modules/url/url.cpp`](src/modules/url/url.cpp).
+- Module `gui` and `url` are not included in compilation process by default. You can activate it by changing the config in file `compile_linux.sh`, `compile_linux_armv7.sh`, `compile_linux_docker.sh`, `compile_macos.sh`, or `compile_windows.bat`, depending on your platform
+- If you want to compile module `url` and your [libcurl](https://curl.se/libcurl/) version is greater than or equal to 7.56, then add macro definition `#define __NEW_CURL__` to file [`src/modules/url/url.cpp`](src/modules/url/url.cpp)
 - Module `gui` is not available on Linux Docker
 
 ## Required Build Tools and Libraries
