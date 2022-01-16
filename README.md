@@ -4,10 +4,7 @@
 </p>
 
 Dinfio is a high-level, general-purpose, interpreted, minimalist, simple, and open source programming language. Dinfio supports multiple paradigms, including imperative, procedural, object-oriented, and event-driven programming.
-
-<br>
-&mdash;&mdash;
-
+<br><br>&mdash;&mdash;<br>
 Welcome! This is the official repository of Dinfio source code. You can build, install, and contribute to Dinfio through this repository.
 
 ## Building Dinfio
