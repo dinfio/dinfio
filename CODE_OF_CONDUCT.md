@@ -13,7 +13,7 @@ This code of conduct applies to all members of Dinfio community, including all p
     - Posting (or threatening to post) other people's personally identifying information ("doxing")
     - Personal insults, especially those using racist or sexist terms
     - Unwelcome sexual attention
-    - Advocating for, or encouraging, any of the above behavior
+    - Advocating for, or encouraging, any of the above behaviour
     - Repeated harassment of others. In general, if someone asks you to stop, then stop
 
 If you believe someone is violating the code of conduct, we ask that you report it by emailing conduct@dinfio.org.
