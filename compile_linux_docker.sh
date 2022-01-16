@@ -33,7 +33,7 @@ echo "Preparing..."
 # Compile main programme
 
 echo "Compiling Dinfio main programme..."
-$CC -std=$CXX -O3 -ldl src/main.cpp -o build/$PLATFORM/dinfio
+$CC -std=$CXX -O3 src/main.cpp -ldl -o build/$PLATFORM/dinfio
 
 
 # Compile modules
