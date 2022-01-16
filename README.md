@@ -9,7 +9,7 @@ Welcome! This is the official repository of Dinfio source code. You can build, i
 
 ## Building Dinfio
 
-The instruction how to build Dinfio from the source code, please see [BUILDING.md](BUILDING.md).
+For the instruction how to build Dinfio from the source code, please see [BUILDING.md](BUILDING.md).
 
 ## Binary Installation
 
