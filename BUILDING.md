@@ -20,7 +20,7 @@ const string __DINFIO_PATH__ = "/usr/local/dinfio/";
 Change the constant value with your build path (absolute path), for example:
 
 ``` cpp
-const string __DINFIO_PATH__ = "/home/faruq/Documents/dinfio/build/linux/";
+const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/linux/";
 ```
 <br>
 
