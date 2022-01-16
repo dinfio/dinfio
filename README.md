@@ -21,6 +21,7 @@ Contributing to Dinfio is much welcomed and encouraged. You can contribute to Di
 - Core Language Developer
 - Module Developer
 - Issue Reporter
+- Documentation Author
 - [Dinfio Playground](https://dinfio.org/playground/) Contributor
 - and/or Sponsor
 
