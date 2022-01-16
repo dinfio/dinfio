@@ -67,6 +67,17 @@ If you see the Dinfio version, then Dinfio is successfully compiled.
 - If you want to compile module `url` and your [libcurl](https://curl.se/libcurl/) version is greater than or equal to 7.56, then add macro definition `#define __NEW_CURL__` to file [`src/modules/url/url.cpp`](src/modules/url/url.cpp)
 - Module `gui` is not available on Linux Docker
 
+## Notes for Windows
+
+- If you want to compile module `url`, then open file [`compile_windows.bat`](compile_windows.bat), and change `LIBCURL_PATH` with your `libcurl` path. For example:
+``` bat
+set LIBCURL_PATH=C:\libcurl
+```
+- As well as if you want to compile module `gui`, then open file [`compile_windows.bat`](compile_windows.bat), and change `WXWIDGETS_PATH` with your `wxwidgets` path. For example:
+``` bat
+set WXWIDGETS_PATH=C:\wxwidgets
+```
+
 ## Required Build Tools and Libraries
 
 - [g++](https://gcc.gnu.org/) >= 5.4.0 &mdash; If you compile Dinfio on Linux
