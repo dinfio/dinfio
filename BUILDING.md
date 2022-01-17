@@ -30,6 +30,7 @@ const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 
 > Additionally, please see the [notes](#notes) below if you want to activate module `url` and/or `gui` in the compilation process.
 
+<br>
 
 And compile:
 
