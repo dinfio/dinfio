@@ -1,6 +1,10 @@
 # Building Dinfio
 
-Before building Dinfio, please make sure you have all the [required build tools and libraries](#required-build-tools-and-libraries) installed. Then, download the source code by cloning the git repository:
+Before building Dinfio, please make sure you have all the [required build tools and libraries](#required-build-tools-and-libraries) installed and read the [notes](#notes) below.
+
+## Getting the Source Code
+
+Download the source code by cloning the git repository:
 ```
 $ git clone https://github.com/dinfio/dinfio.git
 ```
@@ -9,7 +13,8 @@ After the source code downloaded, go to directory `dinfio`:
 ```
 $ cd dinfio
 ```
-<br>
+
+## Configuring and Compiling
 
 Open file [`src/header.h`](src/header.h), and point to  `__DINFIO_PATH__` constant (at line 44 or 51 or 58, depending on your platform):
 
@@ -22,7 +27,6 @@ Change the constant value with your build path (absolute path), for example:
 ``` cpp
 const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 ```
-<br>
 
 And compile:
 
@@ -50,7 +54,6 @@ $ ./compile_macos.sh
 ```
 > compile_windows.bat
 ```
-<br>
 
 Once it is compiled, go to your build path (`cd build/`), and run Dinfio executable:
 
@@ -59,11 +62,29 @@ $ ./dinfio -v
 ```
 
 If you see the Dinfio version, then Dinfio is successfully compiled.
-<br>
+
+## Testing the Modules
+
+You can run test below to make sure all of the modules are well compiled:
+
+```
+$ ./dinfio ../tests/modules.fio
+```
+
+If you do not see any error message, then the modules are successfully and well compiled.
+
+Please note that module `url` and `gui` are not included in the test above. You can run test below to test module `url` and/or `gui` individually:
+
+```
+$ ./dinfio ../tests/module_url.fio
+```
+```
+$ ./dinfio ../tests/module_gui.fio
+```
 
 ## Notes
 
-- Module `gui` and `url` are not included in compilation process by default. You can activate it by changing the config in file `compile_linux.sh`, `compile_linux_armv7.sh`, `compile_linux_docker.sh`, `compile_macos.sh`, or `compile_windows.bat`, depending on your platform
+- Module `url` and `gui` are not included in compilation process by default. You can activate it by changing the config in file `compile_linux.sh`, `compile_linux_armv7.sh`, `compile_linux_docker.sh`, `compile_macos.sh`, or `compile_windows.bat`, depending on your platform
 - If you want to compile module `url` and your [libcurl](https://curl.se/libcurl/) version is greater than or equal to 7.56, then add macro definition `#define __NEW_CURL__` to file [`src/modules/url/url.cpp`](src/modules/url/url.cpp)
 - Module `gui` is not available on Linux Docker
 
