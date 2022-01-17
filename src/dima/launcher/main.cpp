@@ -18,13 +18,14 @@
 using namespace std;
 
 #ifdef __linux__
-    const string __DIMA_PATH__ = "/usr/local/dinfio/dima/";
+    const string __DINFIO_PATH__ = "/usr/local/dinfio/";
 #elif __APPLE__
-    const string __DIMA_PATH__ = "/Library/Dinfio/3.1/dima/";
+    const string __DINFIO_PATH__ = "/Library/Dinfio/3.1/";
 #else
-    const string __DIMA_PATH__ = "C:/Dinfio/dima/";
+    const string __DINFIO_PATH__ = "C:/Dinfio/";
 #endif
 
+const string __DIMA_PATH__ = __DINFIO_PATH__ + "dima/";
 const string __TOKEN__ = "55b9e2612764030c20b792960330d0f5";
 
 int main(int argc, char* argv[]) {
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]) {
         args += "\"" + arg + "\" ";
     }
 
-    string command = "dinfio \"" + __DIMA_PATH__ + "main.fio\" " + __TOKEN__ + " " + args;
+    string command = __DINFIO_PATH__ + "dinfio \"" + __DIMA_PATH__ + "main.fio\" " + __TOKEN__ + " " + args;
     
     int result = system(command.c_str());
     return result;
