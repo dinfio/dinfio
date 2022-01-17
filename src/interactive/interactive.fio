@@ -262,7 +262,7 @@ function loop()
                         colourise(__STYLE_BOLD__)
                         colourise(__STYLE_GREEN__)
 
-                        result = execute("dinfio " & tmp)
+                        result = execute(dinfio.path & "dinfio " & tmp)
 
                         if result != 0
                             beep()
@@ -321,11 +321,11 @@ function run_code(code)
     f.write(code)
     f.close()
 
-    return execute("dinfio " & tmp & " -i")
+    return execute(dinfio.path & "dinfio " & tmp & " -i")
 stop
 
 function run_file(filename)
-    result = execute("dinfio " & filename)
+    result = execute(dinfio.path & "dinfio " & filename)
 
     if result != 0
         beep()
