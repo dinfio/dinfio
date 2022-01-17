@@ -1,0 +1,9 @@
+import gui
+
+start
+    window = gui_window("GUI Tested: OK", 200, 100)
+    button = gui_button("Done", window, 20, 20)
+
+    button.addevent(event.click, exit())
+    window.show()
+stop
