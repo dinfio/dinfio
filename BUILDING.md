@@ -1,6 +1,6 @@
 # Building Dinfio
 
-Before building Dinfio, please make sure you have all the [required build tools and libraries](#required-build-tools-and-libraries) installed and read the [notes](#notes) below.
+Before building Dinfio, please make sure you have all the [required build tools and libraries](#required-build-tools-and-libraries) installed.
 
 ## Getting the Source Code
 
@@ -27,6 +27,9 @@ Change the constant value with your build path (absolute path), for example:
 ``` cpp
 const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 ```
+
+> Additionally, please see the [notes](#notes) below if you want to activate module `url` and/or `gui` in the compilation process.
+
 
 And compile:
 
