@@ -15,6 +15,10 @@ For the instruction how to build Dinfio from the source code, please see [BUILDI
 
 If you would install Dinfio from pre-compiled binary rather than build from the source code, you can download it from Dinfio homepage: [https://dinfio.org](https://dinfio.org/#download). The page provides step by step guide how to download and install Dinfio on your machine.
 
+## Building Dima
+
+Dima is a module manager for Dinfio. You can install and uninstall modules using Dima. If you want to build Dima, please see [src/dima/README.md](src/dima/README.md).
+
 ## Contributing
 
 Contributing to Dinfio is much welcomed and encouraged. You can contribute to Dinfio by become:
