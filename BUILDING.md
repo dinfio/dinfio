@@ -35,25 +35,25 @@ const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 And compile:
 
 - On Linux x86_64:
+
     ```
     $ ./compile_linux.sh
     ```
-
 - On Linux ARMv7:
+
     ```
     $ ./compile_linux_armv7.sh
     ```
-
 - On Linux Docker:
+
     ```
     $ ./compile_linux_docker.sh
     ```
-
 - On macOS:
+
     ```
     $ ./compile_macos.sh
     ```
-
 - On Windows:
     ```
     > compile_windows.bat
