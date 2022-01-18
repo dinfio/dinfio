@@ -43,4 +43,4 @@ Please follow these steps to build Dima:
 
 ## Note
 
-- Module `url` is required by Dima, so you have to activate module `url` in Dinfio compilation process. Please see [`../../BUILDING.md`](../../BUILDING.md#notes) for more information about how to activate it
+- Module `url` is required by Dima, so you have to activate module `url` in Dinfio compilation process. Please see [../../BUILDING.md](../../BUILDING.md#notes) for more information about how to activate it
