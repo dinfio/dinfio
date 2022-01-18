@@ -56,7 +56,7 @@ And compile:
     ```
 - On Windows:
 
-    ``` sh
+    ``` bat
     > compile_windows.bat
     ```
 
