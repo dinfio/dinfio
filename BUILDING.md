@@ -5,12 +5,12 @@ Before building Dinfio, please make sure you have all the [required build tools 
 ## Getting the Source Code
 
 Download the source code by cloning the git repository:
-```  sh
+```s
 $ git clone https://github.com/dinfio/dinfio.git
 ```
 
 After the source code downloaded, go to directory `dinfio`:
-``` sh
+```s
 $ cd dinfio
 ```
 
@@ -36,27 +36,27 @@ And compile:
 
 - On Linux x86_64:
 
-    ``` sh
+    ```s
     $ ./compile_linux.sh
     ```
 - On Linux ARMv7:
 
-    ``` sh
+    ```
     $ ./compile_linux_armv7.sh
     ```
 - On Linux Docker:
 
-    ``` sh
+    ```
     $ ./compile_linux_docker.sh
     ```
 - On macOS:
 
-    ``` sh
+    ```
     $ ./compile_macos.sh
     ```
 - On Windows:
 
-    ``` bat
+    ``` s
     > compile_windows.bat
     ```
 
