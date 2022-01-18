@@ -35,29 +35,29 @@ const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 And compile:
 
 - On Linux x86_64:
-```
-$ ./compile_linux.sh
-```
+    ```
+    $ ./compile_linux.sh
+    ```
 
 - On Linux ARMv7:
-```
-$ ./compile_linux_armv7.sh
-```
+    ```
+    $ ./compile_linux_armv7.sh
+    ```
 
 - On Linux Docker:
-```
-$ ./compile_linux_docker.sh
-```
+    ```
+    $ ./compile_linux_docker.sh
+    ```
 
 - On macOS:
-```
-$ ./compile_macos.sh
-```
+    ```
+    $ ./compile_macos.sh
+    ```
 
 - On Windows:
-```
-> compile_windows.bat
-```
+    ```
+    > compile_windows.bat
+    ```
 
 Once it is compiled, go to your build path (`cd build/`), and run Dinfio executable:
 
@@ -95,13 +95,15 @@ $ ./dinfio ../tests/module_gui.fio
 ## Notes for Windows
 
 - If you want to compile module `url`, then open file [`compile_windows.bat`](compile_windows.bat), and change `LIBCURL_PATH` with your `libcurl` path. For example:
-``` bat
-set LIBCURL_PATH=C:\libcurl
-```
+
+    ``` bat
+    set LIBCURL_PATH=C:\libcurl
+    ```
 - As well as if you want to compile module `gui`, then open file [`compile_windows.bat`](compile_windows.bat), and change `WXWIDGETS_PATH` with your `wxwidgets` path. For example:
-``` bat
-set WXWIDGETS_PATH=C:\wxwidgets
-```
+
+    ``` bat
+    set WXWIDGETS_PATH=C:\wxwidgets
+    ```
 
 ## Required Build Tools and Libraries
 
