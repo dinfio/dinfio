@@ -6,7 +6,7 @@ Dima is a module manager for Dinfio. You can install and uninstall modules using
 
 Please follow these steps to build Dima:
 
-- Configure and Compile the [Dima Launcher](launcher/README.md):
+- Configure and compile the [Dima Launcher](launcher/README.md):
     - Open file [`launcher/main.cpp`](launcher/main.cpp), and point to  `__DINFIO_PATH__` constant (at line 21 or 23 or 25, depending on your platform):
 
         ``` cpp
