@@ -5,12 +5,12 @@ Before building Dinfio, please make sure you have all the [required build tools 
 ## Getting the Source Code
 
 Download the source code by cloning the git repository:
-``` text
+``` txt
 $ git clone https://github.com/dinfio/dinfio.git
 ```
 
 After the source code downloaded, go to directory `dinfio`:
-``` text
+``` txt
 $ cd dinfio
 ```
 
