@@ -38,7 +38,7 @@ Please follow these steps to build Dima:
 - Test the Dima:
     ```s
     $ cd ../../build/dima/
-    $ ./dima
+    $ ./dima list
     ```
 
 ## Note
