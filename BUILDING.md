@@ -41,17 +41,17 @@ And compile:
     ```
 - On Linux ARMv7:
 
-    ```
+    ```s
     $ ./compile_linux_armv7.sh
     ```
 - On Linux Docker:
 
-    ```
+    ```s
     $ ./compile_linux_docker.sh
     ```
 - On macOS:
 
-    ```
+    ```s
     $ ./compile_macos.sh
     ```
 - On Windows:
@@ -62,7 +62,7 @@ And compile:
 
 Once it is compiled, go to your build path (`cd build/`), and run Dinfio executable:
 
-``` sh
+``` s
 $ ./dinfio -v
 ```
 
@@ -72,7 +72,7 @@ If you see the Dinfio version, then Dinfio is successfully compiled.
 
 You can run test below to make sure all of the modules are well compiled:
 
-``` sh
+``` s
 $ ./dinfio ../tests/modules.fio
 ```
 
@@ -80,10 +80,10 @@ If you do not see any error message, then the modules are successfully and well 
 
 Please note that module `url` and `gui` are not included in the test above. You can run test below to test module `url` and/or `gui` individually:
 
-``` sh
+``` s
 $ ./dinfio ../tests/module_url.fio
 ```
-``` sh
+``` s
 $ ./dinfio ../tests/module_gui.fio
 ```
 
