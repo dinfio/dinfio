@@ -1,20 +1,11 @@
 ' Test Module url
 
 start
-    var tests_result = []
-
     writeln("Testing the module...")
     run("url")
-    print()
 stop
 
 function run(module)
     r = execute(dinfio.path & "dinfio " & "../tests/modules/module_" & module & ".fio -i")
-    append(tests_result, "Module " & module & ": " & iif(r == 0, "OK", "NOT OK"))
-stop
-
-function print()
-    for i, 0, size(tests_result) - 1
-        writeln(tests_result[i])
-    endfor
+    writeln("Module " & module & ": " & iif(r == 0, "OK", "NOT OK"))
 stop
