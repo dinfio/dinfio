@@ -18,7 +18,7 @@ start
 stop
 
 function run(module)
-    r = execute(dinfio.path & "dinfio " & "../tests/modules/module_" & module & ".fio -i")
+    r = execute(dinfio.path & "dinfio \q../tests/modules/module_" & module & ".fio\q -i")
     append(tests_result, "Module " & module & ": " & iif(r == 0, "OK", "NOT OK"))
 stop
 
