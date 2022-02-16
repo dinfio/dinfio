@@ -173,7 +173,7 @@ class gui_textbox: gui
     function getseltext()
 endclass
 
-class gui_textarea: gui_textbox, gui
+class gui_textarea: gui_textbox
     function construct(text, gui: parent, x = 0, y = 0, width = 160, height = 80, wrap = true)
 endclass
 
@@ -350,7 +350,7 @@ class gui_colours
     field gui_colour: white
     field gui_colour: black
     field gui_colour: transparent
-    
+
     function rgba(red, green, blue, alpha)
     function rgb(red, green, blue)
     function hex(hex_string)
