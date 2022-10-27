@@ -253,16 +253,13 @@ function loop()
                 endif
             else
                 if command == "done"
-                    f = file(tmp, file_write)
+                    file_result = fileput(tmp, editor_content)
 
-                    if f != nothing
-                        f.write(editor_content)
-                        f.close()
-
+                    if file_result
                         colourise(__STYLE_BOLD__)
                         colourise(__STYLE_GREEN__)
 
-                        result = execute(dinfio.path & "dinfio " & tmp)
+                        result = execute("dinfio " & tmp)
 
                         if result != 0
                             beep()
@@ -304,28 +301,24 @@ function loop()
 stop
 
 function run_code(code)
-    f = file(tmp, file_write)
+    file_result = fileput(tmp, code)
 
-    if f == nothing
+    if !file_result
         colourise(__STYLE_DEFAULT__)
         colourise(__STYLE_RED__)
 
         write("Dinfio Interactive Mode: ")
         colourise(__STYLE_DEFAULT__)
         writeln("Permission denied on directory '" & getcurrentdirectory() & "'")
-        beep()
 
         return 1
     endif
 
-    f.write(code)
-    f.close()
-
-    return execute(dinfio.path & "dinfio " & tmp & " -i")
+    return execute("dinfio " & tmp & " -i")
 stop
 
 function run_file(filename)
-    result = execute(dinfio.path & "dinfio " & filename)
+    result = execute("dinfio " & filename)
 
     if result != 0
         beep()
