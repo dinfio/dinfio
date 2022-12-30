@@ -249,7 +249,13 @@ function loop()
 
                     rl_addhistory(command)
                 else
-                    writeln("Semicolon (;) delimiter is not supported in interactive mode.")
+                    colourise(__STYLE_DEFAULT__)
+                    colourise(__STYLE_RED__)
+
+                    writeln("Semicolon (;) delimiter is currently not supported in interactive mode.")
+
+                    colourise(__STYLE_DEFAULT__)
+                    beep()
                 endif
             else
                 if command == "done"
@@ -467,7 +473,7 @@ stop
 
 function found_semicolon(line)
     in_quotes = false
-    result = false
+    yield false
 
     for i, 0, length(line) - 1
         m = substring(line, i, 1)
@@ -486,8 +492,6 @@ function found_semicolon(line)
             endif
         endif
     endfor
-    
-    return false
 stop
 
 function is_bracket_complete(line)
