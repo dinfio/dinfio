@@ -323,18 +323,11 @@ Code* parse_line_code(string& line_code) {
 bool is_variable_assignment(string line_code, string& l, string& r, string& o) {
     bool result = false;
     vector<string> scr;
-    string r2;
 
     if (line_code.find("=") != string::npos) {
         scr = split(line_code, "=", 2);
 
-        if (scr.at(0).length() > 1) {
-            r2 = scr.at(0).substr(scr.at(0).length() - 2, 1);
-        } else {
-            r2 = scr.at(0);
-        }
-
-        if (scr.at(0).find("(") == string::npos || scr.at(0).substr(scr.at(0).length() - 1, 1) == "]" || r2 == "]") {
+        if (bracket_complete(scr.at(0))) {
             result = true;
             l = scr.at(0);
             r = scr.at(1);
