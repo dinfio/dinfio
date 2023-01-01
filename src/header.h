@@ -61,13 +61,13 @@ using namespace std;
     #define __RTLD_TYPE__ RTLD_LOCAL
 #endif
 
-const int __DINFIO_VERSION_NUMBER__ = 30106;
+const int __DINFIO_VERSION_NUMBER__ = 30107;
 const string __DINFIO_VERSION_MAJOR__ = "3";
 const string __DINFIO_VERSION_MINOR__ = "1";
-const string __DINFIO_VERSION_REVISION__ = "06";
+const string __DINFIO_VERSION_REVISION__ = "07";
 const string __DINFIO_VERSION__ =  __DINFIO_VERSION_MAJOR__ + "." + __DINFIO_VERSION_MINOR__ + "." + __DINFIO_VERSION_REVISION__;
-const string __DINFIO_BUILD_DATE_RAW__ = "2022-01-07";
-const string __DINFIO_BUILD_DATE__ = "7 January 2022";
+const string __DINFIO_BUILD_DATE_RAW__ = "2023-mm-dd";
+const string __DINFIO_BUILD_DATE__ = "2023";
 const string __MODULES_PATH__ = __DINFIO_PATH__ + "modules/";
 
 
