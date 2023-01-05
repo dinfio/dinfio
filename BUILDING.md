@@ -109,8 +109,8 @@ $ ./dinfio ../tests/module_gui.fio
 
 ## Required Build Tools and Libraries
 
-- [g++](https://gcc.gnu.org/) >= 5.4.0 &mdash; If you compile Dinfio on Linux
-- [Clang](https://clang.llvm.org/) >= 9.0.0 &mdash; If you compile Dinfio on macOS
-- [MinGW with g++](https://sourceforge.net/projects/mingw/) >= 9.2.0 &mdash; If you compile Dinfio on Windows. MSVC is not tested yet
+- [g++](https://gcc.gnu.org/) >= 5.4.0 &mdash; If you are going to compile Dinfio on Linux
+- [Clang](https://clang.llvm.org/) >= 9.0.0 &mdash; If you are going to compile Dinfio on macOS
+- [MinGW with g++](https://sourceforge.net/projects/mingw/) >= 9.2.0 &mdash; If you are going to compile Dinfio on Windows. MSVC is not tested yet
 - [libcurl](https://curl.se/libcurl/) >= 7.47 &mdash; If you want to compile `url` module
 - [wxWidgets](https://www.wxwidgets.org/) >= 3.1.4 (>= 3.0.4 on Raspberry Pi OS) &mdash; If you want to compile `gui` module
