@@ -89,7 +89,7 @@ start
 stop
 
 function create_gui()
-    global window = gui_window("Tetris in Dinfio", canvas_spec.x * 2 + canvas_spec.width + 128, canvas_spec.y * 2 + canvas_spec.height)
+    global window = gui_window("Tetris in Dinfio", canvas_spec.x * 2 + canvas_spec.width + 128, canvas_spec.y * 2 + canvas_spec.height, false)
 
     global canvas = gui_panel(window, canvas_spec.x, canvas_spec.y, canvas_spec.width, canvas_spec.height, true)
     global label_score = gui_label("Score: " & score, window, canvas_spec.x * 2 + canvas_spec.width, 20, 140, 32)
@@ -417,6 +417,19 @@ function load_game()
 stop
 
 function save_game()
+    json_data = filecontent(getfoldername(getcurrentfile()) & "/tetris.json")
+    saved_score = 0
+
+    if json_data != ""
+        json_data = json.decode(json_data)
+        saved_score = json_data.score
+    endif
+
+    if saved_score > score
+        i = messagebox("Your saved score is higher than the current score. Are you sure you want to continue?", "Tetris in Dinfio", message.question + message.yesno)
+        if i == message.no; return; endif
+    endif
+
     json_data = json.encode({
         score: score,
         score_lines: score_lines,
