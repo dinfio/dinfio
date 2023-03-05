@@ -1,0 +1,30 @@
+' ChatGPT example in Dinfio
+
+import openai
+
+start
+    setup()
+
+    writeln("Welcome to ChatGPT example in Dinfio!")
+    writeln("The following is a conversation with an AI.\n")
+
+    while true
+        write("You: ")
+        question = readln()
+
+        if question == ""; break; endif
+
+        prompt &= question & "\n"
+        write("AI: ...")
+
+        result = openai.completion(prompt)
+
+        prompt &= result & "\n"
+        writeln("\rAI: " & result)
+    endwhile
+stop
+
+function setup()
+    global prompt = "Hello!\nHi!\n"
+    openai.api_key = "Your API Key"
+stop

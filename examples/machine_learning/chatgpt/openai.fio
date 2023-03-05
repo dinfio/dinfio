@@ -1,0 +1,56 @@
+' OpenAI Module (Beta)
+
+import url
+import json
+
+function openai::init()
+    global openai = openai()
+stop
+
+class openai
+    field __server__
+    field api_key
+
+    function construct()
+        this.__server__ = "https://api.openai.com/v1/completions"
+    stop
+
+    function completion(prompt, model = "text-davinci-003", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
+        request = json.encode({
+            "model": model,
+            "prompt": prompt,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "top_p": top_p,
+            "frequency_penalty": frequency_penalty,
+            "presence_penalty": presence_penalty,
+            "stop": stop_sequence
+        })
+
+        response = url.post(this.__server__, request, false, {"Content-Type": "application/json", "Authorization": "Bearer " & this.api_key})
+        
+        if response.code == 200
+            data = json.decode(response.body)
+
+            if data != nothing
+                if !attribute_exists(data, "error")
+                    return data.choices[0].text
+                else
+                    return "OpenAI error: " & data.error.message
+                endif
+            else
+                return "OpenAI parse error: " & json.get_error()
+            endif
+        elseif response.code != 0
+            data = json.decode(response.body)
+            
+            if data != nothing
+                return "OpenAI error: " & data.error.message
+            else
+                return "OpenAI parse error: " & json.get_error()
+            endif
+        else
+            return "OpenAI error: Unable to retrieve data from server (" & response.error_string & ")"
+        endif
+    stop
+endclass
