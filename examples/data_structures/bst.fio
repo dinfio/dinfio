@@ -35,7 +35,7 @@ class binarysearchtree
     stop
     
     function doinsert(x, binarynode: t)
-        if is_nothing(t)
+        if t == nothing
             t = binarynode(x)
         elseif x < t.element
             t.left = this.doinsert(x, t.left)
@@ -53,7 +53,7 @@ class binarysearchtree
     stop
     
     function dopreorder(binarynode: t)
-        if !is_nothing(t)
+        if t != nothing
             write(t.element & " ")
             this.dopreorder(t.left)
             this.dopreorder(t.right)
@@ -65,7 +65,7 @@ class binarysearchtree
     stop
     
     function doinorder(binarynode: t)
-        if !is_nothing(t)
+        if t != nothing
             this.doinorder(t.left)
             write(t.element & " ")
             this.doinorder(t.right)
@@ -77,7 +77,7 @@ class binarysearchtree
     stop
     
     function dopostorder(binarynode: t)
-        if !is_nothing(t)
+        if t != nothing
             this.dopostorder(t.left)
             this.dopostorder(t.right)
             write(t.element & " ")

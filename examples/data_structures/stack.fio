@@ -36,7 +36,7 @@ class stack
     stop
 
     function pop()
-        if is_nothing(this.head.next)
+        if this.head.next == nothing
             return nothing
         endif
         
@@ -49,7 +49,7 @@ class stack
     stop
 
     function top()
-        if is_nothing(this.head.next)
+        if this.head.next == nothing
             return nothing
         endif
         

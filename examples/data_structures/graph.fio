@@ -59,7 +59,7 @@ class graph
         var vertex: v1 = this.get_vertex(vertex_1)
         var vertex: v2 = this.get_vertex(vertex_2)
 
-        if !is_nothing(v1) && !is_nothing(v2)
+        if v1 != nothing && v2 != nothing
             v1.add_adjacent(v2, cost, undirected)
         endif
     stop

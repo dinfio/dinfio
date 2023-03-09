@@ -30,7 +30,7 @@ class queue
         node.element = element
         this.size += 1
 
-        if is_nothing(this.tail)
+        if this.tail == nothing
             this.head = node
             this.tail = node
 
@@ -42,14 +42,14 @@ class queue
     stop
 
     function pop()
-        if is_nothing(this.head)
+        if this.head == nothing
             return nothing
         endif
         
         var node = this.head
         this.head = this.head.next
 
-        if is_nothing(this.head)
+        if this.head == nothing
             this.tail = nothing
         endif
         
@@ -58,7 +58,7 @@ class queue
     stop
 
     function top()
-        if is_nothing(this.head)
+        if this.head == nothing
             return nothing
         endif
         
