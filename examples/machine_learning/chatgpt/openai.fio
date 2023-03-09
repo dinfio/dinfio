@@ -1,21 +1,17 @@
 ' OpenAI Module (Beta)
 
-import url
-import json
+import string, url, json
+import multiprocess
 
 function openai::init()
+    global __openai_server__ = "https://api.openai.com/v1/completions"
     global openai = openai()
 stop
 
 class openai
-    field __server__
     field api_key
 
-    function construct()
-        this.__server__ = "https://api.openai.com/v1/completions"
-    stop
-
-    function completion(prompt, model = "text-davinci-003", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
+    function completion(prompt, raw_response = false, model = "text-davinci-003", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
         request = json.encode({
             "model": model,
             "prompt": prompt,
@@ -27,14 +23,28 @@ class openai
             "stop": stop_sequence
         })
 
-        response = url.post(this.__server__, request, false, {"Content-Type": "application/json", "Authorization": "Bearer " & this.api_key})
+        response = url.post(__openai_server__, request, false, {"Content-Type": "application/json", "Authorization": "Bearer " & this.api_key})
+
+        if raw_response
+            return json.decode(response.body)
+        endif
         
         if response.code == 200
             data = json.decode(response.body)
 
             if data != nothing
                 if !attribute_exists(data, "error")
-                    return data.choices[0].text
+                    if trim(data.choices[0].text) == ""
+                        return "Sorry, but I don't understand."
+                    else
+                        result = ""
+
+                        for i, 0, size(data.choices) - 1
+                            result &= data.choices[i].text & "\n"
+                        endfor
+
+                        return subleft(result, length(result) - 1)
+                    endif
                 else
                     return "OpenAI error: " & data.error.message
                 endif
@@ -52,5 +62,10 @@ class openai
         else
             return "OpenAI error: Unable to retrieve data from server (" & response.error_string & ")"
         endif
+    stop
+
+    function completion_async(prompt, ref: callback, raw_response = false, model = "text-davinci-003", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
+        process("openai_worker", [this.api_key, prompt, raw_response, model, temperature, max_tokens, top_p, frequency_penalty, presence_penalty, stop_sequence], nothing, callback)
+        return true
     stop
 endclass

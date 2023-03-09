@@ -26,5 +26,5 @@ stop
 
 function setup()
     global prompt = "Hello!\nHi!\n"
-    openai.api_key = "Your API Key"
+    openai.api_key = "Your Key"
 stop

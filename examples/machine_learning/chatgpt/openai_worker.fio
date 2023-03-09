@@ -1,0 +1,11 @@
+' OpenAI Module (Beta)
+
+import openai
+import multiprocess
+
+start
+    [openai.api_key, prompt, raw_response, model, temperature, max_tokens, top_p, frequency_penalty, presence_penalty, stop_sequence] = process_arguments
+    result = openai.completion(prompt, raw_response, model, temperature, max_tokens, top_p, frequency_penalty, presence_penalty, stop_sequence)
+
+    process_return(result)
+stop
