@@ -66,6 +66,11 @@ void parse_arguments(int argc, char* argv[]) {
 }
 
 void error_message(string error) {
+    if (__on_error_callback != NULL) {
+        uint_fast32_t caller_id_oec = 1;
+        call_function(__on_error_callback, caller_id_oec);
+    }
+
     Color::Modifier red(Color::FG_RED);
     Color::Modifier def(Color::FG_DEFAULT);
 

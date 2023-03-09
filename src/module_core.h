@@ -23,7 +23,7 @@ namespace core {
     uint_fast16_t __caller_file;
     uint_fast16_t __attribute_set, __attribute_get, __attribute_exists;
     uint_fast16_t __bit_not, __bit_and, __bit_or, __bit_xor, __bit_ls, __bit_rs;
-    uint_fast16_t __register_event_loop;
+    uint_fast16_t __register_event_loop, __set_on_error_callback;
 
     class RefHolder: public Base {
     public:
@@ -89,9 +89,10 @@ namespace core {
         __bit_rs = register_function("brs", __REG_BUILT_IN_FUNCTION__);
 
         __register_event_loop = register_function("register_event_loop", __REG_BUILT_IN_FUNCTION__);
+        __set_on_error_callback = register_function("set_on_error_callback", __REG_BUILT_IN_FUNCTION__);
         
         __min = __array;
-        __max = __register_event_loop;   // DO NOT FORGET THIS!
+        __max = __set_on_error_callback;   // DO NOT FORGET THIS!
     }
 
     DataType* __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
@@ -952,6 +953,25 @@ namespace core {
                     result->__type = __TYPE_BOOL__;
                     result->__value_bool = false;
                 }
+            } else {
+                result->__type = __TYPE_BOOL__;
+                result->__value_bool = false;
+            }
+        } else if (func == __set_on_error_callback) {
+            if (params.size() < 1) error_message_param("set_on_error_callback");
+            AST* f = params.at(0);
+            if (f->__type != __AST_FUNCTION_CALL__) error_message("set_on_error_callback(): parameter #1 must be a function call");
+
+            if (((AST_FunctionCall*) f)->__address == 0) {
+                uint_fast16_t func_id = __registered_functions[((AST_FunctionCall*) f)->__identifier];
+                if (func_id == 0) error_message("Undefined function " + ((AST_FunctionCall*) f)->__identifier + "()");
+            }
+
+            if (__on_error_callback == NULL) {
+                __on_error_callback = f;
+
+                result->__type = __TYPE_BOOL__;
+                result->__value_bool = true;
             } else {
                 result->__type = __TYPE_BOOL__;
                 result->__value_bool = false;

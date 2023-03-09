@@ -314,6 +314,7 @@ string __imported_modules;
 Module* __gui_module;
 uint_fast16_t __gui_event_loop = 0;
 AST* __event_loop = NULL;
+AST* __on_error_callback = NULL;
 
 void init_builtin(int, char*);
 void import_module(string);
