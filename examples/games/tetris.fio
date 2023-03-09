@@ -13,9 +13,9 @@ var canvas_spec = {
     colour: colour.hex("fafafa")
 }
 
-var scale = 16
-var t_width = canvas_spec.width \ scale
-var t_height = canvas_spec.height \ scale
+var scaling = 16
+var t_width = canvas_spec.width \ scaling
+var t_height = canvas_spec.height \ scaling
 var speed = 700
 var round_radius = 4
 var score = 0
