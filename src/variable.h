@@ -549,7 +549,7 @@ void declare_variables(AST* l, AST* r, uint_fast32_t& caller_id, bool is_local) 
         }
 
         if (__variables[c + ((AST_Variable*) vr)->__identifier] != NULL) {
-            delete(__variables[c + ((AST_Variable*) vr)->__identifier]);
+            error_message("Variable '" + ((AST_Variable*) vr)->__identifier + "' is already declared");
         }
 
         __variables[c + ((AST_Variable*) vr)->__identifier] = d;
