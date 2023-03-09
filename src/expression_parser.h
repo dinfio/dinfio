@@ -604,6 +604,7 @@ AST_Parameter* parse_import_declaration(string& expression) {
 
 bool is_there_object(string& expression) {
     bool in_quotes = false;
+    int n_parentheses = 0;
 
     for (int i = 0; i < expression.length(); i++) {
         string m = expression.substr(i, 1);
@@ -613,7 +614,14 @@ bool is_there_object(string& expression) {
             else in_quotes = true;
         }
 
-        if (!in_quotes && m == ".") return true;
+        if (!in_quotes && m == "[") n_parentheses++;
+        if (!in_quotes && m == "]") n_parentheses--;
+        if (!in_quotes && m == "(") n_parentheses++;
+        if (!in_quotes && m == ")") n_parentheses--;
+        if (!in_quotes && m == "{") n_parentheses++;
+        if (!in_quotes && m == "}") n_parentheses--;
+
+        if (!in_quotes && n_parentheses == 0 && m == ".") return true;
     }
 
     return false;
