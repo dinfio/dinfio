@@ -111,8 +111,7 @@ function create_gui()
     label_level.setfontbold(true)
 
     window.setbackgroundcolour(colour.white)
-    canvas.setbackgroundcolour(canvas_spec.colour)
-    canvas.setenable(false)
+    canvas.setbackgroundcolour(colour.white)
 
     button_save.addevent(event.click, save_game())
     button_load.addevent(event.click, load_game())
@@ -121,11 +120,14 @@ function create_gui()
 
     if !dinfio.is_windows
         window.addevent(event.keydown, keypress())
+        canvas.addevent(event.keydown, keypress())
     else
         window.addevent(event.keyup, keypress())
+        canvas.addevent(event.keydown, keypress())
     endif
 
     window.show()
+    canvas.setfocus()
 stop
 
 function draw_matrix(matrix, x, y)
@@ -348,14 +350,14 @@ function update()
     draw_arena()
     draw_matrix(player.matrix, player.pos.x, player.pos.y)
 
-    canvas.update()
+    canvas.refresh()
 stop
 
 function pre_update()
     draw_arena()
     draw_matrix(player.matrix, player.pos.x, player.pos.y)
 
-    canvas.update()
+    canvas.refresh()
 stop
 
 function wipe_lines()
@@ -378,11 +380,12 @@ function wipe_lines()
         canvas.draw_roundedrectangle((wiped_index - 1) * t_width, (wiped_lines[i] - 1) * t_width, t_width, t_width, round_radius)
     endfor
 
-    canvas.update()
+    canvas.refresh()
     wiped_index += 1
 stop
 
 function load_game()
+    canvas.setfocus()
     json_data = filecontent(getfoldername(getcurrentfile()) & "/tetris.json")
 
     if json_data != ""
@@ -417,6 +420,8 @@ function load_game()
 stop
 
 function save_game()
+    canvas.setfocus()
+    
     json_data = filecontent(getfoldername(getcurrentfile()) & "/tetris.json")
     saved_score = 0
 
