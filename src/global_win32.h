@@ -66,11 +66,6 @@ void parse_arguments(int argc, char* argv[]) {
 }
 
 void error_message(string error) {
-    if (__on_error_callback != NULL) {
-        uint_fast32_t caller_id_oec = 1;
-        call_function(__on_error_callback, caller_id_oec);
-    }
-    
     if (!__interactive_mode) {
         cout << endl << error << endl << endl;
 
@@ -85,6 +80,11 @@ void error_message(string error) {
         }
     } else {
         cout << error << endl;
+    }
+
+    if (__on_error_callback != NULL) {
+        uint_fast32_t caller_id_oec = 1;
+        call_function(__on_error_callback, caller_id_oec);
     }
 
     exit(EXIT_FAILURE);
