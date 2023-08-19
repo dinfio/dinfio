@@ -12,10 +12,8 @@
 -------------------------------------------------------------------
 */
 
-/*
-NOTE: Add this if your libcurl version >= 7.56
-#define __NEW_CURL__
-*/
+/* NOTE: Uncomment the following line if your libcurl's version >= 7.56 */
+/* #define __NEW_CURL__ */
 
 #include <curl/curl.h>
 #include <sstream>
@@ -769,7 +767,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             curl_easy_setopt(curl, CURLOPT_CAINFO, __ssl_cainfo.c_str());
         } else {
             #ifdef _WIN32
-                curl_easy_setopt(curl, CURLOPT_CAINFO, "C:\\Program Files (x86)\\Dinfio\\curl-ca-bundle.crt");
+                curl_easy_setopt(curl, CURLOPT_CAINFO, "C:\\Dinfio\\curl-ca-bundle.crt");
             #endif
         }
         
@@ -902,7 +900,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
                 connector->__remove_garbage(params.at(1), e);
             } else {
                 dmime = connector->__get_value(params.at(1), caller_id);
-                if (dmime->__type != __TYPE_OBJECT__) connector->__error_message("url::post(): parameter #2 must be an object because multipart is true");
+                if (dmime->__type != __TYPE_OBJECT__) connector->__error_message("url::post(): parameter #2 must be an object since multipart is true");
             }
         }
         if (params.size() > 3) {
@@ -974,7 +972,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             curl_easy_setopt(curl, CURLOPT_CAINFO, __ssl_cainfo.c_str());
         } else {
             #ifdef _WIN32
-                curl_easy_setopt(curl, CURLOPT_CAINFO, "C:\\Program Files (x86)\\Dinfio\\curl-ca-bundle.crt");
+                curl_easy_setopt(curl, CURLOPT_CAINFO, "C:\\Dinfio\\curl-ca-bundle.crt");
             #endif
         }
 
@@ -1027,7 +1025,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
                 response_error_string = curl_easy_strerror(res);
             }
         } else {
-            // Response saved to file
+            // Response is saved to file
 
             FILE *target;
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, __write_to_file);
