@@ -254,6 +254,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 
                 AST_Value* v = new AST_Value(ival);
                 assignment(e, v, caller_id);
+                delete v;
             }
         }
 
