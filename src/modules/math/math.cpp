@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -63,13 +63,13 @@ double random_double(double min, double max) {
 #endif
 
 void add_constant_double(string name, double value) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = value;
     connector->__add_constant(name, d);
 }
 
 void add_constant_string(string name, string value) {
-    DataType* d = new DataType(__TYPE_STRING__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = value;
     connector->__add_constant(name, d);
 }
@@ -134,13 +134,13 @@ void Module::__init(Connector* c) {
     __max = __math_round;   // DO NOT FORGET THIS!
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __math_getnumber) {
         if (params.size() < 1) connector->__error_message_param("getnumber");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         result->__type = __TYPE_DOUBLE__;
 
         if (d->__type == __TYPE_STRING__) {
@@ -163,7 +163,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_sin) {
         if (params.size() < 1) connector->__error_message_param("sin");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sin(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -175,7 +175,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_cos) {
         if (params.size() < 1) connector->__error_message_param("cos");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("cos(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -187,7 +187,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_tan) {
         if (params.size() < 1) connector->__error_message_param("tan");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("tan(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -200,7 +200,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_sind) {
         if (params.size() < 1) connector->__error_message_param("sind");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sind(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -212,7 +212,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_cosd) {
         if (params.size() < 1) connector->__error_message_param("cosd");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("cosd(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -224,7 +224,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_tand) {
         if (params.size() < 1) connector->__error_message_param("tand");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("tand(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -237,7 +237,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_asin) {
         if (params.size() < 1) connector->__error_message_param("asin");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("asin(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -249,7 +249,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_acos) {
         if (params.size() < 1) connector->__error_message_param("acos");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("acos(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -261,7 +261,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_atan) {
         if (params.size() < 1) connector->__error_message_param("atan");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("atan(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -274,7 +274,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_asind) {
         if (params.size() < 1) connector->__error_message_param("asind");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("asin(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -286,7 +286,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_acosd) {
         if (params.size() < 1) connector->__error_message_param("acosd");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("acos(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -298,7 +298,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_atand) {
         if (params.size() < 1) connector->__error_message_param("atand");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("atan(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -311,7 +311,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_sinh) {
         if (params.size() < 1) connector->__error_message_param("sinh");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sinh(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -323,7 +323,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_cosh) {
         if (params.size() < 1) connector->__error_message_param("cosh");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("cosh(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -335,7 +335,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_tanh) {
         if (params.size() < 1) connector->__error_message_param("tanh");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("tanh(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -348,7 +348,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_asinh) {
         if (params.size() < 1) connector->__error_message_param("asinh");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sinh(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -360,7 +360,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_acosh) {
         if (params.size() < 1) connector->__error_message_param("acosh");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("cosh(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -372,7 +372,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_atanh) {
         if (params.size() < 1) connector->__error_message_param("atanh");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("tanh(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -385,7 +385,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __math_abs) {
         if (params.size() < 1) connector->__error_message_param("abs");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("abs(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -397,7 +397,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_sign) {
         if (params.size() < 1) connector->__error_message_param("sign");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sign(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -409,7 +409,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_sqrt) {
         if (params.size() < 1) connector->__error_message_param("sqrt");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sqrt(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -421,7 +421,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_exp) {
         if (params.size() < 1) connector->__error_message_param("exp");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("exp(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -433,7 +433,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_ln) {
         if (params.size() < 1) connector->__error_message_param("ln");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("ln(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -445,7 +445,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_log) {
         if (params.size() < 1) connector->__error_message_param("log");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("log(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -457,8 +457,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_logn) {
         if (params.size() < 2) connector->__error_message_params("logn", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("logn(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("logn(): parameter #2 must be a number");
         double v = d->__value_double;
@@ -473,7 +473,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_floor) {
         if (params.size() < 1) connector->__error_message_param("floor");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("floor(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -485,7 +485,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_ceil) {
         if (params.size() < 1) connector->__error_message_param("ceil");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("ceil(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -497,7 +497,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_int) {
         if (params.size() < 1) connector->__error_message_param("int");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("int(): parameter #1 must be a number");
         double v = d->__value_double;
 
@@ -509,12 +509,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_round) {
         if (params.size() < 1) connector->__error_message_param("round");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("round(): parameter #1 must be a number");
         double v = d->__value_double;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("round(): parameter #2 must be a number");
             int w = (int) e->__value_double;
             result->__type = __TYPE_DOUBLE__;
@@ -537,8 +537,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __math_random) {
         if (params.size() < 2) connector->__error_message_params("random", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("random(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("random(): parameter #2 must be a number");
         double v = d->__value_double;
@@ -553,8 +553,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __math_randomint) {
         if (params.size() < 2) connector->__error_message_params("randomint", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("randomint(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("randomint(): parameter #2 must be a number");
         int v = (int) d->__value_double;

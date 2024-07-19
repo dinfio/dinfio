@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -89,8 +89,8 @@ void Module::__init(Connector* c) {
     __max = __time_sleep_s;   // DO NOT FORGET THIS!
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __time_now) {
@@ -109,8 +109,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __time_time_diff) {
         if (params.size() < 2) connector->__error_message_params("time_diff", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("time_diff(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("time_diff(): parameter #2 must be a number");
 
@@ -130,21 +130,21 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_STRING__) connector->__error_message("datetime(): parameter #1 must be a string");
             fmt = e->__value_string;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("datetime(): parameter #2 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(1), e);
         }
         if (params.size() > 2) {
-            DataType* e = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(2), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("datetime(): parameter #3 must be a boolean");
             utc = e->__value_bool;
 
@@ -161,9 +161,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __time_create_datetime) {
         if (params.size() < 3) connector->__error_message_params("create_datetime", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("create_datetime(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("create_datetime(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("create_datetime(): parameter #3 must be a number");
@@ -177,28 +177,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 3) {
-            DataType* e = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(3), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("create_datetime(): parameter #4 must be a number");
             hour = (int) e->__value_double;
 
             connector->__remove_garbage(params.at(3), e);
         }
         if (params.size() > 4) {
-            DataType* e = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(4), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("create_datetime(): parameter #5 must be a number");
             minute = (int) e->__value_double;
 
             connector->__remove_garbage(params.at(4), e);
         }
         if (params.size() > 5) {
-            DataType* e = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(5), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("create_datetime(): parameter #6 must be a number");
             second = (int) e->__value_double;
 
             connector->__remove_garbage(params.at(5), e);
         }
         if (params.size() > 6) {
-            DataType* e = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(6), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("create_datetime(): parameter #7 must be a boolean");
             utc = e->__value_bool;
 
@@ -229,7 +229,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __time_set_locale) {
         if (params.size() < 1) connector->__error_message_param("set_timelocale");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("set_timelocale(): parameter #1 must be a string");
 
         setlocale(LC_TIME, d->__value_string.c_str());
@@ -245,14 +245,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_year(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_year(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -269,14 +269,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_month(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_month(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -293,14 +293,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_day(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_day(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -317,14 +317,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_weekday(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_weekday(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -341,14 +341,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_yearday(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_yearday(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -365,14 +365,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_hour(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_hour(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -389,14 +389,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_minute(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_minute(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -413,14 +413,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_second(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_second(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -437,14 +437,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("is_dst(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("is_dst(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -461,14 +461,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool utc = false;
 
         if (params.size() > 0) {
-            DataType* e = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(0), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("get_timezone(): parameter #1 must be a number");
             t = (time_t) e->__value_double;
 
             connector->__remove_garbage(params.at(0), e);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("get_timezone(): parameter #2 must be a boolean");
             utc = e->__value_bool;
 
@@ -489,7 +489,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     } else if (func_id == __time_sleep) {
         vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
         if (params.size() < 1) connector->__error_message_param("sleep");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sleep(): parameter #1 must be a number");
 
         long ms = d->__value_double;
@@ -499,7 +499,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     } else if (func_id == __time_sleep_s) {
         vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
         if (params.size() < 1) connector->__error_message_param("sleep_s");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("sleep_s(): parameter #1 must be a number");
 
         long s = d->__value_double;

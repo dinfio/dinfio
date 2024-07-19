@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -21,22 +21,22 @@ uint_fast16_t __rl_setmaxhistory, __rl_setcompletion, __rl_addcompletion, __rl_c
 
 vector<string> __completion_list;
 
-DataType* __new_double(double v) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+gc<DataType> __new_double(double v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = v;
 
     return d;
 }
 
-DataType* __new_string(string v) {
-    DataType* d = new DataType(__TYPE_STRING__);
+gc<DataType> __new_string(string v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = v;
 
     return d;
 }
 
-DataType* __new_bool(bool v) {
-    DataType* d = new DataType(__TYPE_BOOL__);
+gc<DataType> __new_bool(bool v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_BOOL__);
     d->__value_bool = v;
 
     return d;
@@ -106,8 +106,8 @@ void Module::__init(Connector* c) {
     });
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __rl) {
@@ -116,7 +116,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool quit;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_STRING__) connector->__error_message("rl(): parameter #1 must be a string");
             prompt = d->__value_string;
 
@@ -135,7 +135,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __rl_addhistory) {
         if (params.size() < 1) connector->__error_message_param("rl_addhistory");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("rl_addhistory(): parameter #1 must be a string");
 
         result->__type = __TYPE_BOOL__;
@@ -146,7 +146,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __rl_loadhistory) {
         if (params.size() < 1) connector->__error_message_param("rl_loadhistory");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("rl_loadhistory(): parameter #1 must be a string");
 
         result->__type = __TYPE_BOOL__;
@@ -157,7 +157,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __rl_savehistory) {
         if (params.size() < 1) connector->__error_message_param("rl_savehistory");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("rl_savehistory(): parameter #1 must be a string");
 
         result->__type = __TYPE_BOOL__;
@@ -175,7 +175,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __rl_addcompletion) {
         if (params.size() < 1) connector->__error_message_param("rl_addcompletion");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("rl_addcompletion(): parameter #1 must be a string");
 
         __completion_list.push_back(d->__value_string);
@@ -188,10 +188,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __rl_setcompletion) {
         if (params.size() < 1) connector->__error_message_param("rl_setcompletion");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_ARRAY__) connector->__error_message("rl_setcompletion(): parameter #1 must be an array");
 
-        vector<DataType*> arr = d->__value_array->__elements;
+        vector<gc<DataType>> arr = d->__value_array->__elements;
         __completion_list.clear();
 
         for (int i = 0; i < arr.size(); i++) {

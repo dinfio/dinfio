@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -207,13 +207,13 @@ size_t levenshtein(const string& s1, const string& s2) {
 }
 
 void add_constant_double(string name, double value) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = value;
     connector->__add_constant(name, d);
 }
 
 void add_constant_string(string name, string value) {
-    DataType* d = new DataType(__TYPE_STRING__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = value;
     connector->__add_constant(name, d);
 }
@@ -263,14 +263,14 @@ void Module::__init(Connector* c) {
     __max = __string_join;   // DO NOT FORGET THIS!
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __string_split) {
         if (params.size() < 2) connector->__error_message_params("split", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("split(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("split(): parameter #2 must be a string");
 
@@ -278,7 +278,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         vector<string> v;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("split(): parameter #3 must be a number");
             limit = f->__value_double;
 
@@ -288,10 +288,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             v = split(d->__value_string, e->__value_string);
         }
 
-        DataType* da = connector->__create_array(0);
+        gc<DataType> da = connector->__create_array(0);
 
         for (int i = 0; i < v.size(); i++) {
-            DataType* el = new DataType(__TYPE_STRING__);
+            gc<DataType> el = new_gc<DataType>(__TYPE_STRING__);
             el->__value_string = v.at(i);
             da->__value_array->__elements.push_back(el);
         }
@@ -302,7 +302,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return da;
     } else if (func_id == __string_length) {
         if (params.size() < 1) connector->__error_message_param("length");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("length(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -314,7 +314,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_toascii) {
         if (params.size() < 1) connector->__error_message_param("toascii");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("toascii(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -326,7 +326,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_fromascii) {
         if (params.size() < 1) connector->__error_message_param("fromascii");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("fromascii(): parameter #1 must be a number");
         char s = (char) d->__value_double;
         
@@ -338,7 +338,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_trim) {
         if (params.size() < 1) connector->__error_message_param("trim");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("trim(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -350,7 +350,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_ltrim) {
         if (params.size() < 1) connector->__error_message_param("ltrim");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("ltrim(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -362,7 +362,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_rtrim) {
         if (params.size() < 1) connector->__error_message_param("rtrim");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("rtrim(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -374,7 +374,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_lcase) {
         if (params.size() < 1) connector->__error_message_param("lcase");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("lcase(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -386,7 +386,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_ucase) {
         if (params.size() < 1) connector->__error_message_param("ucase");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("ucase(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -398,7 +398,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_fcase) {
         if (params.size() < 1) connector->__error_message_param("fcase");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("fcase(): parameter #1 must be a string");
         string s = d->__value_string;
         
@@ -410,7 +410,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_reverse) {
         if (params.size() < 1) connector->__error_message_param("reverse");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("reverse(): parameter #1 must be a string");
         string s = d->__value_string;
 
@@ -422,8 +422,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_subleft) {
         if (params.size() < 2) connector->__error_message_params("subleft", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("subleft(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("subleft(): parameter #2 must be a number");
         string s = d->__value_string;
@@ -437,8 +437,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_subright) {
         if (params.size() < 2) connector->__error_message_params("subright", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("subright(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("subright(): parameter #2 must be a number");
         string s = d->__value_string;
@@ -452,14 +452,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_substring) {
         if (params.size() < 2) connector->__error_message_params("substring", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("substring(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("substring(): parameter #2 must be a number");
         string s = d->__value_string;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("substring(): parameter #3 must be a number");
             s = s.substr(e->__value_double, f->__value_double);
 
@@ -477,8 +477,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_repeat) {
         if (params.size() < 2) connector->__error_message_params("repeat", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("repeat(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("repeat(): parameter #2 must be a number");
         string s = d->__value_string;
@@ -492,8 +492,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_format) {
         if (params.size() < 2) connector->__error_message_params("format", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("format(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("format(): parameter #2 must be a number");
         
@@ -520,8 +520,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_find) {
         if (params.size() < 2) connector->__error_message_params("find", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("find(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("find(): parameter #2 must be a string");
         string s = d->__value_string;
@@ -530,7 +530,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         size_t pos;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("find(): parameter #3 must be a number");
             start = (size_t) f->__value_double;
 
@@ -549,8 +549,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_findlast) {
         if (params.size() < 2) connector->__error_message_params("findlast", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("findlast(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("findlast(): parameter #2 must be a string");
         string s = d->__value_string;
@@ -559,7 +559,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         size_t pos;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("findlast(): parameter #3 must be a number");
             start = (size_t) f->__value_double;
 
@@ -578,16 +578,16 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_replace) {
         if (params.size() < 3) connector->__error_message_params("replace", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("replace(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("replace(): parameter #2 must be a string");
         if (f->__type != __TYPE_STRING__) connector->__error_message("replace(): parameter #3 must be a string");
         string s = d->__value_string;
         
         if (params.size() > 3) {
-            DataType* g = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(3), caller_id);
             if (g->__type != __TYPE_DOUBLE__) connector->__error_message("find(): parameter #4 must be a number");
             int count = g->__value_double;
 
@@ -607,7 +607,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_str) {
         if (params.size() < 1) connector->__error_message_param("str");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         string s = "";
 
         if (d->__type == __TYPE_DOUBLE__) {
@@ -642,8 +642,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_levenshtein) {
         if (params.size() < 2) connector->__error_message_params("levenshtein", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("levenshtein(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("levenshtein(): parameter #2 must be a string");
         
@@ -656,8 +656,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_hamming) {
         if (params.size() < 2) connector->__error_message_params("hamming", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("hamming(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("hamming(): parameter #2 must be a string");
         string a = d->__value_string;
@@ -679,20 +679,20 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __string_join) {
         if (params.size() < 1) connector->__error_message_param("join");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_ARRAY__) connector->__error_message("join(): parameter #1 must be an array");
         string glue = "";
         string rslt = "";
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_STRING__) connector->__error_message("join(): parameter #2 must be a string");
             glue = e->__value_string;
 
             connector->__remove_garbage(params.at(1), e);
         }
 
-        Array* arr = ((Array*) d->__value_array);
+        gc<Array> arr = ((gc<Array>) d->__value_array);
         connector->__remove_garbage(params.at(0), d);
         
         for (const auto t: arr->__elements) {

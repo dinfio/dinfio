@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -29,7 +29,7 @@ uint_fast16_t register_function(string name, uint_fast8_t type) {
     return counter;
 }
 
-DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, bool need_return) {
+gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, bool need_return) {
     uint_fast16_t func_id;
 
     if (func->__address == 0) {
@@ -41,19 +41,19 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
     }
 
     if (func_id > __BUCKET_EXTERNAL_FUNCTION__) {
-        Object* o = NULL;
+        gc<Object> o = NULL;
 
         for (uint_fast16_t i = 0; i < __modules.size(); i++) {
             Module* m = __modules.at(i);
             if (func_id >= m->__min && func_id <= m->__max) return m->__call(func_id, func, o, caller_id);
         }
 
-        return new DataType(__TYPE_NULL__);
+        return new_gc<DataType>(__TYPE_NULL__);
     } else if (func_id > __BUCKET_BUILT_IN_FUNCTION__) {
         if (func_id >= standardIO::__min && func_id <= standardIO::__max) return standardIO::__call(func_id, func, caller_id);
         if (func_id >= core::__min && func_id <= core::__max) return core::__call(func_id, func, caller_id);
 
-        return new DataType(__TYPE_NULL__);
+        return new_gc<DataType>(__TYPE_NULL__);
     } else if (func_id > __BUCKET_UDEF_FUNCTION__) {
         Code* c = __udef_function_map[func_id];
         AST_FunctionCall* f = ((AST_FunctionCall*) c->__body);
@@ -99,7 +99,7 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
         __last_cur_i = 0;
 
         if (need_return) {
-            DataType* r = __variables[sfc + "__ret__"];
+            gc<DataType> r = __variables[sfc + "__ret__"];
 
             if (r == NULL) {
                 __cur_i = c->__index;
@@ -128,7 +128,7 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
 
-                delete(__variables[p]);
+                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
@@ -155,22 +155,22 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
   
-                delete(__variables[p]);
+                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
-            return new DataType(__TYPE_NULL__);
+            return new_gc<DataType>(__TYPE_NULL__);
         }
     } else {
-        Object* cm = __class_map[func_id];
-        DataType* d = new DataType(__TYPE_OBJECT__);
-        Object* o = new Object(cm->__name, __object_address++);
+        gc<Object> cm = __class_map[func_id];
+        gc<DataType> d = new_gc<DataType>(__TYPE_OBJECT__);
+        gc<Object> o = new_gc<Object>(cm->__name, __object_address++);
 
         o->__functions = cm->__functions;
         d->__value_object = o;
 
         for (const auto &attr: cm->__attributes) {
-            o->__attributes[attr.first] = new DataType(__TYPE_NULL__);
+            o->__attributes[attr.first] = new_gc<DataType>(__TYPE_NULL__);
         }
 
         if (cm->__constructor != 0) {
@@ -241,7 +241,7 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
 
-                delete(__variables[p]);
+                // delete(__variables[p]);
                 __variables.erase(p);
             }
         }
@@ -250,9 +250,9 @@ DataType* get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id, b
     }
 }
 
-DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t& caller_id, bool need_return) {
+gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t& caller_id, bool need_return) {
     uint_fast16_t func_id = 0;
-    Object* fo = get_pure_object_value(func->__object, caller_id);
+    gc<Object> fo = get_pure_object_value(func->__object, caller_id);
 
     func_id = fo->__functions[func->__identifier];
     if (func_id == 0) error_message("Function " + func->__identifier + "() is not declared in class " + fo->__name);
@@ -263,11 +263,11 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
             if (func_id >= m->__min && func_id <= m->__max) return m->__call(func_id, func, fo, caller_id);
         }
 
-        return new DataType(__TYPE_NULL__);
+        return new_gc<DataType>(__TYPE_NULL__);
     } else if (func_id > __BUCKET_BUILT_IN_FUNCTION__) {
         // TODO: Call built-in
 
-        return new DataType(__TYPE_NULL__);
+        return new_gc<DataType>(__TYPE_NULL__);
     } else if (func_id > __BUCKET_UDEF_FUNCTION__) {
         Code* c = __udef_function_map[func_id];
         AST_FunctionCall* f = ((AST_FunctionCall*) c->__body);
@@ -289,7 +289,7 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
             error_message("Function " + fo->__name + "::" + func->__identifier + "() needs maximum " + to_string(declaration_params.size()) + " parameters");
         }
 
-        DataType* dfo = new DataType(__TYPE_OBJECT__);
+        gc<DataType> dfo = new_gc<DataType>(__TYPE_OBJECT__);
         dfo->__value_object = fo;
         __variables[sfc + "this"] = dfo;
 
@@ -316,10 +316,10 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
         walk(c->__index + 1, fc, stop_loop, stop_procedure);
 
         __last_cur_i = 0;
-        delete(dfo);
+        // delete(dfo);
 
         if (need_return) {
-            DataType* r = __variables[sfc + "__ret__"];
+            gc<DataType> r = __variables[sfc + "__ret__"];
 
             if (r == NULL) {
                 __cur_i = c->__index;
@@ -349,7 +349,7 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
 
-                delete(__variables[p]);
+                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
@@ -377,38 +377,38 @@ DataType* get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t&
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
                 
-                delete(__variables[p]);
+                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
-            return new DataType(__TYPE_NULL__);
+            return new_gc<DataType>(__TYPE_NULL__);
         }
     } else {
-        return new DataType(__TYPE_NULL__);
+        return new_gc<DataType>(__TYPE_NULL__);
     }
 }
 
 void call_function(AST* func, uint_fast32_t& caller_id) {
     if (func->__type == __AST_FUNCTION_CALL__) {
-        DataType* d = get_function_value((AST_FunctionCall*) func, caller_id, false);
-        delete(d);
+        gc<DataType> d = get_function_value((AST_FunctionCall*) func, caller_id, false);
+        // delete(d);
     } else {
-        DataType* d = get_object_function_value((AST_ObjectFunctionCall*) func, caller_id, false);
-        delete(d);
+        gc<DataType> d = get_object_function_value((AST_ObjectFunctionCall*) func, caller_id, false);
+        // delete(d);
     }
 }
 
-void remove_garbage(AST* param, DataType* d_param) {
-    if (param->__type == __AST_FUNCTION_CALL__ || param->__type == __AST_OBJECT_FUNCTION_CALL__ ||
-        param->__type == __AST_BINARY_EXPRESSION__ || param->__type == __AST_ARRAY_NOTATION__ ||
-        param->__type == __AST_OBJECT_NOTATION__) {
-        delete(d_param);
-    }
+void remove_garbage(AST* param, gc<DataType> d_param) {
+    // if (param->__type == __AST_FUNCTION_CALL__ || param->__type == __AST_OBJECT_FUNCTION_CALL__ ||
+    //     param->__type == __AST_BINARY_EXPRESSION__ || param->__type == __AST_ARRAY_NOTATION__ ||
+    //     param->__type == __AST_OBJECT_NOTATION__) {
+    //     delete(d_param);
+    // }
 }
 
 void parse_function_class() {
     uint_fast16_t count = __functions_classes.size();
-    Object* cur_class = NULL;
+    gc<Object> cur_class = NULL;
     unordered_map<string, uint_fast8_t> classes;
     AST_FunctionCall* cur_func = NULL;
 
@@ -429,7 +429,7 @@ void parse_function_class() {
                 error_message("Class '" + class_name + "' is already declared");
             }
 
-            cur_class = new Object(class_name, 0);
+            cur_class = new_gc<Object>(class_name, 0);
             string extends = "";
 
             for (int j = 1; j < params.size(); j++) {
@@ -452,7 +452,7 @@ void parse_function_class() {
             vector<AST*> params = param->__parameters;
 
             for (int j = 0; j < params.size(); j++) {
-                cur_class->__attributes[((AST_Variable*) params.at(j))->__identifier] = new DataType(__TYPE_DOUBLE__);
+                cur_class->__attributes[((AST_Variable*) params.at(j))->__identifier] = new_gc<DataType>(__TYPE_DOUBLE__);
             }
         } else if (c->__header == __H_FUNCTION__) {
             AST_FunctionCall* f = ((AST_FunctionCall*) c->__body);

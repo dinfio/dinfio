@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -40,8 +40,13 @@ namespace core {
             call_function(__func, caller_id);
         }
 
-        DataType* eval(uint_fast32_t caller_id) {
+        gc<DataType> eval(uint_fast32_t caller_id) {
             return get_function_value((AST_FunctionCall*) __func, caller_id, true);
+        }
+
+        ~RefHolder() {
+            if (__func != NULL) delete __func;
+            __original_params.clear();
         }
     };
 
@@ -95,14 +100,14 @@ namespace core {
         __max = __set_on_error_callback;   // DO NOT FORGET THIS!
     }
 
-    DataType* __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
-        DataType* result = new DataType(__TYPE_NULL__);
+    gc<DataType> __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
         vector<AST*> params = ((AST_FunctionCall*) ast_func)->__parameters;
 
         if (func == __array) {
             if (params.size() > 0) {
-                DataType* d = get_value(params.at(0), caller_id);
-                DataType* r = core::create_array(d->__value_double);
+                gc<DataType> d = get_value(params.at(0), caller_id);
+                gc<DataType> r = core::create_array(d->__value_double);
 
                 remove_garbage(params.at(0), d);
                 return r;
@@ -111,12 +116,12 @@ namespace core {
             }
         } else if (func == __array2d) {
             if (params.size() < 2) error_message_params("array2d", 2);
-            DataType* d = get_value(params.at(0), caller_id);
-            DataType* e = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("array2d(): parameter #1 must be a number");
             if (e->__type != __TYPE_DOUBLE__) error_message("array2d(): parameter #2 must be a number");
 
-            DataType* r = core::create_array_2d(d->__value_double, e->__value_double);
+            gc<DataType> r = core::create_array_2d(d->__value_double, e->__value_double);
 
             remove_garbage(params.at(0), d);
             remove_garbage(params.at(1), e);
@@ -124,8 +129,8 @@ namespace core {
             return r;
         } else if (func == __object) {
             if (params.size() > 0) {
-                DataType* d = get_value(params.at(0), caller_id);
-                DataType* r = core::create_empty_object(d->__value_string);
+                gc<DataType> d = get_value(params.at(0), caller_id);
+                gc<DataType> r = core::create_empty_object(d->__value_string);
 
                 remove_garbage(params.at(0), d);
                 return r;
@@ -134,7 +139,7 @@ namespace core {
             }
         } else if (func == __size) {
             if (params.size() < 1) error_message_param("size");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_ARRAY__) error_message("size(): parameter #1 must be an array");
 
             result->__type = __TYPE_DOUBLE__;
@@ -144,29 +149,29 @@ namespace core {
             return result;
         } else if (func == __append) {
             if (params.size() < 2) error_message_params("append", 2);
-            DataType* f = get_value(params.at(0), caller_id);
-            DataType* d = get_value(params.at(1), caller_id);
+            gc<DataType> f = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_ARRAY__) error_message("append(): parameter #1 must be an array");
 
-            DataType* e;
+            gc<DataType> e;
 
             if (d->__type == __TYPE_DOUBLE__) {
-                e = new DataType(__TYPE_DOUBLE__);
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
                 e->__value_double = d->__value_double;
             } else if (d->__type == __TYPE_BOOL__) {
-                e = new DataType(__TYPE_BOOL__);
+                e = new_gc<DataType>(__TYPE_BOOL__);
                 e->__value_bool = d->__value_bool;
             } else if (d->__type == __TYPE_STRING__) {
-                e = new DataType(__TYPE_STRING__);
+                e = new_gc<DataType>(__TYPE_STRING__);
                 e->__value_string = d->__value_string;
             } else if (d->__type == __TYPE_ARRAY__) {
-                e = new DataType(__TYPE_ARRAY__);
+                e = new_gc<DataType>(__TYPE_ARRAY__);
                 e->__value_array = d->__value_array;
             } else if (d->__type == __TYPE_OBJECT__) {
-                e = new DataType(__TYPE_OBJECT__);
+                e = new_gc<DataType>(__TYPE_OBJECT__);
                 e->__value_object = d->__value_object;
             } else {
-                e = new DataType(__TYPE_NULL__);
+                e = new_gc<DataType>(__TYPE_NULL__);
             }
 
             f->__value_array->__elements.push_back(e);
@@ -180,11 +185,11 @@ namespace core {
             return result;
         } else if (func == __clear) {
             if (params.size() < 1) error_message_param("clear");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_ARRAY__) error_message("clear(): parameter #1 must be an array");
 
             while (!d->__value_array->__elements.empty()) {
-                delete(d->__value_array->__elements.back());
+                // delete(d->__value_array->__elements.back());
                 d->__value_array->__elements.pop_back();
             }
 
@@ -197,10 +202,10 @@ namespace core {
             return result;
         } else if (func == __pop) {
             if (params.size() < 1) error_message_param("pop");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_ARRAY__) error_message("pop(): parameter #1 must be an array");
 
-            delete(d->__value_array->__elements[0]);
+            // delete(d->__value_array->__elements[0]);
             d->__value_array->__elements.erase(d->__value_array->__elements.begin());
 
             result->__type = __TYPE_BOOL__;
@@ -210,7 +215,7 @@ namespace core {
             return result;
         } else if (func == __is_nothing) {
             if (params.size() < 1) error_message_param("is_nothing");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = (d->__type == __TYPE_NULL__) ? true : false;
@@ -219,13 +224,13 @@ namespace core {
             return result;
         } else if (func == __extend) {
             if (params.size() < 2) error_message_params("extend", 2);
-            DataType* a = get_value(params.at(0), caller_id);
-            DataType* b = get_value(params.at(1), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
             if (a->__type != __TYPE_OBJECT__) error_message("extend(): parameter #1 must be an object");
             if (b->__type != __TYPE_OBJECT__) error_message("extend(): parameter #2 must be an object");
 
-            Object* oa = a->__value_object;
-            Object* ob = b->__value_object;
+            gc<Object> oa = a->__value_object;
+            gc<Object> ob = b->__value_object;
 
             oa->__inherited += ob->__name + " ";
             oa->__holder_pointer = ob->__holder_pointer;
@@ -248,17 +253,17 @@ namespace core {
             return result;
         } else if (func == __equal) {
             if (params.size() < 2) error_message_params("equal", 2);
-            DataType* a = get_value(params.at(0), caller_id);
-            DataType* b = get_value(params.at(1), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
             if (a->__type != __TYPE_OBJECT__ && a->__type != __TYPE_ARRAY__) error_message("equal(): parameter #1 must be a reference");
             if (b->__type != __TYPE_OBJECT__ && b->__type != __TYPE_ARRAY__) error_message("equal(): parameter #2 must be a reference");
 
             uint_fast32_t addr_a, addr_b;
 
-            if (a->__type == __TYPE_ARRAY__) addr_a = ((Array*) a->__value_array)->__address;
-            if (b->__type == __TYPE_ARRAY__) addr_b = ((Array*) b->__value_array)->__address;
-            if (a->__type == __TYPE_OBJECT__) addr_a = ((Object*) a->__value_object)->__address;
-            if (b->__type == __TYPE_OBJECT__) addr_b = ((Object*) b->__value_object)->__address;
+            if (a->__type == __TYPE_ARRAY__) addr_a = ((gc<Array>) a->__value_array)->__address;
+            if (b->__type == __TYPE_ARRAY__) addr_b = ((gc<Array>) b->__value_array)->__address;
+            if (a->__type == __TYPE_OBJECT__) addr_a = ((gc<Object>) a->__value_object)->__address;
+            if (b->__type == __TYPE_OBJECT__) addr_b = ((gc<Object>) b->__value_object)->__address;
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = (addr_a == addr_b);
@@ -269,13 +274,13 @@ namespace core {
             return result;
         } else if (func == __name) {
             if (params.size() < 1) error_message_param("name");
-            DataType* a = get_value(params.at(0), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
             if (a->__type != __TYPE_OBJECT__ && a->__type != __TYPE_ARRAY__) error_message("name(): parameter #1 must be a reference");
 
             string name;
 
             if (a->__type == __TYPE_ARRAY__) name = "array";
-            if (a->__type == __TYPE_OBJECT__) name = ((Object*) a->__value_object)->__name;
+            if (a->__type == __TYPE_OBJECT__) name = ((gc<Object>) a->__value_object)->__name;
 
             result->__type = __TYPE_STRING__;
             result->__value_string = name;
@@ -285,13 +290,13 @@ namespace core {
             return result;
         } else if (func == __address) {
             if (params.size() < 1) error_message_param("address");
-            DataType* a = get_value(params.at(0), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
             if (a->__type != __TYPE_OBJECT__ && a->__type != __TYPE_ARRAY__) error_message("address(): parameter #1 must be a reference");
 
             uint_fast32_t addr;
 
-            if (a->__type == __TYPE_ARRAY__) addr = ((Array*) a->__value_array)->__address;
-            if (a->__type == __TYPE_OBJECT__) addr = ((Object*) a->__value_object)->__address;
+            if (a->__type == __TYPE_ARRAY__) addr = ((gc<Array>) a->__value_array)->__address;
+            if (a->__type == __TYPE_OBJECT__) addr = ((gc<Object>) a->__value_object)->__address;
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = addr;
@@ -301,10 +306,10 @@ namespace core {
             return result;
         } else if (func == __inherits) {
             if (params.size() < 1) error_message_param("inherits");
-            DataType* a = get_value(params.at(0), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
             if (a->__type != __TYPE_OBJECT__) error_message("inherits(): parameter #1 must be an object");
 
-            string inherits = ((Object*) a->__value_object)->__inherited;
+            string inherits = ((gc<Object>) a->__value_object)->__inherited;
 
             result->__type = __TYPE_STRING__;
             result->__value_string = inherits;
@@ -314,14 +319,14 @@ namespace core {
             return result;
         } else if (func == __attributes) {
             if (params.size() < 1) error_message_param("attributes");
-            DataType* a = get_value(params.at(0), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
             if (a->__type != __TYPE_OBJECT__) error_message("attributes(): parameter #1 must be an object");
 
-            Array* arr = core::create_array(0)->__value_array;
+            gc<Array> arr = core::create_array(0)->__value_array;
             uint_fast16_t i = 0;
             
-            for (const auto &attr: ((Object*) a->__value_object)->__attributes) {
-                DataType* d = new DataType(__TYPE_STRING__);
+            for (const auto &attr: ((gc<Object>) a->__value_object)->__attributes) {
+                gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
                 d->__value_string = attr.first;
                 arr->__elements.push_back(d);
             }
@@ -334,7 +339,7 @@ namespace core {
             return result;
         } else if (func == __type) {
             if (params.size() < 1) error_message_param("type");
-            DataType* a = get_value(params.at(0), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
 
             string type;
 
@@ -362,7 +367,7 @@ namespace core {
             return result;
         } else if (func == __exit) {
             if (params.size() > 0) {
-                DataType* d = get_value(params.at(0), caller_id);
+                gc<DataType> d = get_value(params.at(0), caller_id);
                 if (d->__type != __TYPE_DOUBLE__ && d->__type != __TYPE_STRING__) error_message("exit(): parameter #1 must be an integer number or string");
 
                 if (d->__type == __TYPE_DOUBLE__) {
@@ -382,7 +387,7 @@ namespace core {
             return result;
         } else if (func == __error) {
             if (params.size() < 1) error_message_param("error");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_STRING__) error_message("error(): parameter #1 must be a string");
 
             if (__last_cur_i != 0) __cur_i = __last_cur_i;
@@ -394,11 +399,11 @@ namespace core {
             return result;
         } else if (func == __iif) {
             if (params.size() < 3) error_message_params("iif", 3);
-            DataType* a = get_value(params.at(0), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
             if (a->__type != __TYPE_BOOL__) error_message("iff(): parameter #1 must be a boolean expression");
 
             if (a->__value_bool) {
-                DataType* b = get_value(params.at(1), caller_id);
+                gc<DataType> b = get_value(params.at(1), caller_id);
                 result->__type = b->__type;
 
                 if (b->__type == __TYPE_DOUBLE__) {
@@ -415,7 +420,7 @@ namespace core {
 
                 remove_garbage(params.at(1), b);
             } else {
-                DataType* b = get_value(params.at(2), caller_id);
+                gc<DataType> b = get_value(params.at(2), caller_id);
                 result->__type = b->__type;
 
                 if (b->__type == __TYPE_DOUBLE__) {
@@ -448,7 +453,7 @@ namespace core {
             return result;
         } else if (func == __platform) {
             if (params.size() < 3) error_message_params("platform", 3);
-            DataType* b = get_value(params.at(__DINFIO_PLATFORM_RAW__), caller_id);
+            gc<DataType> b = get_value(params.at(__DINFIO_PLATFORM_RAW__), caller_id);
             result->__type = b->__type;
 
             if (b->__type == __TYPE_DOUBLE__) {
@@ -467,7 +472,7 @@ namespace core {
         } else if (func == __platform_linux) {
             if (params.size() < 2) error_message_params("platform_linux", 2);
             int pos = (__DINFIO_PLATFORM_RAW__ == 0) ? 0 : 1;
-            DataType* b = get_value(params.at(pos), caller_id);
+            gc<DataType> b = get_value(params.at(pos), caller_id);
             result->__type = b->__type;
 
             if (b->__type == __TYPE_DOUBLE__) {
@@ -486,7 +491,7 @@ namespace core {
         } else if (func == __platform_mac) {
             if (params.size() < 2) error_message_params("platform_mac", 2);
             int pos = (__DINFIO_PLATFORM_RAW__ == 1) ? 0 : 1;
-            DataType* b = get_value(params.at(pos), caller_id);
+            gc<DataType> b = get_value(params.at(pos), caller_id);
             result->__type = b->__type;
 
             if (b->__type == __TYPE_DOUBLE__) {
@@ -505,7 +510,7 @@ namespace core {
         } else if (func == __platform_windows) {
             if (params.size() < 2) error_message_params("platform_windows", 2);
             int pos = (__DINFIO_PLATFORM_RAW__ == 2) ? 0 : 1;
-            DataType* b = get_value(params.at(pos), caller_id);
+            gc<DataType> b = get_value(params.at(pos), caller_id);
             result->__type = b->__type;
 
             if (b->__type == __TYPE_DOUBLE__) {
@@ -529,14 +534,14 @@ namespace core {
             return result;
         } else if (func == __array_random) {
             if (params.size() < 3) error_message_params("array_random", 3);
-            DataType* a = get_value(params.at(0), caller_id);
-            DataType* b = get_value(params.at(1), caller_id);
-            DataType* c = get_value(params.at(2), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
+            gc<DataType> c = get_value(params.at(2), caller_id);
 
-            Array* arr = core::create_array(0)->__value_array;
+            gc<Array> arr = core::create_array(0)->__value_array;
 
             for (int i = 0; i < a->__value_double; i++) {
-                DataType* d = new DataType(__TYPE_DOUBLE__);
+                gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
                 d->__value_double = random_int(b->__value_double, c->__value_double);
                 arr->__elements.push_back(d);
             }
@@ -555,7 +560,7 @@ namespace core {
             #endif
 
             if (params.size() < 1) error_message_param("execute");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_STRING__) error_message("execute(): parameter #1 must be a string");
 
             bool wait = true;
@@ -563,7 +568,7 @@ namespace core {
             int r = 0;
 
             if (params.size() > 1) {
-                DataType* e = get_value(params.at(1), caller_id);
+                gc<DataType> e = get_value(params.at(1), caller_id);
                 if (e->__type != __TYPE_BOOL__) error_message("execute(): parameter #2 must be a boolean");
             
                 wait = e->__value_bool;
@@ -592,7 +597,7 @@ namespace core {
             return core::create_ref(params.at(0), "ref", 0, caller_id);
         } else if (func == __ref_eval) {
             if (params.size() < 1) error_message_param("eval");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_OBJECT__) error_message("eval(): parameter #1 must be a ref object");
             if (d->__value_object->__name != "ref") error_message("eval(): parameter #1 must be a ref object");
 
@@ -604,7 +609,7 @@ namespace core {
             }
 
             remove_garbage(params.at(0), d);
-            DataType* b = get_function_value((AST_FunctionCall*) rh->__func, caller_id, true);
+            gc<DataType> b = get_function_value((AST_FunctionCall*) rh->__func, caller_id, true);
             result->__type = b->__type;
             
             if (b->__type == __TYPE_DOUBLE__) {
@@ -619,12 +624,12 @@ namespace core {
                 result->__value_object = b->__value_object;
             }
 
-            delete(b);
+            // delete(b);
             return result;
 
         } else if (func == __ref_call) {
             if (params.size() < 1) error_message_param("call");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_OBJECT__) error_message("call(): parameter #1 must be a ref object");
             if (d->__value_object->__name != "ref") error_message("call(): parameter #1 must be a ref object");
 
@@ -646,35 +651,35 @@ namespace core {
             return result;
         } else if (func == __attribute_get) {
             if (params.size() < 2) error_message_params("attribute_get", 2);
-            DataType* a = get_value(params.at(0), caller_id);
-            DataType* b = get_value(params.at(1), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
             if (a->__type != __TYPE_OBJECT__) error_message("attribute_get(): parameter #1 must be an object");
             if (b->__type != __TYPE_STRING__) error_message("attribute_get(): parameter #2 must be a string");
 
-            if (((Object*) a->__value_object)->__attributes.count(b->__value_string) <= 0) {
+            if (((gc<Object>) a->__value_object)->__attributes.count(b->__value_string) <= 0) {
                 remove_garbage(params.at(0), a);
                 remove_garbage(params.at(1), b);
 
                 return result;
             }
 
-            DataType* d = ((Object*) a->__value_object)->__attributes[b->__value_string];
+            gc<DataType> d = ((gc<Object>) a->__value_object)->__attributes[b->__value_string];
 
             if (d != NULL) {
                 if (d->__type == __TYPE_DOUBLE__) {
-                    result = new DataType(__TYPE_DOUBLE__);
+                    result = new_gc<DataType>(__TYPE_DOUBLE__);
                     result->__value_double = d->__value_double;
                 } else if (d->__type == __TYPE_BOOL__) {
-                    result = new DataType(__TYPE_BOOL__);
+                    result = new_gc<DataType>(__TYPE_BOOL__);
                     result->__value_bool = d->__value_bool;
                 } else if (d->__type == __TYPE_STRING__) {
-                    result = new DataType(__TYPE_STRING__);
+                    result = new_gc<DataType>(__TYPE_STRING__);
                     result->__value_string = d->__value_string;
                 } else if (d->__type == __TYPE_ARRAY__) {
-                    result = new DataType(__TYPE_ARRAY__);
+                    result = new_gc<DataType>(__TYPE_ARRAY__);
                     result->__value_array = d->__value_array;
                 } else if (d->__type == __TYPE_OBJECT__) {
-                    result = new DataType(__TYPE_OBJECT__);
+                    result = new_gc<DataType>(__TYPE_OBJECT__);
                     result->__value_object = d->__value_object;
                 }
             }
@@ -685,34 +690,34 @@ namespace core {
             return result;
         } else if (func == __attribute_set) {
             if (params.size() < 3) error_message_params("attribute_set", 3);
-            DataType* a = get_value(params.at(0), caller_id);
-            DataType* b = get_value(params.at(1), caller_id);
-            DataType* d = get_value(params.at(2), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(2), caller_id);
             if (a->__type != __TYPE_OBJECT__) error_message("attribute_set(): parameter #1 must be an object");
             if (b->__type != __TYPE_STRING__) error_message("attribute_set(): parameter #2 must be a string");
 
-            DataType* e;
+            gc<DataType> e;
 
             if (d->__type == __TYPE_DOUBLE__) {
-                e = new DataType(__TYPE_DOUBLE__);
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
                 e->__value_double = d->__value_double;
             } else if (d->__type == __TYPE_BOOL__) {
-                e = new DataType(__TYPE_BOOL__);
+                e = new_gc<DataType>(__TYPE_BOOL__);
                 e->__value_bool = d->__value_bool;
             } else if (d->__type == __TYPE_STRING__) {
-                e = new DataType(__TYPE_STRING__);
+                e = new_gc<DataType>(__TYPE_STRING__);
                 e->__value_string = d->__value_string;
             } else if (d->__type == __TYPE_ARRAY__) {
-                e = new DataType(__TYPE_ARRAY__);
+                e = new_gc<DataType>(__TYPE_ARRAY__);
                 e->__value_array = d->__value_array;
             } else if (d->__type == __TYPE_OBJECT__) {
-                e = new DataType(__TYPE_OBJECT__);
+                e = new_gc<DataType>(__TYPE_OBJECT__);
                 e->__value_object = d->__value_object;
             } else {
-                e = new DataType(__TYPE_NULL__);
+                e = new_gc<DataType>(__TYPE_NULL__);
             }
 
-            ((Object*) a->__value_object)->__attributes[b->__value_string] = e;
+            ((gc<Object>) a->__value_object)->__attributes[b->__value_string] = e;
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
@@ -724,13 +729,13 @@ namespace core {
             return result;
         } else if (func == __attribute_exists) {
             if (params.size() < 2) error_message_params("attribute_exists", 2);
-            DataType* a = get_value(params.at(0), caller_id);
-            DataType* b = get_value(params.at(1), caller_id);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
             if (a->__type != __TYPE_OBJECT__) error_message("attribute_exists(): parameter #1 must be an object");
             if (b->__type != __TYPE_STRING__) error_message("attribute_exists(): parameter #2 must be a string");
 
             result->__type = __TYPE_BOOL__;
-            result->__value_bool = ((Object*) a->__value_object)->__attributes.count(b->__value_string) > 0;
+            result->__value_bool = ((gc<Object>) a->__value_object)->__attributes.count(b->__value_string) > 0;
 
             remove_garbage(params.at(0), a);
             remove_garbage(params.at(1), b);
@@ -739,14 +744,14 @@ namespace core {
         
         } else if (func == __bit_not) {
             if (params.size() < 1) error_message_params("bnot", 1);
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("bnot(): parameter #1 must be a number");
             
             int bw = 32;
             bool is_unsigned = false;
 
             if (params.size() > 1) {
-                DataType* e = get_value(params.at(1), caller_id);
+                gc<DataType> e = get_value(params.at(1), caller_id);
                 if (e->__type != __TYPE_DOUBLE__) error_message("bnot(): parameter #2 must be a number");
             
                 bw = e->__value_double;
@@ -755,7 +760,7 @@ namespace core {
                 remove_garbage(params.at(1), e);
             }
             if (params.size() > 2) {
-                DataType* e = get_value(params.at(2), caller_id);
+                gc<DataType> e = get_value(params.at(2), caller_id);
                 if (e->__type != __TYPE_BOOL__) error_message("bnot(): parameter #3 must be a boolean");
             
                 is_unsigned = e->__value_bool;
@@ -769,8 +774,8 @@ namespace core {
             return result;
         } else if (func == __bit_and) {
             if (params.size() < 2) error_message_params("band", 2);
-            DataType* d = get_value(params.at(0), caller_id);
-            DataType* e = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("band(): parameter #1 must be a number");
             if (e->__type != __TYPE_DOUBLE__) error_message("band(): parameter #2 must be a number");
             
@@ -778,7 +783,7 @@ namespace core {
             bool is_unsigned = false;
 
             if (params.size() > 2) {
-                DataType* f = get_value(params.at(2), caller_id);
+                gc<DataType> f = get_value(params.at(2), caller_id);
                 if (f->__type != __TYPE_DOUBLE__) error_message("band(): parameter #3 must be a number");
             
                 bw = f->__value_double;
@@ -787,7 +792,7 @@ namespace core {
                 remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
-                DataType* f = get_value(params.at(3), caller_id);
+                gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("band(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
@@ -803,8 +808,8 @@ namespace core {
             return result;
         } else if (func == __bit_or) {
             if (params.size() < 2) error_message_params("bor", 2);
-            DataType* d = get_value(params.at(0), caller_id);
-            DataType* e = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("bor(): parameter #1 must be a number");
             if (e->__type != __TYPE_DOUBLE__) error_message("bor(): parameter #2 must be a number");
             
@@ -812,7 +817,7 @@ namespace core {
             bool is_unsigned = false;
 
             if (params.size() > 2) {
-                DataType* f = get_value(params.at(2), caller_id);
+                gc<DataType> f = get_value(params.at(2), caller_id);
                 if (f->__type != __TYPE_DOUBLE__) error_message("bor(): parameter #3 must be a number");
             
                 bw = f->__value_double;
@@ -821,7 +826,7 @@ namespace core {
                 remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
-                DataType* f = get_value(params.at(3), caller_id);
+                gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("bor(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
@@ -837,8 +842,8 @@ namespace core {
             return result;
         } else if (func == __bit_xor) {
             if (params.size() < 2) error_message_params("bxor", 2);
-            DataType* d = get_value(params.at(0), caller_id);
-            DataType* e = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("bxor(): parameter #1 must be a number");
             if (e->__type != __TYPE_DOUBLE__) error_message("bxor(): parameter #2 must be a number");
             
@@ -846,7 +851,7 @@ namespace core {
             bool is_unsigned = false;
 
             if (params.size() > 2) {
-                DataType* f = get_value(params.at(2), caller_id);
+                gc<DataType> f = get_value(params.at(2), caller_id);
                 if (f->__type != __TYPE_DOUBLE__) error_message("bxor(): parameter #3 must be a number");
             
                 bw = f->__value_double;
@@ -855,7 +860,7 @@ namespace core {
                 remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
-                DataType* f = get_value(params.at(3), caller_id);
+                gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("bxor(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
@@ -871,8 +876,8 @@ namespace core {
             return result;
         } else if (func == __bit_ls) {
             if (params.size() < 2) error_message_params("bls", 2);
-            DataType* d = get_value(params.at(0), caller_id);
-            DataType* e = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("bls(): parameter #1 must be a number");
             if (e->__type != __TYPE_DOUBLE__) error_message("bls(): parameter #2 must be a number");
             
@@ -880,7 +885,7 @@ namespace core {
             bool is_unsigned = false;
 
             if (params.size() > 2) {
-                DataType* f = get_value(params.at(2), caller_id);
+                gc<DataType> f = get_value(params.at(2), caller_id);
                 if (f->__type != __TYPE_DOUBLE__) error_message("bls(): parameter #3 must be a number");
             
                 bw = f->__value_double;
@@ -889,7 +894,7 @@ namespace core {
                 remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
-                DataType* f = get_value(params.at(3), caller_id);
+                gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("bls(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
@@ -905,8 +910,8 @@ namespace core {
             return result;
         } else if (func == __bit_rs) {
             if (params.size() < 2) error_message_params("brs", 2);
-            DataType* d = get_value(params.at(0), caller_id);
-            DataType* e = get_value(params.at(1), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) error_message("brs(): parameter #1 must be a number");
             if (e->__type != __TYPE_DOUBLE__) error_message("brs(): parameter #2 must be a number");
             
@@ -914,7 +919,7 @@ namespace core {
             bool is_unsigned = false;
 
             if (params.size() > 2) {
-                DataType* f = get_value(params.at(2), caller_id);
+                gc<DataType> f = get_value(params.at(2), caller_id);
                 if (f->__type != __TYPE_DOUBLE__) error_message("brs(): parameter #3 must be a number");
             
                 bw = f->__value_double;
@@ -923,7 +928,7 @@ namespace core {
                 remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
-                DataType* f = get_value(params.at(3), caller_id);
+                gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("brs(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
@@ -981,7 +986,7 @@ namespace core {
         return result;
     }
 
-    DataType* create_ref(AST* func, string identifier, uint_fast8_t pos, uint_fast32_t& caller_id) {
+    gc<DataType> create_ref(AST* func, string identifier, uint_fast8_t pos, uint_fast32_t& caller_id) {
         if (func->__type == __AST_FUNCTION_CALL__) {
             AST_FunctionCall* af = (AST_FunctionCall*) func;
 
@@ -1008,7 +1013,7 @@ namespace core {
                     AST_FunctionCall* f = ((AST_FunctionCall*) c->__body);
                     declaration_params_type = f->__parameters_type;
                 } else {
-                    Object* cm = __class_map[func_id];
+                    gc<Object> cm = __class_map[func_id];
 
                     if (cm->__constructor != 0) {
                         Code* c = __udef_function_map[cm->__constructor];
@@ -1022,28 +1027,28 @@ namespace core {
 
                 for (int i = 0; i < param_size; i++) declaration_params_type.push_back(__AST_PARAMETER_ANY__);
 
-                DataType* result = core::create_empty_object("ref");
+                gc<DataType> result = core::create_empty_object("ref");
                 vector<AST*> params;
 
                 for (int i = 0; i < af->__parameters.size(); i++) {
                     if (declaration_params_type.at(i) == __AST_PARAMETER_ANY__) {
-                        DataType* d = get_value(af->__parameters.at(i), caller_id);
-                        DataType* e;
+                        gc<DataType> d = get_value(af->__parameters.at(i), caller_id);
+                        gc<DataType> e;
 
                         if (d->__type == __TYPE_DOUBLE__) {
-                            e = new DataType(__TYPE_DOUBLE__);
+                            e = new_gc<DataType>(__TYPE_DOUBLE__);
                             e->__value_double = d->__value_double;
                         } else if (d->__type == __TYPE_BOOL__) {
-                            e = new DataType(__TYPE_BOOL__);
+                            e = new_gc<DataType>(__TYPE_BOOL__);
                             e->__value_bool = d->__value_bool;
                         } else if (d->__type == __TYPE_STRING__) {
-                            e = new DataType(__TYPE_STRING__);
+                            e = new_gc<DataType>(__TYPE_STRING__);
                             e->__value_string = d->__value_string;
                         } else if (d->__type == __TYPE_ARRAY__) {
-                            e = new DataType(__TYPE_ARRAY__);
+                            e = new_gc<DataType>(__TYPE_ARRAY__);
                             e->__value_array = d->__value_array;
                         } else if (d->__type == __TYPE_OBJECT__) {
-                            e = new DataType(__TYPE_OBJECT__);
+                            e = new_gc<DataType>(__TYPE_OBJECT__);
                             e->__value_object = d->__value_object;
                         }
 
@@ -1064,7 +1069,7 @@ namespace core {
                 return result;
             }
         } else {
-            DataType* d = get_value(func, caller_id);
+            gc<DataType> d = get_value(func, caller_id);
 
             if (d->__type == __TYPE_OBJECT__) {
                 if (d->__value_object->__name == "ref") {
@@ -1082,12 +1087,12 @@ namespace core {
         return NULL;
     }
 
-    DataType* create_array(uint_fast32_t size) {
-        DataType* result = new DataType(__TYPE_ARRAY__);
-        Array* a = new Array(__object_address++);
+    gc<DataType> create_array(uint_fast32_t size) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_ARRAY__);
+        gc<Array> a = new_gc<Array>(__object_address++);
 
         for (int_fast32_t i = 0; i < size; i++) {
-            DataType* d = new DataType(__TYPE_DOUBLE__);
+            gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
             d->__value_double = 0;
             a->__elements.push_back(d);
         }
@@ -1096,16 +1101,16 @@ namespace core {
         return result;
     }
 
-    DataType* create_array_2d(uint_fast32_t rows, uint_fast32_t cols) {
-        DataType* result = new DataType(__TYPE_ARRAY__);
-        Array* a = new Array(__object_address++);
+    gc<DataType> create_array_2d(uint_fast32_t rows, uint_fast32_t cols) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_ARRAY__);
+        gc<Array> a = new_gc<Array>(__object_address++);
 
         for (int_fast32_t i = 0; i < rows; i++) {
-            DataType* r = new DataType(__TYPE_ARRAY__);
-            Array* ar = new Array(__object_address++);
+            gc<DataType> r = new_gc<DataType>(__TYPE_ARRAY__);
+            gc<Array> ar = new_gc<Array>(__object_address++);
 
             for (int_fast32_t j = 0; j < cols; j++) {
-                DataType* d = new DataType(__TYPE_DOUBLE__);
+                gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
                 d->__value_double = 0;
                 ar->__elements.push_back(d);
             }
@@ -1118,32 +1123,32 @@ namespace core {
         return result;
     }
 
-    DataType* create_filled_array(AST_ArrayNotation* arr, uint_fast32_t& caller_id) {
-        DataType* result = new DataType(__TYPE_ARRAY__);
-        Array* a = new Array(__object_address++);
+    gc<DataType> create_filled_array(AST_ArrayNotation* arr, uint_fast32_t& caller_id) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_ARRAY__);
+        gc<Array> a = new_gc<Array>(__object_address++);
         vector<AST*> elements = arr->__elements;
 
         for (int_fast32_t i = 0; i < elements.size(); i++) {
-            DataType* d = get_value(elements.at(i), caller_id);
-            DataType* e;
+            gc<DataType> d = get_value(elements.at(i), caller_id);
+            gc<DataType> e;
 
             if (d->__type == __TYPE_DOUBLE__) {
-                e = new DataType(__TYPE_DOUBLE__);
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
                 e->__value_double = d->__value_double;
             } else if (d->__type == __TYPE_BOOL__) {
-                e = new DataType(__TYPE_BOOL__);
+                e = new_gc<DataType>(__TYPE_BOOL__);
                 e->__value_bool = d->__value_bool;
             } else if (d->__type == __TYPE_STRING__) {
-                e = new DataType(__TYPE_STRING__);
+                e = new_gc<DataType>(__TYPE_STRING__);
                 e->__value_string = d->__value_string;
             } else if (d->__type == __TYPE_ARRAY__) {
-                e = new DataType(__TYPE_ARRAY__);
+                e = new_gc<DataType>(__TYPE_ARRAY__);
                 e->__value_array = d->__value_array;
             } else if (d->__type == __TYPE_OBJECT__) {
-                e = new DataType(__TYPE_OBJECT__);
+                e = new_gc<DataType>(__TYPE_OBJECT__);
                 e->__value_object = d->__value_object;
             } else {
-                e = new DataType(__TYPE_NULL__);
+                e = new_gc<DataType>(__TYPE_NULL__);
             }
             
             a->__elements.push_back(e);
@@ -1154,41 +1159,41 @@ namespace core {
         return result;
     }
 
-    DataType* create_empty_object(const string& name) {
-        DataType* result = new DataType(__TYPE_OBJECT__);
-        Object* a = new Object(name, __object_address++);
+    gc<DataType> create_empty_object(const string& name) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_OBJECT__);
+        gc<Object> a = new_gc<Object>(name, __object_address++);
 
         result->__value_object = a;
         return result;
     }
 
-    DataType* create_object(AST_ObjectNotation* obj, uint_fast32_t& caller_id) {
-        DataType* result = new DataType(__TYPE_OBJECT__);
-        Object* a = new Object("object", __object_address++);
+    gc<DataType> create_object(AST_ObjectNotation* obj, uint_fast32_t& caller_id) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_OBJECT__);
+        gc<Object> a = new_gc<Object>("object", __object_address++);
         vector<string> names = obj->__names;
         vector<AST*> attributes = obj->__attributes;
 
         for (int_fast32_t i = 0; i < attributes.size(); i++) {
-            DataType* d = get_value(attributes.at(i), caller_id);
-            DataType* e;
+            gc<DataType> d = get_value(attributes.at(i), caller_id);
+            gc<DataType> e;
 
             if (d->__type == __TYPE_DOUBLE__) {
-                e = new DataType(__TYPE_DOUBLE__);
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
                 e->__value_double = d->__value_double;
             } else if (d->__type == __TYPE_BOOL__) {
-                e = new DataType(__TYPE_BOOL__);
+                e = new_gc<DataType>(__TYPE_BOOL__);
                 e->__value_bool = d->__value_bool;
             } else if (d->__type == __TYPE_STRING__) {
-                e = new DataType(__TYPE_STRING__);
+                e = new_gc<DataType>(__TYPE_STRING__);
                 e->__value_string = d->__value_string;
             } else if (d->__type == __TYPE_ARRAY__) {
-                e = new DataType(__TYPE_ARRAY__);
+                e = new_gc<DataType>(__TYPE_ARRAY__);
                 e->__value_array = d->__value_array;
             } else if (d->__type == __TYPE_OBJECT__) {
-                e = new DataType(__TYPE_OBJECT__);
+                e = new_gc<DataType>(__TYPE_OBJECT__);
                 e->__value_object = d->__value_object;
             } else {
-                e = new DataType(__TYPE_NULL__);
+                e = new_gc<DataType>(__TYPE_NULL__);
             }
 
             a->__attributes[names.at(i)] = e;

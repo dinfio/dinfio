@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -15,6 +15,7 @@
 class Base {
 public:
     uint_fast8_t __type;
+    virtual ~Base() {}
 };
 
 namespace Color {

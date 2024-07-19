@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -40,6 +40,8 @@ class FileIO: public Base {
 public:
     string filename;
     fstream holder;
+
+    ~FileIO() {}
 };
 
 long get_file_size(string filename) {
@@ -108,8 +110,8 @@ bool is_number(const string& s) {
     return *p == 0;
 }
 
-DataType* get_list_dirs(string path, bool fullpath) {
-    DataType* result = connector->__create_array(0);
+gc<DataType> get_list_dirs(string path, bool fullpath) {
+    gc<DataType> result = connector->__create_array(0);
     tinydir_dir dir;
     tinydir_open(&dir, path.c_str());
 
@@ -124,7 +126,7 @@ DataType* get_list_dirs(string path, bool fullpath) {
 
         if (filename != "." && filename != "..") {
             if (file.is_dir) {
-                DataType* d = new DataType(__TYPE_STRING__);
+                gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
                 d->__value_string = (fullpath) ? filepath : filename;
                 result->__value_array->__elements.push_back(d);
                 i++;
@@ -138,8 +140,8 @@ DataType* get_list_dirs(string path, bool fullpath) {
     return result;
 }
 
-DataType* get_list_files(string path, bool fullpath) {
-    DataType* result = connector->__create_array(0);
+gc<DataType> get_list_files(string path, bool fullpath) {
+    gc<DataType> result = connector->__create_array(0);
     tinydir_dir dir;
     tinydir_open(&dir, path.c_str());
 
@@ -154,7 +156,7 @@ DataType* get_list_files(string path, bool fullpath) {
 
         if (filename != "." && filename != "..") {
             if (!file.is_dir) {
-                DataType* d = new DataType(__TYPE_STRING__);
+                gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
                 d->__value_string = (fullpath) ? filepath : filename;
                 result->__value_array->__elements.push_back(d);
                 i++;
@@ -169,13 +171,13 @@ DataType* get_list_files(string path, bool fullpath) {
 }
 
 void add_constant_double(string name, double value) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = value;
     connector->__add_constant(name, d);
 }
 
 void add_constant_string(string name, string value) {
-    DataType* d = new DataType(__TYPE_STRING__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = value;
     connector->__add_constant(name, d);
 }
@@ -237,13 +239,13 @@ void Module::__init(Connector* c) {
     __max = __deletefolder;   // DO NOT FORGET THIS!
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __file_size) {
         if (params.size() < 1) connector->__error_message_param("filesize");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("filesize(): parameter #1 must be a string");
         
         result->__type = __TYPE_DOUBLE__;
@@ -254,7 +256,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __file_exists) {
         if (params.size() < 1) connector->__error_message_param("fileexists");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("fileexists(): parameter #1 must be a string");
         
         result->__type = __TYPE_BOOL__;
@@ -265,7 +267,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __file_content) {
         if (params.size() < 1) connector->__error_message_param("filecontent");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("filecontent(): parameter #1 must be a string");
         
         result->__type = __TYPE_STRING__;
@@ -277,8 +279,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     } else if (func_id == __file_put) {
         if (params.size() < 2) connector->__error_message_params("fileput", 2);
 
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("fileput(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("fileput(): parameter #2 must be a string");
@@ -287,7 +289,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__type = __TYPE_BOOL__;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("fileput(): parameter #3 must be a boolean");
             is_append = f->__value_bool;
 
@@ -334,7 +336,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __getabsolutepath) {
         if (params.size() < 1) connector->__error_message_param("getabsolutepath");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("getabsolutepath(): parameter #1 must be a string");
 
         result->__type = __TYPE_STRING__;
@@ -345,7 +347,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __getfoldername) {
         if (params.size() < 1) connector->__error_message_param("getfoldername");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("getfoldername(): parameter #1 must be a string");
 
         result->__type = __TYPE_STRING__;
@@ -356,7 +358,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __getfilename) {
         if (params.size() < 1) connector->__error_message_param("getfilename");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("getfilename(): parameter #1 must be a string");
 
         result->__type = __TYPE_STRING__;
@@ -367,7 +369,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __deletefile) {
         if (params.size() < 1) connector->__error_message_param("deletefile");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("deletefile(): parameter #1 must be a string");
 
         result->__type = __TYPE_BOOL__;
@@ -378,7 +380,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __deletefolder) {
         if (params.size() < 1) connector->__error_message_param("deletefolder");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("deletefolder(): parameter #1 must be a string");
 
         result->__type = __TYPE_BOOL__;
@@ -389,7 +391,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __list_dirs) {
         if (params.size() < 1) connector->__error_message_param("listdirs");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("listdirs(): parameter #1 must be a string");
         if (d->__value_string == "") connector->__error_message("listdirs(): path cannot be an empty string");
 
@@ -397,7 +399,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool fullpath = false;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("listdirs(): parameter #2 must be a boolean");
             fullpath = e->__value_bool;
 
@@ -408,7 +410,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return get_list_dirs(path, fullpath);
     } else if (func_id == __list_files) {
         if (params.size() < 1) connector->__error_message_param("listfiles");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("listfiles(): parameter #1 must be a string");
         if (d->__value_string == "") connector->__error_message("listfiles(): path cannot be an empty string");
 
@@ -416,7 +418,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool fullpath = false;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("listfiles(): parameter #2 must be a boolean");
             fullpath = e->__value_bool;
 
@@ -428,8 +430,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __file) {
         if (params.size() < 2) connector->__error_message_params("file", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("file(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("file(): parameter #2 must be a number");
@@ -439,12 +441,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         fio->holder.open(d->__value_string, (ios_base::openmode) e->__value_double);
         
         if (fio->holder.is_open()) {
-            DataType* dfo = connector->__create_object("file");
+            gc<DataType> dfo = connector->__create_object("file");
             dfo->__value_object->__holder_pointer = fio;
             
-            DataType* dfo_f = new DataType(__TYPE_STRING__);
+            gc<DataType> dfo_f = new_gc<DataType>(__TYPE_STRING__);
             dfo_f->__value_string = d->__value_string;
-            DataType* dfo_m = new DataType(__TYPE_DOUBLE__);
+            gc<DataType> dfo_m = new_gc<DataType>(__TYPE_DOUBLE__);
             dfo_m->__value_double = e->__value_double;
             
             connector->__object_set_attribute(dfo, "name", dfo_f);
@@ -476,7 +478,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         return result;
     } else if (func_id == __file_close) {
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         fio->holder.close();
 
@@ -486,13 +488,13 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __file_reopen) {
         if (params.size() < 2) connector->__error_message_params("file::reopen", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("file::reopen(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("file::reopen(): parameter #2 must be a number");
 
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
 
         if (fio->holder.is_open()) fio->holder.close();
@@ -513,7 +515,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         return result;
     } else if (func_id == __file_eof) {
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         
         result->__type = __TYPE_BOOL__;
@@ -521,7 +523,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         return result;
     } else if (func_id == __file_size_alt) {
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         
         result->__type = __TYPE_DOUBLE__;
@@ -529,7 +531,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         return result;
     } else if (func_id == __file_read) {
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
 
         string s = "";
@@ -551,7 +553,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         return result;
     } else if (func_id == __file_readln) {
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
 
         string s = "";
@@ -563,9 +565,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __file_write) {
         if (params.size() < 1) connector->__error_message_param("file::write");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
 
         if (d->__type == __TYPE_DOUBLE__) {
@@ -598,11 +600,11 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         return result;
     } else if (func_id == __file_writeln) {
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
             if (d->__type == __TYPE_DOUBLE__) {
                 fio->holder << d->__value_double << endl;
@@ -638,10 +640,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __readbyte) {
         if (params.size() < 1) connector->__error_message_param("file::readbyte");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("file::readbyte(): parameter #1 must be a number");
 
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         unsigned char x;
 
@@ -656,12 +658,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __readstring) {
         if (params.size() < 2) connector->__error_message_params("file::readstring", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("file::readstring(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("file::readstring(): parameter #2 must be a number");
 
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         unsigned char x[(int) (e->__value_double)];
         string s = "";
@@ -682,12 +684,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __writebyte) {
         if (params.size() < 2) connector->__error_message_params("file::writebyte", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("file::writebyte(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("file::writebyte(): parameter #2 must be a number");
 
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         unsigned char x = (unsigned char) d->__value_double;
         
@@ -703,12 +705,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __writestring) {
         if (params.size() < 2) connector->__error_message_params("file::writestring", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("file::writestring(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("file::writestring(): parameter #2 must be a number");
 
-        Object* f = obj;
+        gc<Object> f = obj;
         FileIO* fio = ((FileIO*) f->__holder_pointer);
         string t = d->__value_string;
         

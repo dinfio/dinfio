@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -27,13 +27,13 @@ namespace standardIO {
         __max = __writer;   // DO NOT FORGET THIS!
     }
 
-    DataType* __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
-        DataType* result = new DataType(__TYPE_NULL__);
+    gc<DataType> __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
+        gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
         vector<AST*> params = ((AST_FunctionCall*) ast_func)->__parameters;
 
         if (func == __write) {
             if (params.size() < 1) error_message_param("write");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
 
             if (d->__type == __TYPE_DOUBLE__) {
                 cout << d->__value_double << flush;
@@ -66,7 +66,7 @@ namespace standardIO {
             return result;
         } else if (func == __writeln) {
             if (params.size() > 0) {
-                DataType* d = get_value(params.at(0), caller_id);
+                gc<DataType> d = get_value(params.at(0), caller_id);
 
                 if (d->__type == __TYPE_DOUBLE__) {
                     cout << d->__value_double << endl;
@@ -147,7 +147,7 @@ namespace standardIO {
         
         } else if (func == __writer) {
             if (params.size() < 1) error_message_param("writer");
-            DataType* d = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(0), caller_id);
 
             standardIO::write_recursive(d, 0);
             cout << endl;
@@ -163,7 +163,7 @@ namespace standardIO {
         return result;
     }
 
-    void write_recursive(DataType* d, int level) {
+    void write_recursive(gc<DataType> d, int level) {
         string spaces = repeat(" ", level * 4);
         string spaces2 = repeat(" ", (level + 1) * 4);
 
@@ -186,7 +186,7 @@ namespace standardIO {
         } else {
             if (d->__type == __TYPE_ARRAY__) {
                 cout << "array(" << endl;
-                Array* arr = ((Array*) d->__value_array);
+                gc<Array> arr = ((gc<Array>) d->__value_array);
 
                 for (int i = 0; i < arr->__elements.size(); i++) {
                     cout << spaces2 << "[" << i << "] = ";
@@ -196,9 +196,9 @@ namespace standardIO {
                 
                 cout << spaces << ")";
             } else {
-                Object* obj = ((Object*) d->__value_object);
+                gc<Object> obj = ((gc<Object>) d->__value_object);
                 cout << obj->__name << "(" << endl;
-                map<string, DataType*> e;
+                map<string, gc<DataType>> e;
 
                 for (const auto &attr: obj->__attributes) {
                     e[attr.first] = attr.second;

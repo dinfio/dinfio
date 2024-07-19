@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -24,7 +24,7 @@ void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header
 
     if (additional_header == __H_FOR_WITH_STEP__) {
         AST* st = ((AST_Parameter*) body)->__parameters[3];
-        DataType* dst = get_value(st, caller_id);
+        gc<DataType> dst = get_value(st, caller_id);
         step = dst->__value_double;
 
         if (step == 0) error_message("Unable to use 0 in the parameter 'step'");
@@ -33,8 +33,8 @@ void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header
         step = 1;
     }
 
-    DataType* d_start = get_value(a_start, caller_id);
-    DataType* d_end = get_value(a_end, caller_id);
+    gc<DataType> d_start = get_value(a_start, caller_id);
+    gc<DataType> d_end = get_value(a_end, caller_id);
 
     double start = d_start->__value_double;
     double end = d_end->__value_double;
@@ -43,15 +43,15 @@ void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header
     remove_garbage(a_end, d_end);
 
     AST_Variable* e = (AST_Variable*) a_counter;
-    DataType* counter;
+    gc<DataType> counter;
     string c = to_string(caller_id);
 
     if (__variables.count(c + e->__identifier) == 1) {
         counter = __variables.at(c + e->__identifier);
         counter->__type = __TYPE_DOUBLE__;
     } else {
-        counter = new DataType(__TYPE_DOUBLE__);
-        __variables.insert(pair<string, DataType*>(c + e->__identifier, counter));
+        counter = new_gc<DataType>(__TYPE_DOUBLE__);
+        __variables.insert(pair<string, gc<DataType>>(c + e->__identifier, counter));
     }
 
     if (step > 0) {
@@ -76,7 +76,7 @@ void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header
 
 void loop_while(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uint_fast32_t& caller_id, bool& stop_loop, bool& stop_procedure) {
     __cur_i = start_i;
-    DataType* dc = get_value(body, caller_id);
+    gc<DataType> dc = get_value(body, caller_id);
     bool condition = dc->__value_bool;
     remove_garbage(body, dc);
 
@@ -95,7 +95,7 @@ void loop_while(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uin
 
 void branch_if(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uint_fast32_t& endclause2, bool is_elseif, uint_fast32_t& caller_id, bool& stop_loop, bool& stop_procedure) {
     __cur_i = start_i;
-    DataType* dc = get_value(body, caller_id);
+    gc<DataType> dc = get_value(body, caller_id);
     bool condition = dc->__value_bool;
     remove_garbage(body, dc);
 

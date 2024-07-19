@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -665,34 +665,34 @@ BEGIN_EVENT_TABLE(GUI_App, wxApp)
 END_EVENT_TABLE()
 
 void __add_constant_double(string name, double value) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = value;
     connector->__add_constant(name, d);
 }
 
 void __add_constant_string(string name, string value) {
-    DataType* d = new DataType(__TYPE_STRING__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = value;
     connector->__add_constant(name, d);
 }
 
-DataType* __new_double(double v) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+gc<DataType> __new_double(double v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = v;
 
     return d;
 }
 
-DataType* __new_string(string v) {
-    DataType* d = new DataType(__TYPE_STRING__);
+gc<DataType> __new_string(string v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = v;
 
     return d;
 }
 
-DataType* __new_colour(int red, int green, int blue, int alpha) {
-    DataType* result = connector->__create_object("gui_colour");
-    Object* obj = result->__value_object;
+gc<DataType> __new_colour(int red, int green, int blue, int alpha) {
+    gc<DataType> result = connector->__create_object("gui_colour");
+    gc<Object> obj = result->__value_object;
 
     GUI_Colour* c = new GUI_Colour(red, green, blue, alpha);
     obj->__holder_pointer = c;
@@ -701,7 +701,7 @@ DataType* __new_colour(int red, int green, int blue, int alpha) {
 }
 
 void __add_constant_event() {
-    DataType* d = connector->__create_object("event");
+    gc<DataType> d = connector->__create_object("event");
 
     connector->__object_set_attribute(d, "tabchange", __new_double(__GUI_EVENT_TAB_CHANGE__));
     connector->__object_set_attribute(d, "click", __new_double(__GUI_EVENT_CLICK__));
@@ -727,7 +727,7 @@ void __add_constant_event() {
 }
 
 void __add_constant_message() {
-    DataType* d = connector->__create_object("message");
+    gc<DataType> d = connector->__create_object("message");
 
     connector->__object_set_attribute(d, "ok", __new_double(wxOK));
     connector->__object_set_attribute(d, "yes", __new_double(wxYES));
@@ -747,7 +747,7 @@ void __add_constant_message() {
 }
 
 void __add_constant_keycode() {
-    DataType* d = connector->__create_object("keycode");
+    gc<DataType> d = connector->__create_object("keycode");
 
     connector->__object_set_attribute(d, "backspace", __new_double(WXK_BACK));
     connector->__object_set_attribute(d, "tab", __new_double(WXK_TAB));
@@ -781,7 +781,7 @@ void __add_constant_keycode() {
 }
 
 void __add_constant_colour() {
-    DataType* d = connector->__create_object("gui_colours");
+    gc<DataType> d = connector->__create_object("gui_colours");
 
     connector->__object_set_attribute(d, "red", __new_colour(255, 0, 0, 255));
     connector->__object_set_attribute(d, "green", __new_colour(0, 255, 0, 255));
@@ -798,7 +798,7 @@ void __add_constant_colour() {
 }
 
 void __add_constant_menu() {
-    DataType* d = connector->__create_object("menu_type");
+    gc<DataType> d = connector->__create_object("menu_type");
 
     connector->__object_set_attribute(d, "normal", __new_double(wxITEM_NORMAL));
     connector->__object_set_attribute(d, "check", __new_double(wxITEM_CHECK));
@@ -816,7 +816,7 @@ void __add_constant_stack() {
 }
 
 void __add_constant_alignment() {
-    DataType* d = connector->__create_object("alignment");
+    gc<DataType> d = connector->__create_object("alignment");
 
     connector->__object_set_attribute(d, "left", __new_double(wxALIGN_LEFT));
     connector->__object_set_attribute(d, "right", __new_double(wxALIGN_RIGHT));
@@ -830,7 +830,7 @@ void __add_constant_alignment() {
 }
 
 void __add_constant_padding() {
-    DataType* d = connector->__create_object("padding");
+    gc<DataType> d = connector->__create_object("padding");
 
     connector->__object_set_attribute(d, "left", __new_double(wxLEFT));
     connector->__object_set_attribute(d, "right", __new_double(wxRIGHT));
@@ -842,7 +842,7 @@ void __add_constant_padding() {
 }
 
 void __add_constant_scale_mode() {
-    DataType* d = connector->__create_object("scale_mode");
+    gc<DataType> d = connector->__create_object("scale_mode");
     
     #ifndef __RPI__
         connector->__object_set_attribute(d, "none", __new_double(wxStaticBitmapBase::Scale_None));
@@ -860,7 +860,7 @@ void __add_constant_scale_mode() {
 }
 
 void __add_constant_pen_style() {
-    DataType* d = connector->__create_object("pen_style");
+    gc<DataType> d = connector->__create_object("pen_style");
 
     connector->__object_set_attribute(d, "solid", __new_double(0));
     connector->__object_set_attribute(d, "dot", __new_double(1));
@@ -872,7 +872,7 @@ void __add_constant_pen_style() {
 }
 
 void __add_constant_brush_style() {
-    DataType* d = connector->__create_object("brush_style");
+    gc<DataType> d = connector->__create_object("brush_style");
 
     connector->__object_set_attribute(d, "solid", __new_double(0));
     connector->__object_set_attribute(d, "bdiagonal", __new_double(1));
@@ -887,7 +887,7 @@ void __add_constant_brush_style() {
 }
 
 void __add_constant_image_type() {
-    DataType* d = connector->__create_object("image_type");
+    gc<DataType> d = connector->__create_object("image_type");
 
     connector->__object_set_attribute(d, "jpeg", __new_double(0));
     connector->__object_set_attribute(d, "png", __new_double(1));
@@ -896,7 +896,7 @@ void __add_constant_image_type() {
 }
 
 void __add_constant_dialog() {
-    DataType* d = connector->__create_object("dialog");
+    gc<DataType> d = connector->__create_object("dialog");
 
     connector->__object_set_function(d, "open", __gui_dialog_open);
     connector->__object_set_function(d, "save", __gui_dialog_save);
@@ -907,7 +907,7 @@ void __add_constant_dialog() {
 }
 
 void __add_constant_clipboard() {
-    DataType* d = connector->__create_object("clipboard");
+    gc<DataType> d = connector->__create_object("clipboard");
 
     connector->__object_set_function(d, "available", __gui_clipboard_available);
     connector->__object_set_function(d, "get", __gui_clipboard_get);
@@ -1219,7 +1219,7 @@ void __event_gui_window_close(wxCloseEvent &event) {
         return;
     }
 
-    DataType* d = connector->__get_value(f, g->__caller_id);
+    gc<DataType> d = connector->__get_value(f, g->__caller_id);
 
     if (d->__value_bool == true) {
         g->__holder->Destroy();
@@ -1743,7 +1743,7 @@ void __event_gui_panel_erase(wxEraseEvent &event) {
 
 }
 
-void __gui_add_functions(DataType* d) {
+void __gui_add_functions(gc<DataType> d) {
     connector->__object_set_function(d, "addevent", __gui_add_event);
     connector->__object_set_function(d, "gettext", __gui_gettext);
     connector->__object_set_function(d, "settext", __gui_settext);
@@ -1882,9 +1882,9 @@ wxWindow* __get_gui_holder_alt(GUI* g) {
     return NULL;
 }
 
-DataType* __create_window(string title, int width, int height, bool resizable, bool minimisable, bool closable, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_window");
-    Object* obj = result->__value_object;
+gc<DataType> __create_window(string title, int width, int height, bool resizable, bool minimisable, bool closable, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_window");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -1943,9 +1943,9 @@ DataType* __create_window(string title, int width, int height, bool resizable, b
     return result;
 }
 
-DataType* __create_menubar(GUI* parent) {
-    DataType* result = connector->__create_object("gui_menubar");
-    Object* obj = result->__value_object;
+gc<DataType> __create_menubar(GUI* parent) {
+    gc<DataType> result = connector->__create_object("gui_menubar");
+    gc<Object> obj = result->__value_object;
 
     connector->__object_set_function(result, "append", __gui_menubar_append);
     connector->__object_set_function(result, "insert", __gui_menubar_insert);
@@ -1969,9 +1969,9 @@ DataType* __create_menubar(GUI* parent) {
     return result;
 }
 
-DataType* __create_menu() {
-    DataType* result = connector->__create_object("gui_menu");
-    Object* obj = result->__value_object;
+gc<DataType> __create_menu() {
+    gc<DataType> result = connector->__create_object("gui_menu");
+    gc<Object> obj = result->__value_object;
 
     connector->__object_set_function(result, "append", __gui_menu_append);
     connector->__object_set_function(result, "appendseparator", __gui_menu_appendseparator);
@@ -1999,9 +1999,9 @@ DataType* __create_menu() {
     return result;
 }
 
-DataType* __create_stack(bool vertical, GUI* parent) {
-    DataType* result = connector->__create_object("gui_stack");
-    Object* obj = result->__value_object;
+gc<DataType> __create_stack(bool vertical, GUI* parent) {
+    gc<DataType> result = connector->__create_object("gui_stack");
+    gc<Object> obj = result->__value_object;
 
     connector->__object_set_function(result, "add", __gui_stack_add);
     connector->__object_set_function(result, "addspacer", __gui_stack_addspacer);
@@ -2028,9 +2028,9 @@ DataType* __create_stack(bool vertical, GUI* parent) {
     return result;
 }
 
-DataType* __create_grid(int rows, int cols, GUI* parent, int vertical_gap, int horizontal_gap, bool grow_all = false) {
-    DataType* result = connector->__create_object("gui_grid");
-    Object* obj = result->__value_object;
+gc<DataType> __create_grid(int rows, int cols, GUI* parent, int vertical_gap, int horizontal_gap, bool grow_all = false) {
+    gc<DataType> result = connector->__create_object("gui_grid");
+    gc<Object> obj = result->__value_object;
 
     connector->__object_set_function(result, "add", __gui_grid_add);
     connector->__object_set_function(result, "addgrowablecol", __gui_grid_addgrowablecol);
@@ -2067,9 +2067,9 @@ DataType* __create_grid(int rows, int cols, GUI* parent, int vertical_gap, int h
     return result;
 }
 
-DataType* __create_panel(GUI* parent, int x, int y, int width, int height, bool as_canvas, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_panel");
-    Object* obj = result->__value_object;
+gc<DataType> __create_panel(GUI* parent, int x, int y, int width, int height, bool as_canvas, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_panel");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2156,9 +2156,9 @@ DataType* __create_panel(GUI* parent, int x, int y, int width, int height, bool 
     return result;
 }
 
-DataType* __create_labeled_panel(GUI* parent, string text, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_labeled_panel");
-    Object* obj = result->__value_object;
+gc<DataType> __create_labeled_panel(GUI* parent, string text, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_labeled_panel");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2206,9 +2206,9 @@ DataType* __create_labeled_panel(GUI* parent, string text, int x, int y, int wid
     return result;
 }
 
-DataType* __create_tab(GUI* parent, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_tab");
-    Object* obj = result->__value_object;
+gc<DataType> __create_tab(GUI* parent, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_tab");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2261,9 +2261,9 @@ DataType* __create_tab(GUI* parent, int x, int y, int width, int height, uint_fa
     return result;
 }
 
-DataType* __create_button(GUI* parent, string text, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_button");
-    Object* obj = result->__value_object;
+gc<DataType> __create_button(GUI* parent, string text, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_button");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
     
     __gui_add_functions(result);
@@ -2296,9 +2296,9 @@ DataType* __create_button(GUI* parent, string text, int x, int y, int width, int
     return result;
 }
 
-DataType* __create_label(GUI* parent, string text, int x, int y, int width, int height, int alignment, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_label");
-    Object* obj = result->__value_object;
+gc<DataType> __create_label(GUI* parent, string text, int x, int y, int width, int height, int alignment, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_label");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2346,9 +2346,9 @@ DataType* __create_label(GUI* parent, string text, int x, int y, int width, int 
     return result;
 }
 
-DataType* __create_textbox(GUI* parent, string text, int x, int y, int width, int height, bool is_password, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_textbox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_textbox(GUI* parent, string text, int x, int y, int width, int height, bool is_password, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_textbox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2437,9 +2437,9 @@ DataType* __create_textbox(GUI* parent, string text, int x, int y, int width, in
     return result;
 }
 
-DataType* __create_textarea(GUI* parent, string text, int x, int y, int width, int height, bool wrap, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_textarea");
-    Object* obj = result->__value_object;
+gc<DataType> __create_textarea(GUI* parent, string text, int x, int y, int width, int height, bool wrap, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_textarea");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui,gui_textbox";
 
     __gui_add_functions(result);
@@ -2497,9 +2497,9 @@ DataType* __create_textarea(GUI* parent, string text, int x, int y, int width, i
     return result;
 }
 
-DataType* __create_checkbox(GUI* parent, string text, bool checked, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_checkbox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_checkbox(GUI* parent, string text, bool checked, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_checkbox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2552,9 +2552,9 @@ DataType* __create_checkbox(GUI* parent, string text, bool checked, int x, int y
     return result;
 }
 
-DataType* __create_radiobox(GUI* parent, string text, bool start_group, bool checked, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_radiobox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_radiobox(GUI* parent, string text, bool start_group, bool checked, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_radiobox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2607,9 +2607,9 @@ DataType* __create_radiobox(GUI* parent, string text, bool start_group, bool che
     return result;
 }
 
-DataType* __create_listbox(GUI* parent, Array* list, bool multiple_selection, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_listbox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_listbox(GUI* parent, gc<Array> list, bool multiple_selection, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_listbox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
     
     __gui_add_functions(result);
@@ -2672,9 +2672,9 @@ DataType* __create_listbox(GUI* parent, Array* list, bool multiple_selection, in
     return result;
 }
 
-DataType* __create_combobox(GUI* parent, Array* list, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_combobox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_combobox(GUI* parent, gc<Array> list, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_combobox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui,gui_listbox";
     
     __gui_add_functions(result);
@@ -2738,9 +2738,9 @@ DataType* __create_combobox(GUI* parent, Array* list, int x, int y, int width, i
     return result;
 }
 
-DataType* __create_editable_combobox(GUI* parent, Array* list, int x, int y, int width, int height, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_combobox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_editable_combobox(GUI* parent, gc<Array> list, int x, int y, int width, int height, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_combobox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui,gui_listbox";
     
     __gui_add_functions(result);
@@ -2805,9 +2805,9 @@ DataType* __create_editable_combobox(GUI* parent, Array* list, int x, int y, int
     return result;
 }
 
-DataType* __create_timer(int interval, AST* event, uint_fast32_t caller_id) {
-    DataType* result = connector->__create_object("gui_timer");
-    Object* obj = result->__value_object;
+gc<DataType> __create_timer(int interval, AST* event, uint_fast32_t caller_id) {
+    gc<DataType> result = connector->__create_object("gui_timer");
+    gc<Object> obj = result->__value_object;
 
     connector->__object_set_function(result, "run", __gui_timer_run);
     connector->__object_set_function(result, "pause", __gui_timer_pause);
@@ -2822,23 +2822,23 @@ DataType* __create_timer(int interval, AST* event, uint_fast32_t caller_id) {
         AST_FunctionCall* af = (AST_FunctionCall*) event;
 
         for (int i = 0; i < af->__parameters.size(); i++) {
-            DataType* d = connector->__get_value(af->__parameters.at(i), caller_id);
-            DataType* e;
+            gc<DataType> d = connector->__get_value(af->__parameters.at(i), caller_id);
+            gc<DataType> e;
 
             if (d->__type == __TYPE_DOUBLE__) {
-                e = new DataType(__TYPE_DOUBLE__);
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
                 e->__value_double = d->__value_double;
             } else if (d->__type == __TYPE_BOOL__) {
-                e = new DataType(__TYPE_BOOL__);
+                e = new_gc<DataType>(__TYPE_BOOL__);
                 e->__value_bool = d->__value_bool;
             } else if (d->__type == __TYPE_STRING__) {
-                e = new DataType(__TYPE_STRING__);
+                e = new_gc<DataType>(__TYPE_STRING__);
                 e->__value_string = d->__value_string;
             } else if (d->__type == __TYPE_ARRAY__) {
-                e = new DataType(__TYPE_ARRAY__);
+                e = new_gc<DataType>(__TYPE_ARRAY__);
                 e->__value_array = d->__value_array;
             } else if (d->__type == __TYPE_OBJECT__) {
-                e = new DataType(__TYPE_OBJECT__);
+                e = new_gc<DataType>(__TYPE_OBJECT__);
                 e->__value_object = d->__value_object;
             }
 
@@ -2863,9 +2863,9 @@ DataType* __create_timer(int interval, AST* event, uint_fast32_t caller_id) {
     return result;
 }
 
-DataType* __create_imagebox(GUI* parent, string path, int x, int y, int width, int height) {
-    DataType* result = connector->__create_object("gui_imagebox");
-    Object* obj = result->__value_object;
+gc<DataType> __create_imagebox(GUI* parent, string path, int x, int y, int width, int height) {
+    gc<DataType> result = connector->__create_object("gui_imagebox");
+    gc<Object> obj = result->__value_object;
     obj->__inherited = "gui";
 
     __gui_add_functions(result);
@@ -2924,23 +2924,23 @@ void __gui_add_event_handler(GUI* gui, int event, AST* funct, uint_fast32_t& cal
         AST_FunctionCall* af = (AST_FunctionCall*) funct;
 
         for (int i = 0; i < af->__parameters.size(); i++) {
-            DataType* d = connector->__get_value(af->__parameters.at(i), caller_id);
-            DataType* e;
+            gc<DataType> d = connector->__get_value(af->__parameters.at(i), caller_id);
+            gc<DataType> e;
 
             if (d->__type == __TYPE_DOUBLE__) {
-                e = new DataType(__TYPE_DOUBLE__);
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
                 e->__value_double = d->__value_double;
             } else if (d->__type == __TYPE_BOOL__) {
-                e = new DataType(__TYPE_BOOL__);
+                e = new_gc<DataType>(__TYPE_BOOL__);
                 e->__value_bool = d->__value_bool;
             } else if (d->__type == __TYPE_STRING__) {
-                e = new DataType(__TYPE_STRING__);
+                e = new_gc<DataType>(__TYPE_STRING__);
                 e->__value_string = d->__value_string;
             } else if (d->__type == __TYPE_ARRAY__) {
-                e = new DataType(__TYPE_ARRAY__);
+                e = new_gc<DataType>(__TYPE_ARRAY__);
                 e->__value_array = d->__value_array;
             } else if (d->__type == __TYPE_OBJECT__) {
-                e = new DataType(__TYPE_OBJECT__);
+                e = new_gc<DataType>(__TYPE_OBJECT__);
                 e->__value_object = d->__value_object;
             }
 
@@ -3228,8 +3228,8 @@ void __gui_add_event_handler(GUI* gui, int event, AST* funct, uint_fast32_t& cal
     // TODO: Other future GUIs
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params;
 
     if (func_id != 1) {
@@ -3248,42 +3248,42 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool closable = true;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_STRING__) connector->__error_message("gui_window(): parameter #1 must be a string");
             title = d->__value_string;
 
             connector->__remove_garbage(params.at(0), d);
         }
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_window(): parameter #2 must be a number");
             width = e->__value_double;
 
             connector->__remove_garbage(params.at(1), e);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_window(): parameter #3 must be a number");
             height = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_window(): parameter #4 must be a boolean");
             resizable = f->__value_bool;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_window(): parameter #5 must be a boolean");
             minimisable = f->__value_bool;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_window(): parameter #6 must be a boolean");
             closable = f->__value_bool;
 
@@ -3294,7 +3294,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_menubar) {
         if (params.size() < 1) connector->__error_message_param("gui_menubar");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_menubar(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_menubar(): parameter #1 must be a gui object");
 
@@ -3307,8 +3307,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_stack) {
         if (params.size() < 2) connector->__error_message_params("gui_stack", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_stack(): parameter #1 must be a number");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_stack(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_stack(): parameter #2 must be a gui object");
@@ -3322,9 +3322,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_stack(vertical, parent);
     } else if (func_id == __gui_grid) {
         if (params.size() < 3) connector->__error_message_params("gui_grid", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid(): parameter #2 must be a number");
         if (f->__type != __TYPE_OBJECT__) connector->__error_message("gui_grid(): parameter #3 must be an object");
@@ -3338,21 +3338,21 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         GUI* parent = (GUI*) f->__value_object->__holder_pointer;
 
         if (params.size() > 3) {
-            DataType* g = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(3), caller_id);
             if (g->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid(): parameter #4 must be a number");
             vertical_gap = g->__value_double;
 
             connector->__remove_garbage(params.at(3), g);
         }
         if (params.size() > 4) {
-            DataType* g = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(4), caller_id);
             if (g->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid(): parameter #5 must be a number");
             horizontal_gap = g->__value_double;
 
             connector->__remove_garbage(params.at(4), g);
         }
         if (params.size() > 5) {
-            DataType* g = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(5), caller_id);
             if (g->__type != __TYPE_BOOL__) connector->__error_message("gui_grid(): parameter #6 must be a boolean");
             grow_all = g->__value_bool;
 
@@ -3367,7 +3367,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_panel) {
         if (params.size() < 1) connector->__error_message_param("gui_panel");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_panel(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_panel(): parameter #1 must be a gui object");
 
@@ -3379,35 +3379,35 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool as_canvas = false;
         
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel(): parameter #2 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel(): parameter #3 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel(): parameter #4 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel(): parameter #5 must be a number");
             height = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_panel(): parameter #6 must be a boolean");
             as_canvas = f->__value_bool;
 
@@ -3419,8 +3419,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_panel(parent, x, y, width, height, as_canvas, caller_id);
     } else if (func_id == __gui_labeled_panel) {
         if (params.size() < 2) connector->__error_message_params("gui_labeled_panel", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_labeled_panel(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_labeled_panel(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_labeled_panel(): parameter #2 must be a gui object");
@@ -3433,28 +3433,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int height = 0;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_labeled_panel(): parameter #3 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_labeled_panel(): parameter #4 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_labeled_panel(): parameter #5 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_labeled_panel(): parameter #6 must be a number");
             height = f->__value_double;
 
@@ -3467,7 +3467,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_labeled_panel(parent, text, x, y, width, height, caller_id);
     } else if (func_id == __gui_tab) {
         if (params.size() < 1) connector->__error_message_param("gui_tab");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_tab(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_tab(): parameter #1 must be a gui object");
 
@@ -3479,28 +3479,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int height = 0;
         
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_tab(): parameter #2 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_tab(): parameter #3 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_tab(): parameter #4 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_tab(): parameter #5 must be a number");
             height = f->__value_double;
 
@@ -3512,8 +3512,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_tab(parent, x, y, width, height, caller_id);
     } else if (func_id == __gui_button) {
         if (params.size() < 2) connector->__error_message_params("gui_button", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_button(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_button(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_button(): parameter #2 must be a gui object");
@@ -3526,28 +3526,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int height = 26;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_button(): parameter #3 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_button(): parameter #4 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_button(): parameter #5 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_button(): parameter #6 must be a number");
             height = f->__value_double;
 
@@ -3560,8 +3560,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_button(parent, text, x, y, width, height, caller_id);
     } else if (func_id == __gui_label) {
         if (params.size() < 2) connector->__error_message_params("gui_label", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_label(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_label(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_label(): parameter #2 must be a gui object");
@@ -3575,35 +3575,35 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int alignment = wxALIGN_LEFT;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_label(): parameter #3 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_label(): parameter #4 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_label(): parameter #5 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_label(): parameter #6 must be a number");
             height = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_label(): parameter #7 must be a number");
             alignment = f->__value_double;
 
@@ -3616,8 +3616,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_label(parent, text, x, y, width, height, alignment, caller_id);
     } else if (func_id == __gui_textbox) {
         if (params.size() < 2) connector->__error_message_params("gui_textbox", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_textbox(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_textbox(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_textbox(): parameter #2 must be a gui object");
@@ -3631,35 +3631,35 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool is_password = false;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox(): parameter #3 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox(): parameter #4 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox(): parameter #5 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox(): parameter #6 must be a number");
             height = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_textbox(): parameter #7 must be a boolean");
             is_password = f->__value_bool;
 
@@ -3672,8 +3672,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_textbox(parent, text, x, y, width, height, is_password, caller_id);
     } else if (func_id == __gui_textarea) {
         if (params.size() < 2) connector->__error_message_params("gui_textarea", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_textarea(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_textarea(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_textarea(): parameter #2 must be a gui object");
@@ -3687,35 +3687,35 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool wrap = true;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textarea(): parameter #3 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textarea(): parameter #4 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textarea(): parameter #5 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textarea(): parameter #6 must be a number");
             height = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_textarea(): parameter #7 must be a boolean");
             wrap = f->__value_bool;
 
@@ -3728,8 +3728,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_textarea(parent, text, x, y, width, height, wrap, caller_id);
     } else if (func_id == __gui_checkbox) {
         if (params.size() < 2) connector->__error_message_params("gui_checkbox", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_checkbox(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_checkbox(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_checkbox(): parameter #2 must be a gui object");
@@ -3743,35 +3743,35 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool checked = false;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_checkbox(): parameter #3 must be a boolean");
             checked = f->__value_bool;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_checkbox(): parameter #4 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_checkbox(): parameter #5 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_checkbox(): parameter #6 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_checkbox(): parameter #7 must be a number");
             height = f->__value_double;
 
@@ -3784,8 +3784,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_checkbox(parent, text, checked, x, y, width, height, caller_id);
     } else if (func_id == __gui_radiobox) {
         if (params.size() < 2) connector->__error_message_params("gui_radiobox", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_radiobox(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_radiobox(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_radiobox(): parameter #2 must be a gui object");
@@ -3800,42 +3800,42 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool checked = false;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_radiobox(): parameter #3 must be a boolean");
             start_group = f->__value_bool;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_radiobox(): parameter #4 must be a boolean");
             checked = f->__value_bool;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_radiobox(): parameter #5 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_radiobox(): parameter #6 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_radiobox(): parameter #7 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(6), f);
         }
         if (params.size() > 7) {
-            DataType* f = connector->__get_value(params.at(7), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(7), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_radiobox(): parameter #8 must be a number");
             height = f->__value_double;
 
@@ -3848,7 +3848,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_radiobox(parent, text, start_group, checked, x, y, width, height, caller_id);
     } else if (func_id == __gui_listbox) {
         if (params.size() < 1) connector->__error_message_param("gui_listbox");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_listbox(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_listbox(): parameter #1 must be a gui object");
 
@@ -3857,46 +3857,46 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int y = 0;
         int width = 160;
         int height = 80;
-        Array* list = connector->__create_array(0)->__value_array;
+        gc<Array> list = connector->__create_array(0)->__value_array;
         bool multiple_selection = false;
         
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_ARRAY__) connector->__error_message("gui_listbox(): parameter #2 must be an array");
             list = f->__value_array;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_listbox(): parameter #3 must be a boolean");
             multiple_selection = f->__value_bool;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox(): parameter #4 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox(): parameter #5 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox(): parameter #6 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox(): parameter #7 must be a number");
             height = f->__value_double;
 
@@ -3908,7 +3908,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_listbox(parent, list, multiple_selection, x, y, width, height, caller_id);
     } else if (func_id == __gui_combobox) {
         if (params.size() < 1) connector->__error_message_param("gui_combobox");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_combobox(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_combobox(): parameter #1 must be a gui object");
 
@@ -3917,46 +3917,46 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int y = 0;
         int width = 0;
         int height = 0;
-        Array* list = connector->__create_array(0)->__value_array;
+        gc<Array> list = connector->__create_array(0)->__value_array;
         bool editable = false;
         
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_ARRAY__) connector->__error_message("gui_combobox(): parameter #2 must be an array");
             list = f->__value_array;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("gui_combobox(): parameter #3 must be a boolean");
             editable = f->__value_bool;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox(): parameter #4 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox(): parameter #5 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox(): parameter #6 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(5), f);
         }
         if (params.size() > 6) {
-            DataType* f = connector->__get_value(params.at(6), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(6), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox(): parameter #7 must be a number");
             height = f->__value_double;
 
@@ -3972,7 +3972,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         }
     } else if (func_id == __gui_timer) {
         if (params.size() < 2) connector->__error_message_params("gui_timer", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         AST* e = params.at(1);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_timer(): parameter #1 must be a number");
         if (e->__type != __AST_FUNCTION_CALL__ && e->__type != __AST_OBJECT_FUNCTION_CALL__) connector->__error_message("gui_timer(): parameter #2 must be a function call");
@@ -3983,8 +3983,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __create_timer(interval, e, caller_id);
     } else if (func_id == __gui_imagebox) {
         if (params.size() < 2) connector->__error_message_params("gui_imagebox", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_imagebox(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_imagebox(): parameter #2 must be an object");
         if (e->__value_object->__name.substr(0, 3) != "gui" && e->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_imagebox(): parameter #2 must be a gui object");
@@ -3997,28 +3997,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int height = 0;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_imagebox(): parameter #3 must be a number");
             x = f->__value_double;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_imagebox(): parameter #4 must be a number");
             y = f->__value_double;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_imagebox(): parameter #5 must be a number");
             width = f->__value_double;
 
             connector->__remove_garbage(params.at(4), f);
         }
         if (params.size() > 5) {
-            DataType* f = connector->__get_value(params.at(5), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(5), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_imagebox(): parameter #6 must be a number");
             height = f->__value_double;
 
@@ -4047,7 +4047,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_window_settitle) {
         if (params.size() < 1) connector->__error_message_param("gui_window::settitle");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_window::settitle(): parameter #1 must be a string");
         
         wxFrame* f = ((GUI_Window*) obj->__holder_pointer)->__holder;
@@ -4074,7 +4074,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = f->IsMaximized();
     } else if (func_id == __gui_window_setfullscreen) {
         if (params.size() < 1) connector->__error_message_param("gui_window::setfullscreen");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui_window::setfullscreen(): parameter #1 must be a boolean");
         
         wxFrame* f = ((GUI_Window*) obj->__holder_pointer)->__holder;
@@ -4095,8 +4095,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_menubar_append) {
         if (params.size() < 2) connector->__error_message_params("gui_menubar::append", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_menubar::append(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_menubar::append(): parameter #1 must be a gui object");
         if (e->__type != __TYPE_STRING__) connector->__error_message("gui_menubar::append(): parameter #2 must be a string");
@@ -4118,9 +4118,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_menubar_insert) {
         if (params.size() < 3) connector->__error_message_params("gui_menubar::insert", 3);
-        DataType* f = connector->__get_value(params.at(0), caller_id);
-        DataType* d = connector->__get_value(params.at(1), caller_id);
-        DataType* e = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(2), caller_id);
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menubar::insert(): parameter #1 must be a number");
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_menubar::insert(): parameter #2 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_menubar::insert(): parameter #2 must be a gui object");
@@ -4144,7 +4144,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_menubar_remove) {
         if (params.size() < 1) connector->__error_message_param("gui_menubar::remove");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menubar::remove(): parameter #1 must be a number");
         
         GUI_MenuBar* m = (GUI_MenuBar*) obj->__holder_pointer;
@@ -4159,7 +4159,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_menu_append) {
         if (params.size() < 1) connector->__error_message_param("gui_menu::append");
-        DataType* dd = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> dd = connector->__get_value(params.at(0), caller_id);
         if (dd->__type != __TYPE_STRING__) connector->__error_message("gui_menu::append(): parameter #1 must be a string");
 
         GUI_Menu* m = (GUI_Menu*) obj->__holder_pointer;
@@ -4172,7 +4172,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool special = false;
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::append(): parameter #2 must be a number");
             type = f->__value_double;
 
@@ -4186,26 +4186,26 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             AST_FunctionCall* af = (AST_FunctionCall*) fe;
 
             for (int i = 0; i < af->__parameters.size(); i++) {
-                DataType* d = connector->__get_value(af->__parameters.at(i), caller_id);
-                DataType* e;
+                gc<DataType> d = connector->__get_value(af->__parameters.at(i), caller_id);
+                gc<DataType> e;
 
                 if (d->__type == __TYPE_DOUBLE__) {
-                    e = new DataType(__TYPE_DOUBLE__);
+                    e = new_gc<DataType>(__TYPE_DOUBLE__);
                     e->__value_double = d->__value_double;
                 } else if (d->__type == __TYPE_BOOL__) {
-                    e = new DataType(__TYPE_BOOL__);
+                    e = new_gc<DataType>(__TYPE_BOOL__);
                     e->__value_bool = d->__value_bool;
                 } else if (d->__type == __TYPE_STRING__) {
-                    e = new DataType(__TYPE_STRING__);
+                    e = new_gc<DataType>(__TYPE_STRING__);
                     e->__value_string = d->__value_string;
                 } else if (d->__type == __TYPE_ARRAY__) {
-                    e = new DataType(__TYPE_ARRAY__);
+                    e = new_gc<DataType>(__TYPE_ARRAY__);
                     e->__value_array = d->__value_array;
                 } else if (d->__type == __TYPE_OBJECT__) {
-                    e = new DataType(__TYPE_OBJECT__);
+                    e = new_gc<DataType>(__TYPE_OBJECT__);
                     e->__value_object = d->__value_object;
                 } else {
-                    e = new DataType(__TYPE_NULL__);
+                    e = new_gc<DataType>(__TYPE_NULL__);
                 }
 
                 params.push_back(new AST_Value(e));
@@ -4250,8 +4250,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = menu_id;
     } else if (func_id == __gui_menu_appendsubmenu) {
         if (params.size() < 2) connector->__error_message_params("gui_menu::appendsubmenu", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_menu::appendsubmenu(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_menu::appendsubmenu(): parameter #1 must be a gui object");
         if (e->__type != __TYPE_STRING__) connector->__error_message("gui_menu::appendsubmenu(): parameter #2 must be a string");
@@ -4274,8 +4274,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = menu_id;
     } else if (func_id == __gui_menu_insert) {
         if (params.size() < 2) connector->__error_message_params("gui_menu::insert", 2);
-        DataType* de = connector->__get_value(params.at(0), caller_id);
-        DataType* dd = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> de = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> dd = connector->__get_value(params.at(1), caller_id);
         if (de->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::insert(): parameter #1 must be a number");
         if (dd->__type != __TYPE_STRING__) connector->__error_message("gui_menu::insert(): parameter #2 must be a string");
 
@@ -4290,7 +4290,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool special = false;
 
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::insert(): parameter #3 must be a number");
             type = f->__value_double;
 
@@ -4304,26 +4304,26 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             AST_FunctionCall* af = (AST_FunctionCall*) fe;
 
             for (int i = 0; i < af->__parameters.size(); i++) {
-                DataType* d = connector->__get_value(af->__parameters.at(i), caller_id);
-                DataType* e;
+                gc<DataType> d = connector->__get_value(af->__parameters.at(i), caller_id);
+                gc<DataType> e;
 
                 if (d->__type == __TYPE_DOUBLE__) {
-                    e = new DataType(__TYPE_DOUBLE__);
+                    e = new_gc<DataType>(__TYPE_DOUBLE__);
                     e->__value_double = d->__value_double;
                 } else if (d->__type == __TYPE_BOOL__) {
-                    e = new DataType(__TYPE_BOOL__);
+                    e = new_gc<DataType>(__TYPE_BOOL__);
                     e->__value_bool = d->__value_bool;
                 } else if (d->__type == __TYPE_STRING__) {
-                    e = new DataType(__TYPE_STRING__);
+                    e = new_gc<DataType>(__TYPE_STRING__);
                     e->__value_string = d->__value_string;
                 } else if (d->__type == __TYPE_ARRAY__) {
-                    e = new DataType(__TYPE_ARRAY__);
+                    e = new_gc<DataType>(__TYPE_ARRAY__);
                     e->__value_array = d->__value_array;
                 } else if (d->__type == __TYPE_OBJECT__) {
-                    e = new DataType(__TYPE_OBJECT__);
+                    e = new_gc<DataType>(__TYPE_OBJECT__);
                     e->__value_object = d->__value_object;
                 } else {
-                    e = new DataType(__TYPE_NULL__);
+                    e = new_gc<DataType>(__TYPE_NULL__);
                 }
 
                 params.push_back(new AST_Value(e));
@@ -4360,7 +4360,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = menu_id;
     } else if (func_id == __gui_menu_insertseparator) {
         if (params.size() < 1) connector->__error_message_param("gui_menu::insertseparator");
-        DataType* de = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> de = connector->__get_value(params.at(0), caller_id);
         if (de->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::insertseparator(): parameter #1 must be a number");
 
         GUI_Menu* m = (GUI_Menu*) obj->__holder_pointer;
@@ -4376,9 +4376,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = menu_id;
     } else if (func_id == __gui_menu_insertsubmenu) {
         if (params.size() < 3) connector->__error_message_params("gui_menu::insertsubmenu", 3);
-        DataType* f = connector->__get_value(params.at(0), caller_id);
-        DataType* d = connector->__get_value(params.at(1), caller_id);
-        DataType* e = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(2), caller_id);
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::insertsubmenu(): parameter #1 must be a number");
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_menu::insertsubmenu(): parameter #2 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_menu::insertsubmenu(): parameter #2 must be a gui object");
@@ -4405,7 +4405,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = menu_id;
     } else if (func_id == __gui_menu_remove) {
         if (params.size() < 1) connector->__error_message_param("gui_menu::remove");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::remove(): parameter #1 must be a number");
 
         GUI_Menu* m = (GUI_Menu*) obj->__holder_pointer;
@@ -4421,8 +4421,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_menu_setlabel) {
         if (params.size() < 2) connector->__error_message_params("gui_menu::setlabel", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::setlabel(): parameter #1 must be a number");
         if (e->__type != __TYPE_STRING__) connector->__error_message("gui_menu::setlabel(): parameter #2 must be a string");
 
@@ -4441,7 +4441,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_menu_getlabel) {
         if (params.size() < 1) connector->__error_message_param("gui_menu::getlabel");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::getlabel(): parameter #1 must be a number");
 
         GUI_Menu* m = (GUI_Menu*) obj->__holder_pointer;
@@ -4451,7 +4451,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool complete_label = false;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_menu::getlabel(): parameter #2 must be a boolean");
             complete_label = e->__value_bool;
 
@@ -4464,8 +4464,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_string = complete_label ? g->GetLabel(item_id) : g->GetLabelText(item_id);
     } else if (func_id == __gui_menu_setenable) {
         if (params.size() < 2) connector->__error_message_params("gui_menu::setenable", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::setenable(): parameter #1 must be a number");
         if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_menu::setenable(): parameter #2 must be a boolean");
 
@@ -4484,7 +4484,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_menu_isenable) {
         if (params.size() < 1) connector->__error_message_param("gui_menu::isenable");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::isenable(): parameter #1 must be a number");
 
         GUI_Menu* m = (GUI_Menu*) obj->__holder_pointer;
@@ -4497,8 +4497,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = g->IsEnabled(item_id);
     } else if (func_id == __gui_menu_setchecked) {
         if (params.size() < 2) connector->__error_message_params("gui_menu::setchecked", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::setchecked(): parameter #1 must be a number");
         if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_menu::setchecked(): parameter #2 must be a boolean");
 
@@ -4517,7 +4517,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_menu_ischecked) {
         if (params.size() < 1) connector->__error_message_param("gui_menu::ischecked");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_menu::ischecked(): parameter #1 must be a number");
 
         GUI_Menu* m = (GUI_Menu*) obj->__holder_pointer;
@@ -4534,7 +4534,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_stack_add) {
         if (params.size() < 1) connector->__error_message_param("gui_stack::add");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_stack::add(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_stack::add(): parameter #1 must be a gui object");
 
@@ -4549,28 +4549,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int padding = 0;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_stack::add(): parameter #2 must be a boolean");
             vertical_stretch = e->__value_bool;
 
             connector->__remove_garbage(params.at(1), e);
         }
         if (params.size() > 2) {
-            DataType* e = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(2), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_stack::add(): parameter #3 must be a boolean");
             horizontal_stretch = e->__value_bool;
 
             connector->__remove_garbage(params.at(2), e);
         }
         if (params.size() > 3) {
-            DataType* e = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(3), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_stack::add(): parameter #4 must be a number");
             flags = e->__value_double;
 
             connector->__remove_garbage(params.at(3), e);
         }
         if (params.size() > 4) {
-            DataType* e = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(4), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_stack::add(): parameter #5 must be a number");
             padding = e->__value_double;
 
@@ -4595,7 +4595,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_stack_addspacer) {
         if (params.size() < 1) connector->__error_message_param("gui_stack::addspacer");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_stack::addspacer(): parameter #1 must be a number");
 
         GUI_Stack* s = (GUI_Stack*) obj->__holder_pointer;
@@ -4604,7 +4604,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int size = d->__value_double;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_stack::addspacer(): parameter #2 must be a boolean");
             stretch = e->__value_bool;
 
@@ -4624,7 +4624,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_grid_add) {
         if (params.size() < 1) connector->__error_message_param("gui_grid::add");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_grid::add(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("gui_grid::add(): parameter #1 must be a gui object");
 
@@ -4638,21 +4638,21 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int padding = 0;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_grid::add(): parameter #2 must be a boolean");
             stretch = e->__value_bool;
 
             connector->__remove_garbage(params.at(1), e);
         }
         if (params.size() > 2) {
-            DataType* e = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(2), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid::add(): parameter #3 must be a number");
             flags = e->__value_double;
 
             connector->__remove_garbage(params.at(2), e);
         }
         if (params.size() > 3) {
-            DataType* e = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(3), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid::add(): parameter #4 must be a number");
             padding = e->__value_double;
 
@@ -4672,7 +4672,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_grid_addgrowablecol) {
         if (params.size() < 1) connector->__error_message_param("gui_grid::addgrowablecol");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid::addgrowablecol(): parameter #1 must be a number");
 
         GUI_Grid* s = (GUI_Grid*) obj->__holder_pointer;
@@ -4684,7 +4684,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_grid_addgrowablerow) {
         if (params.size() < 1) connector->__error_message_param("gui_grid::addgrowablerow");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_grid::addgrowablerow(): parameter #1 must be a number");
 
         GUI_Grid* s = (GUI_Grid*) obj->__holder_pointer;
@@ -4700,9 +4700,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_tab_addpage) {
         if (params.size() < 3) connector->__error_message_params("gui_tab::addpage", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_tab::addpage(): parameter #1 must be a string");
         if (e->__type != __TYPE_OBJECT__) connector->__error_message("gui_tab::addpage(): parameter #2 must be an object");
         if (e->__value_object->__name != "gui_panel") connector->__error_message("gui_tab::addpage(): parameter #2 must be a gui_panel");
@@ -4724,7 +4724,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = ((GUI_Tab*) obj->__holder_pointer)->__tab_index;
     } else if (func_id == __gui_tab_setpage) {
         if (params.size() < 1) connector->__error_message_param("gui_tab::setpage");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_tab::setpage(): parameter #1 must be a number");
         
         wxNotebook* g = ((GUI_Tab*) obj->__holder_pointer)->__holder;
@@ -4736,7 +4736,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_tab_removepage) {
         if (params.size() < 1) connector->__error_message_param("gui_tab::removepage");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_tab::removepage(): parameter #1 must be a number");
         
         wxNotebook* g = ((GUI_Tab*) obj->__holder_pointer)->__holder;
@@ -4752,7 +4752,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_textbox_appendtext) {
         if (params.size() < 1) connector->__error_message_param("gui_textbox::appendtext");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_textbox::appendtext(): parameter #1 must be a string");
         
         wxTextEntry* f = ((GUI_TextBox*) obj->__holder_pointer)->__holder;
@@ -4764,7 +4764,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_textbox_setlocked) {
         if (params.size() < 1) connector->__error_message_param("gui_textbox::setlocked");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui_textbox::setlocked(): parameter #1 must be a boolean");
         
         wxTextEntry* f = ((GUI_TextBox*) obj->__holder_pointer)->__holder;
@@ -4781,7 +4781,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = !f->IsEditable();
     } else if (func_id == __gui_textbox_setmaxlength) {
         if (params.size() < 1) connector->__error_message_param("gui_textbox::setmaxlength");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox::setmaxlength(): parameter #1 must be a number");
         
         wxTextEntry* f = ((GUI_TextBox*) obj->__holder_pointer)->__holder;
@@ -4793,8 +4793,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_textbox_setsel) {
         if (params.size() < 2) connector->__error_message_params("gui_textbox::setsel", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox::setsel(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_textbox::setsel(): parameter #2 must be a number");
         
@@ -4824,7 +4824,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = sel_to;
     } else if (func_id == __gui_textbox_setseltext) {
         if (params.size() < 1) connector->__error_message_param("gui_textbox::setseltext");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_textbox::setseltext(): parameter #1 must be a string");
         
         wxTextEntry* f = ((GUI_TextBox*) obj->__holder_pointer)->__holder;
@@ -4847,7 +4847,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_radiobox_setchecked) {
         if (params.size() < 1) connector->__error_message_param("gui_radiobox::setchecked");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui_radiobox::setchecked(): parameter #1 must be a boolean");
         
         wxRadioButton* f = ((GUI_RadioBox*) obj->__holder_pointer)->__holder;
@@ -4864,7 +4864,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = f->GetValue();
     } else if (func_id == __gui_checkbox_setchecked) {
         if (params.size() < 1) connector->__error_message_param("gui_checkbox::setchecked");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui_checkbox::setchecked(): parameter #1 must be a boolean");
         
         wxCheckBox* f = ((GUI_CheckBox*) obj->__holder_pointer)->__holder;
@@ -4885,12 +4885,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_listbox_add) {
         if (params.size() < 1) connector->__error_message_param("gui_listbox::add");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_listbox::add(): parameter #1 must be a string");
         int index = -1;
 
         if (params.size() > 1) {
-            DataType* d = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox::add(): parameter #2 must be a number");
             index = d->__value_double;
 
@@ -4911,7 +4911,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_listbox_remove) {
         if (params.size() < 1) connector->__error_message_param("gui_listbox::remove");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox::remove(): parameter #1 must be a number");
         
         wxListBox* f = ((GUI_ListBox*) obj->__holder_pointer)->__holder;
@@ -4934,7 +4934,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = f->GetCount();
     } else if (func_id == __gui_listbox_get) {
         if (params.size() < 1) connector->__error_message_param("gui_listbox::get");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox::get(): parameter #1 must be a number");
         
         wxListBox* f = ((GUI_ListBox*) obj->__holder_pointer)->__holder;
@@ -4945,8 +4945,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_listbox_set) {
         if (params.size() < 2) connector->__error_message_params("gui_listbox::set", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox::set(): parameter #1 must be a number");
         if (e->__type != __TYPE_STRING__) connector->__error_message("gui_listbox::set(): parameter #2 must be a string");
         
@@ -4965,7 +4965,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = f->GetSelection();
     } else if (func_id == __gui_listbox_setindex) {
         if (params.size() < 1) connector->__error_message_param("gui_listbox::setindex");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_listbox::setindex(): parameter #1 must be a number");
         
         wxListBox* f = ((GUI_ListBox*) obj->__holder_pointer)->__holder;
@@ -4977,7 +4977,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_listbox_getselections) {
         wxListBox* f = ((GUI_ListBox*) obj->__holder_pointer)->__holder;
-        DataType* d = connector->__create_array(0);
+        gc<DataType> d = connector->__create_array(0);
 
         wxArrayInt s;
         f->GetSelections(s);
@@ -4990,12 +4990,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_combobox_add) {
         if (params.size() < 1) connector->__error_message_param("gui_combobox::add");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_combobox::add(): parameter #1 must be a string");
         int index = -1;
 
         if (params.size() > 1) {
-            DataType* d = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox::add(): parameter #2 must be a number");
             index = d->__value_double;
 
@@ -5028,7 +5028,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_combobox_remove) {
         if (params.size() < 1) connector->__error_message_param("gui_combobox::remove");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox::remove(): parameter #1 must be a number");
 
         GUI_ComboBox* c = (GUI_ComboBox*) obj->__holder_pointer;
@@ -5072,7 +5072,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         }
     } else if (func_id == __gui_combobox_get) {
         if (params.size() < 1) connector->__error_message_param("gui_combobox::get");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox::get(): parameter #1 must be a number");
         
         GUI_ComboBox* c = (GUI_ComboBox*) obj->__holder_pointer;
@@ -5090,8 +5090,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_combobox_set) {
         if (params.size() < 2) connector->__error_message_params("gui_combobox::set", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox::set(): parameter #1 must be a number");
         if (e->__type != __TYPE_STRING__) connector->__error_message("gui_combobox::set(): parameter #2 must be a string");
         
@@ -5124,7 +5124,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         }
     } else if (func_id == __gui_combobox_setindex) {
         if (params.size() < 1) connector->__error_message_param("gui_combobox::setindex");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_combobox::setindex(): parameter #1 must be a number");
 
         GUI_ComboBox* c = (GUI_ComboBox*) obj->__holder_pointer;
@@ -5170,7 +5170,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = t->__interval;
     } else if (func_id == __gui_timer_setinterval) {
         if (params.size() < 1) connector->__error_message_param("gui_timer::setinterval");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_timer::setinterval(): parameter #1 must be a number");
 
         GUI_Timer* t = (GUI_Timer*) obj->__holder_pointer;
@@ -5190,7 +5190,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_imagebox_setscalemode) {
         if (params.size() < 1) connector->__error_message_param("gui_imagebox::setscalemode");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_imagebox::setscalemode(): parameter #1 must be a number");
 
         int scale_mode = (int) d->__value_double;
@@ -5218,7 +5218,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_string = ((GUI_ImageBox*) obj->__holder_pointer)->__path;
     } else if (func_id == __gui_imagebox_setimage) {
         if (params.size() < 1) connector->__error_message_param("gui_imagebox::setimage");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_imagebox::setimage(): parameter #1 must be a string");
 
         GUI_ImageBox* gui = (GUI_ImageBox*) obj->__holder_pointer;
@@ -5246,7 +5246,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_add_event) {
         if (params.size() < 2) connector->__error_message_params("gui::addevent", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         AST* e = params.at(1);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::addevent(): parameter #1 must be a gui event");
         if (e->__type != __AST_FUNCTION_CALL__ && e->__type != __AST_OBJECT_FUNCTION_CALL__) connector->__error_message("gui::addevent(): parameter #2 must be a function call");
@@ -5260,7 +5260,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_settext) {
         if (params.size() < 1) connector->__error_message_param("gui::settext");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui::settext(): parameter #1 must be a string");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5396,7 +5396,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_double = p.GetHeight();
     } else if (func_id == __gui_setx) {
         if (params.size() < 1) connector->__error_message_param("gui::setx");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::setx(): parameter #1 must be a number");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5412,7 +5412,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_sety) {
         if (params.size() < 1) connector->__error_message_param("gui::sety");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::sety(): parameter #1 must be a number");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5428,7 +5428,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setwidth) {
         if (params.size() < 1) connector->__error_message_param("gui::setwidth");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::setwidth(): parameter #1 must be a number");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5444,7 +5444,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setheight) {
         if (params.size() < 1) connector->__error_message_param("gui::setheight");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::setheight(): parameter #1 must be a number");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5461,7 +5461,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_setenable) {
         if (params.size() < 1) connector->__error_message_param("gui::setenable");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setenable(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5481,7 +5481,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = w->IsEnabled();
     } else if (func_id == __gui_setvisible) {
         if (params.size() < 1) connector->__error_message_param("gui::setvisible");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setvisible(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5506,7 +5506,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_setbackgroundcolour) {
         if (params.size() < 1) connector->__error_message_param("gui::setbackgroundcolour");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui::setbackgroundcolour(): parameter #1 must be an object");
         if (d->__value_object->__name != "gui_colour") connector->__error_message("gui::setbackgroundcolour(): parameter #1 must be a gui_colour");
         
@@ -5522,7 +5522,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setforegroundcolour) {
         if (params.size() < 1) connector->__error_message_param("gui::setforegroundcolour");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui::setforegroundcolour(): parameter #1 must be an object");
         if (d->__value_object->__name != "gui_colour") connector->__error_message("gui::setforegroundcolour(): parameter #1 must be a gui_colour");
         
@@ -5551,7 +5551,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __gui_setfont) {
         if (params.size() < 1) connector->__error_message_param("gui::setfont");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui::setfont(): parameter #1 must be a string");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5567,7 +5567,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setfontsize) {
         if (params.size() < 1) connector->__error_message_param("gui::setfontsize");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::setfontsize(): parameter #1 must be a number");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5583,7 +5583,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setfontbold) {
         if (params.size() < 1) connector->__error_message_param("gui::setfontbold");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setfontbold(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5599,7 +5599,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setfontlight) {
         if (params.size() < 1) connector->__error_message_param("gui::setfontlight");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setfontlight(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5615,7 +5615,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setfontitalic) {
         if (params.size() < 1) connector->__error_message_param("gui::setfontitalic");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setfontitalic(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5631,7 +5631,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setfontunderline) {
         if (params.size() < 1) connector->__error_message_param("gui::setfontunderline");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setfontunderline(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5647,7 +5647,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_setfontstrikethrough) {
         if (params.size() < 1) connector->__error_message_param("gui::setfontstrikethrough");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_BOOL__) connector->__error_message("gui::setfontstrikethrough(): parameter #1 must be a boolean");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5728,7 +5728,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_settooltip) {
         if (params.size() < 1) connector->__error_message_param("gui::settooltip");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui::settooltip(): parameter #1 must be a string");
         
         GUI* g = (GUI*) obj->__holder_pointer;
@@ -5806,7 +5806,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int margin = 0;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::right(): parameter #1 must be a number");
             margin = d->__value_double;
 
@@ -5833,7 +5833,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int margin = 0;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::bottom(): parameter #1 must be a number");
             margin = d->__value_double;
 
@@ -5861,14 +5861,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int margin_right = 0;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretchwidth(): parameter #1 must be a number");
             margin_left = d->__value_double;
 
             connector->__remove_garbage(params.at(0), d);
         }
         if (params.size() > 1) {
-            DataType* d = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretchwidth(): parameter #2 must be a number");
             margin_right = d->__value_double;
 
@@ -5895,14 +5895,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int margin_bottom = 0;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretchheight(): parameter #1 must be a number");
             margin_top = d->__value_double;
 
             connector->__remove_garbage(params.at(0), d);
         }
         if (params.size() > 1) {
-            DataType* d = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretchheight(): parameter #2 must be a number");
             margin_bottom = d->__value_double;
 
@@ -5931,28 +5931,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int margin_bottom = 0;
 
         if (params.size() > 0) {
-            DataType* d = connector->__get_value(params.at(0), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretch(): parameter #1 must be a number");
             margin_left = d->__value_double;
 
             connector->__remove_garbage(params.at(0), d);
         }
         if (params.size() > 1) {
-            DataType* d = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(1), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretch(): parameter #2 must be a number");
             margin_right = d->__value_double;
 
             connector->__remove_garbage(params.at(1), d);
         }
         if (params.size() > 2) {
-            DataType* d = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(2), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretch(): parameter #3 must be a number");
             margin_top = d->__value_double;
 
             connector->__remove_garbage(params.at(2), d);
         }
         if (params.size() > 3) {
-            DataType* d = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> d = connector->__get_value(params.at(3), caller_id);
             if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui::stretch(): parameter #4 must be a number");
             margin_bottom = d->__value_double;
 
@@ -6003,7 +6003,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_dialog_open) {
         if (params.size() < 1) connector->__error_message_param("dialog::open");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("dialog::open(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("dialog::open(): parameter #1 must be a gui object");
 
@@ -6017,28 +6017,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         string default_file = "";
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open(): parameter #2 must be a string");
             title = f->__value_string;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open(): parameter #3 must be a string");
             wildcard = f->__value_string;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open(): parameter #4 must be a string");
             default_dir = f->__value_string;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open(): parameter #5 must be a string");
             default_file = f->__value_string;
 
@@ -6059,7 +6059,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_string = rst;
     } else if (func_id == __gui_dialog_multiple) {
         if (params.size() < 1) connector->__error_message_param("dialog::open_multiple");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("dialog::open_multiple(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("dialog::open_multiple(): parameter #1 must be a gui object");
 
@@ -6072,28 +6072,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         string default_file = "";
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open_multiple(): parameter #2 must be a string");
             title = f->__value_string;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open_multiple(): parameter #3 must be a string");
             wildcard = f->__value_string;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open_multiple(): parameter #4 must be a string");
             default_dir = f->__value_string;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::open_multiple(): parameter #5 must be a string");
             default_file = f->__value_string;
 
@@ -6105,7 +6105,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         #endif
 
         wxFileDialog dialog(((GUI_Window*) parent)->__holder, title, default_dir, default_file, wildcard, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE);
-        DataType* rst = connector->__create_array(0);
+        gc<DataType> rst = connector->__create_array(0);
 
         if (dialog.ShowModal() == wxID_OK) {
             wxArrayString arr;
@@ -6119,7 +6119,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result = rst;
     } else if (func_id == __gui_dialog_save) {
         if (params.size() < 1) connector->__error_message_param("dialog::save");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("dialog::save(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("dialog::save(): parameter #1 must be a gui object");
 
@@ -6133,28 +6133,28 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         string default_file = "";
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::save(): parameter #2 must be a string");
             title = f->__value_string;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::save(): parameter #3 must be a string");
             wildcard = f->__value_string;
 
             connector->__remove_garbage(params.at(2), f);
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::save(): parameter #4 must be a string");
             default_dir = f->__value_string;
 
             connector->__remove_garbage(params.at(3), f);
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::save(): parameter #5 must be a string");
             default_file = f->__value_string;
 
@@ -6175,7 +6175,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_string = rst;
     } else if (func_id == __gui_dialog_directory) {
         if (params.size() < 1) connector->__error_message_param("dialog::directory");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("dialog::directory(): parameter #1 must be an object");
         if (d->__value_object->__name.substr(0, 3) != "gui" && d->__value_object->__inherited.find("gui") == string::npos) connector->__error_message("dialog::directory(): parameter #1 must be a gui object");
 
@@ -6187,14 +6187,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         string default_dir = "";
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::directory(): parameter #2 must be a string");
             title = f->__value_string;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("dialog::directory(): parameter #3 must be a string");
             default_dir = f->__value_string;
 
@@ -6255,7 +6255,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_clipboard_set) {
         if (params.size() < 1) connector->__error_message_param("clipboard::set");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("clipboard::set(): parameter #1 must be a string");
 
         if (wxTheClipboard->Open()) {
@@ -6271,7 +6271,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_messagebox) {
         if (params.size() < 1) connector->__error_message_param("messagebox");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("messagebox(): parameter #1 must be a string");
 
         string message = d->__value_string;
@@ -6279,14 +6279,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         long style = wxOK + wxICON_INFORMATION;
         
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("messagebox(): parameter #2 must be a string");
             title = f->__value_string;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("messagebox(): parameter #3 must be a number");
             style = f->__value_double;
 
@@ -6304,10 +6304,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __gui_colour_rgba) {
         if (params.size() < 4) connector->__error_message_params("gui_colours::rgba", 4);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_colours::rgba(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_colours::rgba(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_colours::rgba(): parameter #3 must be a number");
@@ -6326,9 +6326,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __new_colour(red, green, blue, alpha);
     } else if (func_id == __gui_colour_rgb) {
         if (params.size() < 3) connector->__error_message_params("gui_colours::rgb", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_colours::rgb(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_colours::rgb(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_colours::rgb(): parameter #3 must be a number");
@@ -6344,7 +6344,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return __new_colour(red, green, blue, 255);
     } else if (func_id == __gui_colour_hex) {
         if (params.size() < 1) connector->__error_message_param("gui_colours::hex");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_colours::hex(): parameter #1 must be a string");
 
         string s = d->__value_string;
@@ -6389,7 +6389,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_draw_setpen) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_setpen");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_panel::draw_setpen(): parameter #1 must be an object");
         if (d->__value_object->__name != "gui_colour") connector->__error_message("gui_panel::draw_setpen(): parameter #1 must be a gui_colour");
 
@@ -6397,14 +6397,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         int s = 0;
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_setpen(): parameter #2 must be a number");
             w = f->__value_double;
 
             connector->__remove_garbage(params.at(1), f);
         }
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_setpen(): parameter #3 must be a number");
             s = f->__value_double;
 
@@ -6424,14 +6424,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_setbrush) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_setbrush");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_panel::draw_setbrush(): parameter #1 must be an object");
         if (d->__value_object->__name != "gui_colour") connector->__error_message("gui_panel::draw_setbrush(): parameter #1 must be a gui_colour");
 
         int s = 0;
 
         if (params.size() > 1) {
-            DataType* f = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(1), caller_id);
             if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_setbrush(): parameter #2 must be a number");
             s = f->__value_double;
 
@@ -6451,7 +6451,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_setfont) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_setfont");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_setfont(): parameter #1 must be a number");
 
         string face = "";
@@ -6459,21 +6459,21 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         bool bold = false;
 
         if (params.size() > 1) {
-            DataType* g = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(1), caller_id);
             if (g->__type != __TYPE_STRING__) connector->__error_message("gui_panel::draw_setfont(): parameter #2 must be a string");
             face = g->__value_string;
 
             connector->__remove_garbage(params.at(1), g);
         }
         if (params.size() > 2) {
-            DataType* g = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(2), caller_id);
             if (g->__type != __TYPE_BOOL__) connector->__error_message("gui_panel::draw_setfont(): parameter #3 must be a boolean");
             bold = g->__value_bool;
 
             connector->__remove_garbage(params.at(2), g);
         }
         if (params.size() > 3) {
-            DataType* g = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(3), caller_id);
             if (g->__type != __TYPE_BOOL__) connector->__error_message("gui_panel::draw_setfont(): parameter #4 must be a boolean");
             italic = g->__value_bool;
 
@@ -6497,7 +6497,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_settextcolour) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::settextcolour");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_panel::settextcolour(): parameter #1 must be an object");
         if (d->__value_object->__name != "gui_colour") connector->__error_message("gui_panel::settextcolour(): parameter #1 must be a gui_colour");
 
@@ -6514,7 +6514,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_setbackgroundcolour) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_setbackgroundcolour");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_panel::draw_setbackgroundcolour(): parameter #1 must be an object");
         if (d->__value_object->__name != "gui_colour") connector->__error_message("gui_panel::draw_setbackgroundcolour(): parameter #1 must be a gui_colour");
 
@@ -6531,10 +6531,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_line) {
         if (params.size() < 4) connector->__error_message_params("gui_panel::draw_line", 4);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_line(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_line(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_line(): parameter #3 must be a number");
@@ -6555,10 +6555,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(3), g);
     } else if (func_id == __gui_draw_rectangle) {
         if (params.size() < 4) connector->__error_message_params("gui_panel::draw_rectangle", 4);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_rectangle(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_rectangle(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_rectangle(): parameter #3 must be a number");
@@ -6579,11 +6579,11 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(3), g);
     } else if (func_id == __gui_draw_roundedrectangle) {
         if (params.size() < 5) connector->__error_message_params("gui_panel::draw_roundedrectangle", 5);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
-        DataType* h = connector->__get_value(params.at(4), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> h = connector->__get_value(params.at(4), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_roundedrectangle(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_roundedrectangle(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_roundedrectangle(): parameter #3 must be a number");
@@ -6606,9 +6606,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(4), h);
     } else if (func_id == __gui_draw_text) {
         if (params.size() < 3) connector->__error_message_params("gui_panel::draw_text", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_panel::draw_text(): parameter #1 must be a string");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_text(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_text(): parameter #3 must be a number");
@@ -6616,7 +6616,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         double angle = 0.0;
 
         if (params.size() > 3) {
-            DataType* g = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> g = connector->__get_value(params.at(3), caller_id);
             if (g->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_text(): parameter #4 must be a number");
             angle = g->__value_double;
 
@@ -6637,9 +6637,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(2), f);
     } else if (func_id == __gui_draw_circle) {
         if (params.size() < 3) connector->__error_message_params("gui_panel::draw_circle", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_circle(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_circle(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_circle(): parameter #3 must be a number");
@@ -6658,8 +6658,8 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(2), f);
     } else if (func_id == __gui_draw_point) {
         if (params.size() < 2) connector->__error_message_params("gui_panel::draw_point", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_point(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_point(): parameter #2 must be a number");
         
@@ -6676,10 +6676,10 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(1), e);
     } else if (func_id == __gui_draw_ellipse) {
         if (params.size() < 4) connector->__error_message_params("gui_panel::draw_ellipse", 4);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_ellipse(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_ellipse(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_ellipse(): parameter #3 must be a number");
@@ -6700,12 +6700,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(3), g);
     } else if (func_id == __gui_draw_arc) {
         if (params.size() < 6) connector->__error_message_params("gui_panel::draw_arc", 6);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
-        DataType* h = connector->__get_value(params.at(4), caller_id);
-        DataType* i = connector->__get_value(params.at(5), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> h = connector->__get_value(params.at(4), caller_id);
+        gc<DataType> i = connector->__get_value(params.at(5), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_arc(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_arc(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_arc(): parameter #3 must be a number");
@@ -6730,12 +6730,12 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(5), i);
     } else if (func_id == __gui_draw_ellipticarc) {
         if (params.size() < 6) connector->__error_message_params("gui_panel::draw_ellipticarc", 6);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* f = connector->__get_value(params.at(2), caller_id);
-        DataType* g = connector->__get_value(params.at(3), caller_id);
-        DataType* h = connector->__get_value(params.at(4), caller_id);
-        DataType* i = connector->__get_value(params.at(5), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> f = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(3), caller_id);
+        gc<DataType> h = connector->__get_value(params.at(4), caller_id);
+        gc<DataType> i = connector->__get_value(params.at(5), caller_id);
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_ellipticarc(): parameter #1 must be a number");
         if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_ellipticarc(): parameter #2 must be a number");
         if (f->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_ellipticarc(): parameter #3 must be a number");
@@ -6760,31 +6760,31 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(5), i);
     } else if (func_id == __gui_draw_polygon) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_polygon");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_ARRAY__) connector->__error_message("gui_panel::draw_polygon(): parameter #1 must be an array");
         
         int xo = 0;
         int yo = 0;
         int s = 0;
         vector<DrawingPointData> p;
-        Array* ap = d->__value_array;
+        gc<Array> ap = d->__value_array;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_polygon(): parameter #2 must be a number");
             xo = e->__value_double;
 
             connector->__remove_garbage(params.at(1), e);
         }
         if (params.size() > 2) {
-            DataType* e = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(2), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_polygon(): parameter #3 must be a number");
             yo = e->__value_double;
 
             connector->__remove_garbage(params.at(2), e);
         }
         if (params.size() > 3) {
-            DataType* e = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(3), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_polygon(): parameter #4 must be a number");
             s = e->__value_double;
 
@@ -6795,9 +6795,9 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         if (!panel->__canvas_mode) connector->__error_message("gui_panel::draw_polygon(): canvas mode of this gui_panel must be true");
 
         for (int i = 0; i < ap->__elements.size(); i++) {
-            DataType* app = ap->__elements.at(i);
+            gc<DataType> app = ap->__elements.at(i);
             if (app->__type != __TYPE_ARRAY__) connector->__error_message("gui_panel::draw_polygon(): parameter #1 must be a 2D array");
-            Array* appa = app->__value_array;
+            gc<Array> appa = app->__value_array;
 
             DrawingPointData dp;
             dp.x = appa->__elements.at(0)->__value_double;
@@ -6814,19 +6814,19 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_spline) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_spline");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_ARRAY__) connector->__error_message("gui_panel::draw_spline(): parameter #1 must be an array");
         
         vector<DrawingPointData> p;
-        Array* ap = d->__value_array;
+        gc<Array> ap = d->__value_array;
 
         GUI_Panel* panel = (GUI_Panel*) obj->__holder_pointer;
         if (!panel->__canvas_mode) connector->__error_message("gui_panel::draw_spline(): canvas mode of this gui_panel must be true");
 
         for (int i = 0; i < ap->__elements.size(); i++) {
-            DataType* app = ap->__elements.at(i);
+            gc<DataType> app = ap->__elements.at(i);
             if (app->__type != __TYPE_ARRAY__) connector->__error_message("gui_panel::draw_spline(): parameter #1 must be a 2D array");
-            Array* appa = app->__value_array;
+            gc<Array> appa = app->__value_array;
 
             DrawingPointData dp;
             dp.x = appa->__elements.at(0)->__value_double;
@@ -6843,19 +6843,19 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_lines) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_lines");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_ARRAY__) connector->__error_message("gui_panel::draw_lines(): parameter #1 must be an array");
         
         vector<DrawingPointData> p;
-        Array* ap = d->__value_array;
+        gc<Array> ap = d->__value_array;
 
         GUI_Panel* panel = (GUI_Panel*) obj->__holder_pointer;
         if (!panel->__canvas_mode) connector->__error_message("gui_panel::draw_lines(): canvas mode of this gui_panel must be true");
 
         for (int i = 0; i < ap->__elements.size(); i++) {
-            DataType* app = ap->__elements.at(i);
+            gc<DataType> app = ap->__elements.at(i);
             if (app->__type != __TYPE_ARRAY__) connector->__error_message("gui_panel::draw_lines(): parameter #1 must be a 2D array");
-            Array* appa = app->__value_array;
+            gc<Array> appa = app->__value_array;
 
             DrawingPointData dp;
             dp.x = appa->__elements.at(0)->__value_double;
@@ -6872,7 +6872,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_gettextwidth) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_gettextwidth");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_panel::draw_gettextwidth(): parameter #1 must be a string");
         
         GUI_Panel* panel = (GUI_Panel*) obj->__holder_pointer;
@@ -6900,7 +6900,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         connector->__remove_garbage(params.at(0), d);
     } else if (func_id == __gui_draw_gettextheight) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_gettextheight");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_panel::draw_gettextheight(): parameter #1 must be a string");
         
         GUI_Panel* panel = (GUI_Panel*) obj->__holder_pointer;
@@ -6938,14 +6938,14 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         result->__value_bool = true;
     } else if (func_id == __gui_draw_save) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_save");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("gui_panel::draw_save(): parameter #1 must be a string");
         
         string path = d->__value_string;
         bool use_alpha = false;
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_panel::draw_save(): parameter #2 must be a boolean");
         
             use_alpha = e->__value_bool;

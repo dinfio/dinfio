@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -22,29 +22,29 @@ uint_fast16_t __json_encode, __json_decode, __json_error;
 
 string __json_error_string = "";
 
-DataType* __new_double(double v) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+gc<DataType> __new_double(double v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = v;
 
     return d;
 }
 
-DataType* __new_string(string v) {
-    DataType* d = new DataType(__TYPE_STRING__);
+gc<DataType> __new_string(string v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = v;
 
     return d;
 }
 
-DataType* __new_bool(bool v) {
-    DataType* d = new DataType(__TYPE_BOOL__);
+gc<DataType> __new_bool(bool v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_BOOL__);
     d->__value_bool = v;
 
     return d;
 }
 
 void __add_constants() {
-    DataType* d = connector->__create_object("json");
+    gc<DataType> d = connector->__create_object("json");
 
     connector->__object_set_function(d, "encode", __json_encode);
     connector->__object_set_function(d, "decode", __json_decode);
@@ -63,7 +63,7 @@ string lcase(string s) {
     return result;
 }
 
-json __encode(DataType* d) {
+json __encode(gc<DataType> d) {
     json result;
 
     if (d->__type == __TYPE_BOOL__) {
@@ -94,8 +94,8 @@ json __encode(DataType* d) {
     return result;
 }
 
-DataType* __decode(json& js) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> __decode(json& js) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
 
     if (js.is_boolean()) {
         result->__type = __TYPE_BOOL__;
@@ -153,8 +153,8 @@ void Module::__init(Connector* c) {
     __add_constants();
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __json_error) {
@@ -165,21 +165,21 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __json_encode) {
         if (params.size() < 1) connector->__error_message_param("json::encode");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_OBJECT__) connector->__error_message("json::encode(): parameter #1 must be an object");
 
         int indent = -1;
         string indent_char = " ";
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_DOUBLE__) connector->__error_message("json::encode(): parameter #2 must be a number");
             indent = (int) e->__value_double;
 
             connector->__remove_garbage(params.at(1), e);
         }
         if (params.size() > 2) {
-            DataType* e = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(2), caller_id);
             if (e->__type != __TYPE_STRING__) connector->__error_message("json::encode(): parameter #3 must be a string");
             indent_char = e->__value_string;
 
@@ -198,7 +198,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
     
     } else if (func_id == __json_decode) {
         if (params.size() < 1) connector->__error_message_param("json::decode");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("json::decode(): parameter #1 must be a string");
 
         json js;

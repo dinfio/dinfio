@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -122,10 +122,10 @@ public:
 
 class AST_Double: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
     AST_Double(double value): AST(__AST_DOUBLE__) {
-        DataType* d = new DataType(__TYPE_DOUBLE__);
+        gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
         d->__value_double = value;
         __value = d;
     }
@@ -133,10 +133,10 @@ public:
 
 class AST_Bool: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
     AST_Bool(bool value): AST(__AST_BOOL__) {
-        DataType* d = new DataType(__TYPE_BOOL__);
+        gc<DataType> d = new_gc<DataType>(__TYPE_BOOL__);
         d->__value_bool = value;
         __value = d;
     }
@@ -144,10 +144,10 @@ public:
 
 class AST_String: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
     AST_String(string value): AST(__AST_STRING__) {
-        DataType* d = new DataType(__TYPE_STRING__);
+        gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
         d->__value_string = value;
         __value = d;
     }
@@ -157,7 +157,7 @@ class AST_Variable: public AST {
 public:
     string __identifier;
     uint_fast32_t __caller_id;
-    DataType* __variable_holder;
+    gc<DataType> __variable_holder;
 
     AST_Variable(string identifier): AST(__AST_VARIABLE__) {
         __identifier = identifier;
@@ -169,7 +169,7 @@ class AST_Array: public AST {
 public:
     string __identifier;
     uint_fast32_t __caller_id;
-    DataType* __variable_holder;
+    gc<DataType> __variable_holder;
     vector<AST*> __indices;
 
     AST_Array(string identifier): AST(__AST_ARRAY__) {
@@ -182,7 +182,7 @@ class AST_Object: public AST {
 public:
     string __identifier;
     uint_fast32_t __caller_id;
-    DataType* __variable_holder;
+    gc<DataType> __variable_holder;
     AST_Array* __array_holder;
     vector<AST*> __attributes;   // This is only AST_Variable (just literal) or AST_Array
 
@@ -194,9 +194,9 @@ public:
 
 class AST_Value: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
-    AST_Value(DataType* value): AST(__AST_VALUE__) {
+    AST_Value(gc<DataType> value): AST(__AST_VALUE__) {
         __value = value;
     }
 };

@@ -1,14 +1,14 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
- Module Interface version 1.0.0
+ Module Interface version 1.1.0
 ------------------------------------------------------------
  NOTE: Please comply with this interface,
        and do not modify this file.
@@ -48,11 +48,15 @@
 #define __TYPE_OBJECT__ 5
 #define __TYPE_NULL__ 6
 
+#define gc shared_ptr
+#define new_gc make_shared
+
 using namespace std;
 
 class Base {
 public:
     uint_fast8_t __type;
+    virtual ~Base() {}
 };
 
 class Array;
@@ -65,8 +69,8 @@ public:
     double __value_double;
     string __value_string;
     bool __value_bool;
-    Array* __value_array;
-    Object* __value_object;
+    gc<Array> __value_array;
+    gc<Object> __value_object;
 
     DataType(uint_fast8_t type);
 };
@@ -78,7 +82,7 @@ DataType::DataType(uint_fast8_t type) {
 class Array {
 public:
     uint_fast32_t __address;
-    vector<DataType*> __elements;
+    vector<gc<DataType>> __elements;
 
     Array(uint_fast32_t address) {
         __address = address;
@@ -94,12 +98,16 @@ public:
 
     uint_fast16_t __constructor;
     
-    unordered_map<string, DataType*> __attributes;
+    unordered_map<string, gc<DataType>> __attributes;
     unordered_map<string, uint_fast16_t> __functions;
 
     Object(string name, uint_fast32_t address) {
         __name = name;
         __address = address;
+    }
+
+    ~Object() {
+        if (__holder_pointer != NULL) delete __holder_pointer;
     }
 };
 
@@ -188,10 +196,10 @@ public:
 
 class AST_Double: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
     AST_Double(double value): AST(__AST_DOUBLE__) {
-        DataType* d = new DataType(__TYPE_DOUBLE__);
+        gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
         d->__value_double = value;
         __value = d;
     }
@@ -199,10 +207,10 @@ public:
 
 class AST_Bool: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
     AST_Bool(bool value): AST(__AST_BOOL__) {
-        DataType* d = new DataType(__TYPE_BOOL__);
+        gc<DataType> d = new_gc<DataType>(__TYPE_BOOL__);
         d->__value_bool = value;
         __value = d;
     }
@@ -210,10 +218,10 @@ public:
 
 class AST_String: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
     AST_String(string value): AST(__AST_STRING__) {
-        DataType* d = new DataType(__TYPE_STRING__);
+        gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
         d->__value_string = value;
         __value = d;
     }
@@ -223,7 +231,7 @@ class AST_Variable: public AST {
 public:
     string __identifier;
     uint_fast32_t __caller_id;
-    DataType* __variable_holder;
+    gc<DataType> __variable_holder;
 
     AST_Variable(string identifier): AST(__AST_VARIABLE__) {
         __identifier = identifier;
@@ -235,7 +243,7 @@ class AST_Array: public AST {
 public:
     string __identifier;
     uint_fast32_t __caller_id;
-    DataType* __variable_holder;
+    gc<DataType> __variable_holder;
     vector<AST*> __indices;
 
     AST_Array(string identifier): AST(__AST_ARRAY__) {
@@ -248,7 +256,7 @@ class AST_Object: public AST {
 public:
     string __identifier;
     uint_fast32_t __caller_id;
-    DataType* __variable_holder;
+    gc<DataType> __variable_holder;
     AST_Array* __array_holder;
     vector<AST*> __attributes;   // This is only AST_Variable (just literal) or AST_Array
 
@@ -260,9 +268,9 @@ public:
 
 class AST_Value: public AST {
 public:
-    DataType* __value;
+    gc<DataType> __value;
 
-    AST_Value(DataType* value): AST(__AST_VALUE__) {
+    AST_Value(gc<DataType> value): AST(__AST_VALUE__) {
         __value = value;
     }
 };
@@ -270,18 +278,18 @@ public:
 class Connector {
 public:
     virtual uint_fast16_t __register_function(string);
-    virtual DataType* __get_value(AST*, uint_fast32_t&);
+    virtual gc<DataType> __get_value(AST*, uint_fast32_t&);
     virtual void __call_function(AST*, uint_fast32_t&);
-    virtual DataType* __create_array(uint_fast32_t);
-    virtual DataType* __create_object(const string&);
-    virtual void __object_set_attribute(DataType*, string, DataType*);
-    virtual void __object_set_function(DataType*, string, uint_fast16_t);
-    virtual void __add_constant(const string&, DataType*);
+    virtual gc<DataType> __create_array(uint_fast32_t);
+    virtual gc<DataType> __create_object(const string&);
+    virtual void __object_set_attribute(gc<DataType>, string, gc<DataType>);
+    virtual void __object_set_function(gc<DataType>, string, uint_fast16_t);
+    virtual void __add_constant(const string&, gc<DataType>);
     virtual void __error_message(string);
     virtual void __error_message_param(string);
     virtual void __error_message_params(string, uint8_t);
     virtual bool __variable_exists(string, uint_fast32_t&);
-    virtual void __remove_garbage(AST*, DataType*);
+    virtual void __remove_garbage(AST*, gc<DataType>);
     virtual string __get_current_file();
     virtual string __get_version();
     virtual string __get_path();
@@ -294,7 +302,7 @@ public:
     Module() {}
 
     virtual void __init(Connector*);
-    virtual DataType* __call(uint_fast16_t&, AST*, Object*, uint_fast32_t&);
+    virtual gc<DataType> __call(uint_fast16_t&, AST*, gc<Object>, uint_fast32_t&);
 };
 
 #endif

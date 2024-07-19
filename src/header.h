@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <limits.h>
+#include <memory>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -61,13 +62,13 @@ using namespace std;
     #define __RTLD_TYPE__ RTLD_LOCAL
 #endif
 
-const int __DINFIO_VERSION_NUMBER__ = 30107;
+const int __DINFIO_VERSION_NUMBER__ = 30200;
 const string __DINFIO_VERSION_MAJOR__ = "3";
-const string __DINFIO_VERSION_MINOR__ = "1";
-const string __DINFIO_VERSION_REVISION__ = "07";
+const string __DINFIO_VERSION_MINOR__ = "2";
+const string __DINFIO_VERSION_REVISION__ = "0";
 const string __DINFIO_VERSION__ =  __DINFIO_VERSION_MAJOR__ + "." + __DINFIO_VERSION_MINOR__ + "." + __DINFIO_VERSION_REVISION__;
-const string __DINFIO_BUILD_DATE_RAW__ = "2023-mm-dd";
-const string __DINFIO_BUILD_DATE__ = "2023";
+const string __DINFIO_BUILD_DATE_RAW__ = "2024-mm-dd";
+const string __DINFIO_BUILD_DATE__ = "2024";
 const string __MODULES_PATH__ = __DINFIO_PATH__ + "modules/";
 
 
@@ -160,6 +161,12 @@ string full_path(char*);
 char* full_path_char(char*);
 
 
+// Garbage Collector
+
+#define gc shared_ptr
+#define new_gc make_shared
+
+
 // Variable Layer
 
 #define __TYPE_DOUBLE__ 1
@@ -180,24 +187,24 @@ public:
     double __value_double;
     string __value_string;
     bool __value_bool;
-    Array* __value_array;
-    Object* __value_object;
+    gc<Array> __value_array;
+    gc<Object> __value_object;
 
     DataType(uint_fast8_t type);
 };
 
-unordered_map<string, DataType*> __variables;
-DataType* __nothing_value = new DataType(__TYPE_NULL__);
+unordered_map<string, gc<DataType>> __variables;
+gc<DataType> __nothing_value = new_gc<DataType>(__TYPE_NULL__);
 
-DataType* get_value(AST*, uint_fast32_t&);
+gc<DataType> get_value(AST*, uint_fast32_t&);
 void declare_variables(AST*, AST*, uint_fast32_t&, bool);
-DataType* get_array_value(AST*, uint_fast32_t&);
-void set_array_value(DataType*, AST_Array*, DataType*, uint_fast32_t&);
-DataType* get_object_value(AST*, uint_fast32_t&);
-void set_object_value(DataType*, AST_Object*, DataType*, uint_fast32_t&);
-DataType* get_attribute_array_value(Object*, AST*, uint_fast32_t&);
-void set_attribute_array_value(Object*, AST*, DataType*, uint_fast32_t&);
-Object* get_pure_object_value(AST*, uint_fast32_t&);
+gc<DataType> get_array_value(AST*, uint_fast32_t&);
+void set_array_value(gc<DataType>, AST_Array*, gc<DataType>, uint_fast32_t&);
+gc<DataType> get_object_value(AST*, uint_fast32_t&);
+void set_object_value(gc<DataType>, AST_Object*, gc<DataType>, uint_fast32_t&);
+gc<DataType> get_attribute_array_value(gc<Object>, AST*, uint_fast32_t&);
+void set_attribute_array_value(gc<Object>, AST*, gc<DataType>, uint_fast32_t&);
+gc<Object> get_pure_object_value(AST*, uint_fast32_t&);
 bool variable_exists(string, uint_fast32_t&);
 void error_message_array(string, string, uint_fast32_t&, vector<AST*>, uint_fast32_t&);
 void error_message_object(string, string, uint_fast32_t&, vector<AST*>, uint_fast32_t&);
@@ -253,7 +260,7 @@ void parse_flow_control();
 vector<Code*> __functions_classes;
 unordered_map<string, uint_fast16_t> __registered_functions;
 unordered_map<uint_fast16_t, Code*> __udef_function_map;
-unordered_map<uint_fast16_t, Object*> __class_map;
+unordered_map<uint_fast16_t, gc<Object>> __class_map;
 
 uint_fast32_t __function_caller_id = 2;
 uint_fast16_t __address_external = 1;
@@ -265,10 +272,10 @@ uint_fast32_t __object_address = 0;
 vector<AST_FunctionCall*> __init_functions;
 
 uint_fast16_t register_function(string, uint_fast8_t);
-DataType* get_function_value(AST_FunctionCall*, uint_fast32_t&, bool);
-DataType* get_object_function_value(AST_ObjectFunctionCall*, uint_fast32_t&, bool);
+gc<DataType> get_function_value(AST_FunctionCall*, uint_fast32_t&, bool);
+gc<DataType> get_object_function_value(AST_ObjectFunctionCall*, uint_fast32_t&, bool);
 void call_function(AST*, uint_fast32_t&);
-void remove_garbage(AST*, DataType*);
+void remove_garbage(AST*, gc<DataType>);
 void parse_function_class();
 
 
@@ -283,18 +290,18 @@ void assignment(AST*, AST*, uint_fast32_t&);
 class Connector {
 public:
     virtual uint_fast16_t __register_function(string);
-    virtual DataType* __get_value(AST*, uint_fast32_t&);
+    virtual gc<DataType> __get_value(AST*, uint_fast32_t&);
     virtual void __call_function(AST*, uint_fast32_t&);
-    virtual DataType* __create_array(uint_fast32_t);
-    virtual DataType* __create_object(const string&);
-    virtual void __object_set_attribute(DataType*, string, DataType*);
-    virtual void __object_set_function(DataType*, string, uint_fast16_t);
-    virtual void __add_constant(const string&, DataType*);
+    virtual gc<DataType> __create_array(uint_fast32_t);
+    virtual gc<DataType> __create_object(const string&);
+    virtual void __object_set_attribute(gc<DataType>, string, gc<DataType>);
+    virtual void __object_set_function(gc<DataType>, string, uint_fast16_t);
+    virtual void __add_constant(const string&, gc<DataType>);
     virtual void __error_message(string);
     virtual void __error_message_param(string);
     virtual void __error_message_params(string, uint8_t);
     virtual bool __variable_exists(string, uint_fast32_t&);
-    virtual void __remove_garbage(AST*, DataType*);
+    virtual void __remove_garbage(AST*, gc<DataType>);
     virtual string __get_current_file();
     virtual string __get_version();
     virtual string __get_path();
@@ -305,7 +312,7 @@ public:
     uint_fast16_t __min, __max;
 
     virtual void __init(Connector*);
-    virtual DataType* __call(uint_fast16_t&, AST*, Object*, uint_fast32_t&);
+    virtual gc<DataType> __call(uint_fast16_t&, AST*, gc<Object>, uint_fast32_t&);
 };
 
 vector<Module*> __modules;
@@ -326,13 +333,13 @@ namespace core {
     uint_fast16_t __min, __max;
 
     void __init();
-    DataType* __call(uint_fast16_t&, AST*, uint_fast32_t&);
-    DataType* create_ref(AST*, string, uint_fast8_t, uint_fast32_t&);
-    DataType* create_array(uint_fast32_t);
-    DataType* create_array_2d(uint_fast32_t, uint_fast32_t);
-    DataType* create_filled_array(AST_ArrayNotation*, uint_fast32_t&);
-    DataType* create_empty_object(const string&);
-    DataType* create_object(AST_ObjectNotation*, uint_fast32_t&);
+    gc<DataType> __call(uint_fast16_t&, AST*, uint_fast32_t&);
+    gc<DataType> create_ref(AST*, string, uint_fast8_t, uint_fast32_t&);
+    gc<DataType> create_array(uint_fast32_t);
+    gc<DataType> create_array_2d(uint_fast32_t, uint_fast32_t);
+    gc<DataType> create_filled_array(AST_ArrayNotation*, uint_fast32_t&);
+    gc<DataType> create_empty_object(const string&);
+    gc<DataType> create_object(AST_ObjectNotation*, uint_fast32_t&);
     double bitwise_operation(double, double, int, char, bool);
 }
 
@@ -343,6 +350,6 @@ namespace standardIO {
     uint_fast16_t __min, __max;
 
     void __init();
-    DataType* __call(uint_fast16_t&, AST*, uint_fast32_t&);
-    void write_recursive(DataType*, int);
+    gc<DataType> __call(uint_fast16_t&, AST*, uint_fast32_t&);
+    void write_recursive(gc<DataType>, int);
 }

@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -43,20 +43,20 @@ void Module::__init(Connector* c) {
     __max = __regex_replace;   // DO NOT FORGET THIS!
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __regex_match) {
         if (params.size() < 2) connector->__error_message_params("regex_match", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("regex_match(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("regex_match(): parameter #2 must be a string");
         bool case_sensitive = false;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("regex_match(): parameter #3 must be a boolean");
             case_sensitive = f->__value_bool;
 
@@ -79,21 +79,21 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __regex_search) {
         if (params.size() < 2) connector->__error_message_params("regex_search", 2);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("regex_search(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("regex_search(): parameter #2 must be a string");
         bool case_sensitive = false;
         
         if (params.size() > 2) {
-            DataType* f = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(2), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("regex_search(): parameter #3 must be a boolean");
             case_sensitive = f->__value_bool;
             
             connector->__remove_garbage(params.at(2), f);
         }
 
-        DataType* arr = connector->__create_array(0);
+        gc<DataType> arr = connector->__create_array(0);
 
         if (case_sensitive) {
             string str = e->__value_string;
@@ -103,27 +103,27 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             int i = 0;
 
             for (; pos != end; pos++) {
-                DataType* rs = connector->__create_object("regex");
+                gc<DataType> rs = connector->__create_object("regex");
                 
-                DataType* rsv = new DataType(__TYPE_STRING__);
+                gc<DataType> rsv = new_gc<DataType>(__TYPE_STRING__);
                 rsv->__value_string = pos->str(0);
                 connector->__object_set_attribute(rs, "value", rsv);
 
-                DataType* rsp = new DataType(__TYPE_DOUBLE__);
+                gc<DataType> rsp = new_gc<DataType>(__TYPE_DOUBLE__);
                 rsp->__value_double = pos->position(0);
                 connector->__object_set_attribute(rs, "position", rsp);
 
-                DataType* garr = connector->__create_array(0);
+                gc<DataType> garr = connector->__create_array(0);
                 int k = 0;
 
                 for (int j = 1; j < pos->size(); j++) {
-                    DataType* grs = connector->__create_object("regex_group");
+                    gc<DataType> grs = connector->__create_object("regex_group");
                 
-                    DataType* grsv = new DataType(__TYPE_STRING__);
+                    gc<DataType> grsv = new_gc<DataType>(__TYPE_STRING__);
                     grsv->__value_string = pos->str(j);
                     connector->__object_set_attribute(grs, "value", grsv);
 
-                    DataType* grsp = new DataType(__TYPE_DOUBLE__);
+                    gc<DataType> grsp = new_gc<DataType>(__TYPE_DOUBLE__);
                     grsp->__value_double = pos->position(j);
                     connector->__object_set_attribute(grs, "position", grsp);
 
@@ -144,27 +144,27 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             int i = 0;
 
             for (; pos != end; pos++) {
-                DataType* rs = connector->__create_object("regex");
+                gc<DataType> rs = connector->__create_object("regex");
                 
-                DataType* rsv = new DataType(__TYPE_STRING__);
+                gc<DataType> rsv = new_gc<DataType>(__TYPE_STRING__);
                 rsv->__value_string = pos->str(0);
                 connector->__object_set_attribute(rs, "value", rsv);
 
-                DataType* rsp = new DataType(__TYPE_DOUBLE__);
+                gc<DataType> rsp = new_gc<DataType>(__TYPE_DOUBLE__);
                 rsp->__value_double = pos->position(0);
                 connector->__object_set_attribute(rs, "position", rsp);
 
-                DataType* garr = connector->__create_array(0);
+                gc<DataType> garr = connector->__create_array(0);
                 int k = 0;
 
                 for (int j = 1; j < pos->size(); j++) {
-                    DataType* grs = connector->__create_object("regex_group");
+                    gc<DataType> grs = connector->__create_object("regex_group");
                 
-                    DataType* grsv = new DataType(__TYPE_STRING__);
+                    gc<DataType> grsv = new_gc<DataType>(__TYPE_STRING__);
                     grsv->__value_string = pos->str(j);
                     connector->__object_set_attribute(grs, "value", grsv);
 
-                    DataType* grsp = new DataType(__TYPE_DOUBLE__);
+                    gc<DataType> grsp = new_gc<DataType>(__TYPE_DOUBLE__);
                     grsp->__value_double = pos->position(j);
                     connector->__object_set_attribute(grs, "position", grsp);
 
@@ -185,16 +185,16 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return arr;
     } else if (func_id == __regex_replace) {
         if (params.size() < 3) connector->__error_message_params("regex_replace", 3);
-        DataType* d = connector->__get_value(params.at(0), caller_id);
-        DataType* e = connector->__get_value(params.at(1), caller_id);
-        DataType* g = connector->__get_value(params.at(2), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        gc<DataType> g = connector->__get_value(params.at(2), caller_id);
         if (d->__type != __TYPE_STRING__) connector->__error_message("regex_replace(): parameter #1 must be a string");
         if (e->__type != __TYPE_STRING__) connector->__error_message("regex_replace(): parameter #2 must be a string");
         if (g->__type != __TYPE_STRING__) connector->__error_message("regex_replace(): parameter #3 must be a string");
         bool case_sensitive = false;
         
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_BOOL__) connector->__error_message("regex_replace(): parameter #4 must be a boolean");
             case_sensitive = f->__value_bool;
 

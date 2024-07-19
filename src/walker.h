@@ -1,10 +1,10 @@
 /*
 ------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -80,7 +80,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
 
     if (type == __AST_VARIABLE__) {
         AST_Variable* e = (AST_Variable*) var;
-        DataType* val = get_value(value, caller_id);
+        gc<DataType> val = get_value(value, caller_id);
         
         if (e->__caller_id == caller_id) {
             if (val->__type == __TYPE_DOUBLE__) {
@@ -139,42 +139,42 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 string c = to_string(caller_id);
                 
                 if (val->__type == __TYPE_DOUBLE__) {
-                    DataType* f = new DataType(__TYPE_DOUBLE__);
+                    gc<DataType> f = new_gc<DataType>(__TYPE_DOUBLE__);
                     f->__value_double = val->__value_double;
 
                     __variables[c + e->__identifier] = f;
                     e->__caller_id = caller_id;
                     e->__variable_holder = f;
                 } else if (val->__type == __TYPE_BOOL__) {
-                    DataType* f = new DataType(__TYPE_BOOL__);
+                    gc<DataType> f = new_gc<DataType>(__TYPE_BOOL__);
                     f->__value_bool = val->__value_bool;
 
                     __variables[c + e->__identifier] = f;
                     e->__caller_id = caller_id;
                     e->__variable_holder = f;
                 } else if (val->__type == __TYPE_STRING__) {
-                    DataType* f = new DataType(__TYPE_STRING__);
+                    gc<DataType> f = new_gc<DataType>(__TYPE_STRING__);
                     f->__value_string = val->__value_string;
 
                     __variables[c + e->__identifier] = f;
                     e->__caller_id = caller_id;
                     e->__variable_holder = f;
                 } else if (val->__type == __TYPE_ARRAY__) {
-                    DataType* f = new DataType(__TYPE_ARRAY__);
+                    gc<DataType> f = new_gc<DataType>(__TYPE_ARRAY__);
                     f->__value_array = val->__value_array;
 
                     __variables[c + e->__identifier] = f;
                     e->__caller_id = caller_id;
                     e->__variable_holder = f;
                 } else  if (val->__type == __TYPE_OBJECT__) {
-                    DataType* f = new DataType(__TYPE_OBJECT__);
+                    gc<DataType> f = new_gc<DataType>(__TYPE_OBJECT__);
                     f->__value_object = val->__value_object;
 
                     __variables[c + e->__identifier] = f;
                     e->__caller_id = caller_id;
                     e->__variable_holder = f;
                 } else {
-                    DataType* f = new DataType(__TYPE_NULL__);
+                    gc<DataType> f = new_gc<DataType>(__TYPE_NULL__);
 
                     __variables[c + e->__identifier] = f;
                     e->__caller_id = caller_id;
@@ -186,7 +186,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
         remove_garbage(value, val);
     } else if (type == __AST_ARRAY__) {
         AST_Array* e = (AST_Array*) var;
-        DataType* val = get_value(value, caller_id);
+        gc<DataType> val = get_value(value, caller_id);
 
         if (e->__caller_id == caller_id) {
             set_array_value(e->__variable_holder, e, val, caller_id);
@@ -210,7 +210,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
         remove_garbage(value, val);
     } else if (type == __AST_OBJECT__) {
         AST_Object* e = (AST_Object*) var;
-        DataType* val = get_value(value, caller_id);
+        gc<DataType> val = get_value(value, caller_id);
 
         if (e->__caller_id == caller_id) {
             set_object_value(e->__variable_holder, e, val, caller_id);
@@ -238,7 +238,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
         remove_garbage(value, val);
     } else if (type == __AST_ARRAY_NOTATION__) {
         vector<AST*> arr = ((AST_ArrayNotation*) var)->__elements;
-        DataType* val = get_value(value, caller_id);
+        gc<DataType> val = get_value(value, caller_id);
 
         if (val->__type != __TYPE_ARRAY__) {
             for (int i = 0; i < arr.size(); i++) {
@@ -250,7 +250,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 AST_Variable* e = (AST_Variable*) arr.at(i);
 
                 if (val->__value_array->__elements.size() <= i) error_message("Index " + to_string(i) + " of the right side array is undefined");
-                DataType* ival = val->__value_array->__elements[i];
+                gc<DataType> ival = val->__value_array->__elements[i];
                 
                 AST_Value* v = new AST_Value(ival);
                 assignment(e, v, caller_id);

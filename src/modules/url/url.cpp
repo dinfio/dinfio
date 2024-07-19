@@ -1,10 +1,10 @@
 /*
 -------------------------------------------------------------------
  Dinfio Programming Language
- Version: 3.1
+ Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2022. All Rights Reserved.
+ Copyright (C) 2014-2024. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
@@ -54,15 +54,15 @@ static size_t __write_to_file(void* ptr, size_t size, size_t nmemb, void* stream
     return fwrite(ptr, size, nmemb, (FILE*) stream);
 }
 
-DataType* __new_double(double v) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+gc<DataType> __new_double(double v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = v;
 
     return d;
 }
 
-DataType* __new_string(string v) {
-    DataType* d = new DataType(__TYPE_STRING__);
+gc<DataType> __new_string(string v) {
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = v;
 
     return d;
@@ -92,7 +92,7 @@ int __progress_callback(void* ptr, double total_download, double downloaded, dou
         aaf->__address = af->__address;
         aaf->__parameters = params2;
 
-        DataType* d = connector->__get_value(aaf, p->__caller_id);
+        gc<DataType> d = connector->__get_value(aaf, p->__caller_id);
         int code = (int) d->__value_double;
 
         connector->__remove_garbage(aaf, d);
@@ -102,19 +102,19 @@ int __progress_callback(void* ptr, double total_download, double downloaded, dou
 }
 
 void add_constant_double(string name, double value) {
-    DataType* d = new DataType(__TYPE_DOUBLE__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
     d->__value_double = value;
     connector->__add_constant(name, d);
 }
 
 void add_constant_string(string name, string value) {
-    DataType* d = new DataType(__TYPE_STRING__);
+    gc<DataType> d = new_gc<DataType>(__TYPE_STRING__);
     d->__value_string = value;
     connector->__add_constant(name, d);
 }
 
 void __add_constant_url() {
-    DataType* d = connector->__create_object("url");
+    gc<DataType> d = connector->__create_object("url");
 
     connector->__object_set_function(d, "get", __url_get);
     connector->__object_set_function(d, "post", __url_post);
@@ -133,7 +133,7 @@ void __add_constant_url() {
 }
 
 void __add_constant_http() {
-    DataType* d = connector->__create_object("http");
+    gc<DataType> d = connector->__create_object("http");
 
     connector->__object_set_attribute(d, "ok", __new_double(200));
     connector->__object_set_attribute(d, "not_found", __new_double(404));
@@ -180,7 +180,7 @@ string __url_unescape(string str) {
     return result;
 }
 
-string __parse_request_params(Object* p) {
+string __parse_request_params(gc<Object> p) {
     if (p->__attributes.empty()) return "";
 
     stringstream result;
@@ -191,7 +191,7 @@ string __parse_request_params(Object* p) {
     if (key.at(0) == '"' && key.at(key.length() - 1) == '"') key = key.substr(1, key.length() - 2);
 
     result << key + "=";
-    DataType* d = ib->second;
+    gc<DataType> d = ib->second;
 
     if (d->__type == __TYPE_DOUBLE__) {
         string ss = to_string(d->__value_double);
@@ -227,7 +227,7 @@ string __parse_request_params(Object* p) {
         if (key.at(0) == '"' && key.at(key.length() - 1) == '"') key = key.substr(1, key.length() - 2);
 
         result << "&" << key + "=";
-        DataType* d = ib->second;
+        gc<DataType> d = ib->second;
 
         if (d->__type == __TYPE_DOUBLE__) {
             string ss = to_string(d->__value_double);
@@ -259,7 +259,7 @@ string __parse_request_params(Object* p) {
     return result.str();
 }
 
-struct curl_slist* __parse_header(Object* p) {
+struct curl_slist* __parse_header(gc<Object> p) {
     struct curl_slist* chunk = NULL;
     chunk = curl_slist_append(chunk, ("User-Agent: " + __USER_AGENT__).c_str());
 
@@ -273,7 +273,7 @@ struct curl_slist* __parse_header(Object* p) {
         if (key.at(0) == '"' && key.at(key.length() - 1) == '"') key = key.substr(1, key.length() - 2);
 
         string val = "";
-        DataType* d = ib->second;
+        gc<DataType> d = ib->second;
 
         if (d->__type == __TYPE_DOUBLE__) {
             string ss = to_string(d->__value_double);
@@ -314,7 +314,7 @@ struct curl_slist* __default_header() {
 }
 
 #ifdef __NEW_CURL__
-curl_mime* __parse_mime(CURL* curl, Object* p) {
+curl_mime* __parse_mime(CURL* curl, gc<Object> p) {
     curl_mime* form = NULL;
     curl_mimepart* field = NULL;
 
@@ -329,7 +329,7 @@ curl_mime* __parse_mime(CURL* curl, Object* p) {
         string key = ib->first;
         if (key.at(0) == '"' && key.at(key.length() - 1) == '"') key = key.substr(1, key.length() - 2);
 
-        DataType* d = ib->second;
+        gc<DataType> d = ib->second;
 
         if (d->__type == __TYPE_DOUBLE__) {
             string ss = to_string(d->__value_double);
@@ -387,7 +387,7 @@ curl_mime* __parse_mime(CURL* curl, Object* p) {
 }
 #endif
 
-struct curl_httppost* __parse_mime_old(Object* p) {
+struct curl_httppost* __parse_mime_old(gc<Object> p) {
     struct curl_httppost* post = NULL;
     struct curl_httppost* last = NULL;
 
@@ -400,7 +400,7 @@ struct curl_httppost* __parse_mime_old(Object* p) {
         string key = ib->first;
         if (key.at(0) == '"' && key.at(key.length() - 1) == '"') key = key.substr(1, key.length() - 2);
 
-        DataType* d = ib->second;
+        gc<DataType> d = ib->second;
 
         if (d->__type == __TYPE_DOUBLE__) {
             string ss = to_string(d->__value_double);
@@ -484,13 +484,13 @@ void Module::__init(Connector* c) {
     __add_constant_http();
 }
 
-DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fast32_t& caller_id) {
-    DataType* result = new DataType(__TYPE_NULL__);
+gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
+    gc<DataType> result = new_gc<DataType>(__TYPE_NULL__);
     vector<AST*> params = ((AST_FunctionCall*) func)->__parameters;
 
     if (func_id == __bytes_unit) {
         if (params.size() < 1) connector->__error_message_param("bytes_unit");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("bytes_unit(): parameter #1 must be a number");
         
@@ -520,7 +520,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_encode) {
         if (params.size() < 1) connector->__error_message_param("url::encode");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::encode(): parameter #1 must be a string");
         
@@ -532,7 +532,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_decode) {
         if (params.size() < 1) connector->__error_message_param("url::decode");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::decode(): parameter #1 must be a string");
         
@@ -544,11 +544,11 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __file_data) {
         if (params.size() < 1) connector->__error_message_param("file_data");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("file_data(): parameter #1 must be a string");
         
-        DataType* dfo = connector->__create_object("file_data");
+        gc<DataType> dfo = connector->__create_object("file_data");
         connector->__object_set_attribute(dfo, "filename", __new_string(d->__value_string));
 
         connector->__remove_garbage(params.at(0), d);
@@ -560,7 +560,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __url_verbose) {
         if (params.size() < 1) connector->__error_message_param("url::verbose");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_BOOL__) connector->__error_message("url::verbose(): parameter #1 must be a boolean");
 
@@ -574,7 +574,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_follow_location) {
         if (params.size() < 1) connector->__error_message_param("url::follow_location");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_BOOL__) connector->__error_message("url::follow_location(): parameter #1 must be a boolean");
 
@@ -588,7 +588,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_ssl_verify_peer) {
         if (params.size() < 1) connector->__error_message_param("url::ssl_verify_peer");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("url::ssl_verify_peer(): parameter #1 must be a number");
 
@@ -602,7 +602,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_ssl_verify_host) {
         if (params.size() < 1) connector->__error_message_param("url::ssl_verify_host");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_DOUBLE__) connector->__error_message("url::ssl_verify_host(): parameter #1 must be a number");
 
@@ -616,7 +616,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_ssl_cainfo) {
         if (params.size() < 1) connector->__error_message_param("url::ssl_cainfo");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::ssl_cainfo(): parameter #1 must be a string");
 
@@ -631,7 +631,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_ssl_capath) {
         if (params.size() < 1) connector->__error_message_param("url::ssl_capath");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::ssl_capath(): parameter #1 must be a string");
 
@@ -646,7 +646,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         return result;
     } else if (func_id == __url_proxy) {
         if (params.size() < 1) connector->__error_message_param("url::proxy");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::proxy(): parameter #1 must be a string");
 
@@ -665,13 +665,13 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __url_get) {
         if (params.size() < 1) connector->__error_message_param("url::get");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::get(): parameter #1 must be a string");
 
         string url = d->__value_string;
         string request_params = "";
-        DataType* header = NULL;
+        gc<DataType> header = NULL;
         string downloaded_to = "";
         AST* progress_callback = NULL;
 
@@ -683,7 +683,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         string response_error_string = "";
 
         if (params.size() > 1) {
-            DataType* e = connector->__get_value(params.at(1), caller_id);
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
             if (e->__type != __TYPE_STRING__ && e->__type != __TYPE_OBJECT__) connector->__error_message("url::get(): parameter #2 must be a string or an object");
 
             if (e->__type == __TYPE_STRING__) {
@@ -699,7 +699,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             if (header->__type != __TYPE_OBJECT__) connector->__error_message("url::get(): parameter #3 must be an object");
         }
         if (params.size() > 3) {
-            DataType* f = connector->__get_value(params.at(3), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(3), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("url::get(): parameter #4 must be a string");
 
             downloaded_to = f->__value_string;
@@ -713,23 +713,23 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             AST_FunctionCall* af = (AST_FunctionCall*) g;
 
             for (int i = 0; i < af->__parameters.size(); i++) {
-                DataType* ad = connector->__get_value(af->__parameters.at(i), caller_id);
-                DataType* ae;
+                gc<DataType> ad = connector->__get_value(af->__parameters.at(i), caller_id);
+                gc<DataType> ae;
 
                 if (ad->__type == __TYPE_DOUBLE__) {
-                    ae = new DataType(__TYPE_DOUBLE__);
+                    ae = new_gc<DataType>(__TYPE_DOUBLE__);
                     ae->__value_double = ad->__value_double;
                 } else if (ad->__type == __TYPE_BOOL__) {
-                    ae = new DataType(__TYPE_BOOL__);
+                    ae = new_gc<DataType>(__TYPE_BOOL__);
                     ae->__value_bool = ad->__value_bool;
                 } else if (ad->__type == __TYPE_STRING__) {
-                    ae = new DataType(__TYPE_STRING__);
+                    ae = new_gc<DataType>(__TYPE_STRING__);
                     ae->__value_string = ad->__value_string;
                 } else if (ad->__type == __TYPE_ARRAY__) {
-                    ae = new DataType(__TYPE_ARRAY__);
+                    ae = new_gc<DataType>(__TYPE_ARRAY__);
                     ae->__value_array = ad->__value_array;
                 } else if (ad->__type == __TYPE_OBJECT__) {
-                    ae = new DataType(__TYPE_OBJECT__);
+                    ae = new_gc<DataType>(__TYPE_OBJECT__);
                     ae->__value_object = ad->__value_object;
                 }
 
@@ -844,7 +844,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         // Output
 
-        DataType* dfo = connector->__create_object("response");
+        gc<DataType> dfo = connector->__create_object("response");
 
         connector->__object_set_attribute(dfo, "code", __new_double(response_code));
         connector->__object_set_attribute(dfo, "body", __new_string(response_body));
@@ -860,15 +860,15 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
     } else if (func_id == __url_post) {
         if (params.size() < 1) connector->__error_message_param("url::post");
-        DataType* d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
 
         if (d->__type != __TYPE_STRING__) connector->__error_message("url::post(): parameter #1 must be a string");
 
         string url = d->__value_string;
         bool multipart = false;
         string request_params = "";
-        DataType* dmime;
-        DataType* header = NULL;
+        gc<DataType> dmime;
+        gc<DataType> header = NULL;
         string downloaded_to = "";
         AST* progress_callback = NULL;
 
@@ -880,7 +880,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         string response_error_string = "";
 
         if (params.size() > 2) {
-            DataType* m = connector->__get_value(params.at(2), caller_id);
+            gc<DataType> m = connector->__get_value(params.at(2), caller_id);
             if (m->__type != __TYPE_BOOL__) connector->__error_message("url::post(): parameter #3 must be a boolean");
             multipart = m->__value_bool;
 
@@ -888,7 +888,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
         }
         if (params.size() > 1) {
             if (!multipart) {
-                DataType* e = connector->__get_value(params.at(1), caller_id);
+                gc<DataType> e = connector->__get_value(params.at(1), caller_id);
                 if (e->__type != __TYPE_STRING__ && e->__type != __TYPE_OBJECT__) connector->__error_message("url::post(): parameter #2 must be a string or an object");
 
                 if (e->__type == __TYPE_STRING__) {
@@ -908,7 +908,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             if (header->__type != __TYPE_OBJECT__) connector->__error_message("url::post(): parameter #4 must be an object");
         }
         if (params.size() > 4) {
-            DataType* f = connector->__get_value(params.at(4), caller_id);
+            gc<DataType> f = connector->__get_value(params.at(4), caller_id);
             if (f->__type != __TYPE_STRING__) connector->__error_message("url::post(): parameter #5 must be a string");
 
             downloaded_to = f->__value_string;
@@ -922,23 +922,23 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
             AST_FunctionCall* af = (AST_FunctionCall*) g;
 
             for (int i = 0; i < af->__parameters.size(); i++) {
-                DataType* ad = connector->__get_value(af->__parameters.at(i), caller_id);
-                DataType* ae;
+                gc<DataType> ad = connector->__get_value(af->__parameters.at(i), caller_id);
+                gc<DataType> ae;
 
                 if (ad->__type == __TYPE_DOUBLE__) {
-                    ae = new DataType(__TYPE_DOUBLE__);
+                    ae = new_gc<DataType>(__TYPE_DOUBLE__);
                     ae->__value_double = ad->__value_double;
                 } else if (ad->__type == __TYPE_BOOL__) {
-                    ae = new DataType(__TYPE_BOOL__);
+                    ae = new_gc<DataType>(__TYPE_BOOL__);
                     ae->__value_bool = ad->__value_bool;
                 } else if (ad->__type == __TYPE_STRING__) {
-                    ae = new DataType(__TYPE_STRING__);
+                    ae = new_gc<DataType>(__TYPE_STRING__);
                     ae->__value_string = ad->__value_string;
                 } else if (ad->__type == __TYPE_ARRAY__) {
-                    ae = new DataType(__TYPE_ARRAY__);
+                    ae = new_gc<DataType>(__TYPE_ARRAY__);
                     ae->__value_array = ad->__value_array;
                 } else if (ad->__type == __TYPE_OBJECT__) {
-                    ae = new DataType(__TYPE_OBJECT__);
+                    ae = new_gc<DataType>(__TYPE_OBJECT__);
                     ae->__value_object = ad->__value_object;
                 }
 
@@ -1061,7 +1061,7 @@ DataType* Module::__call(uint_fast16_t& func_id, AST* func, Object* obj, uint_fa
 
         // Output
 
-        DataType* dfo = connector->__create_object("response");
+        gc<DataType> dfo = connector->__create_object("response");
 
         connector->__object_set_attribute(dfo, "code", __new_double(response_code));
         connector->__object_set_attribute(dfo, "body", __new_string(response_body));
