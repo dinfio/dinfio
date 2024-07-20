@@ -45,42 +45,42 @@ if not exist build\modules\zip mkdir build\modules\zip
 :: Compile main programme
 
 echo Compiling Dinfio main programme...
-%CC% -std=%CXX% -O3 src\main.cpp -o build\dinfio.exe
+%CC% -std=%CXX% -O3 -w src\main.cpp -o build\dinfio.exe
 
 
 :: Compile modules
 
 if %COMPILE_MODULES%==true (
     echo Compiling module fileio...
-    %CC% -O3 -shared src\modules\fileio\fileio.cpp -o build\modules\fileio\fileio.dll
+    %CC% -O3 -w -shared src\modules\fileio\fileio.cpp -o build\modules\fileio\fileio.dll
 
     echo Compiling module json...
-    %CC% -std=%CXX% -O3 -shared src\modules\json\json.cpp -o build\modules\json\json.dll
+    %CC% -std=%CXX% -O3 -w -shared src\modules\json\json.cpp -o build\modules\json\json.dll
 
     echo Compiling module math...
-    %CC% -std=%CXX% -O3 -shared src\modules\math\math.cpp -o build\modules\math\math.dll
+    %CC% -std=%CXX% -O3 -w -shared src\modules\math\math.cpp -o build\modules\math\math.dll
 
     echo Compiling module regex...
-    %CC% -std=%CXX% -O3 -shared src\modules\regex\regex.cpp -o build\modules\regex\regex.dll
+    %CC% -std=%CXX% -O3 -w -shared src\modules\regex\regex.cpp -o build\modules\regex\regex.dll
 
     echo Compiling module rl...
-    %CC% -std=gnu++11 -O3 -shared src\modules\rl\rl.cpp -o build\modules\rl\rl.dll
+    %CC% -std=gnu++11 -O3 -w -shared src\modules\rl\rl.cpp -o build\modules\rl\rl.dll
 
     echo Compiling module string...
-    %CC% -std=%CXX% -O3 -shared src\modules\string\string.cpp -o build\modules\string\string.dll
+    %CC% -std=%CXX% -O3 -w -shared src\modules\string\string.cpp -o build\modules\string\string.dll
 
     echo Compiling module time...
-    %CC% -std=%CXX% -O3 -shared -D _WIN32_WINNT=0x0501 src\modules\time\time.cpp -o build\modules\time\time.dll
+    %CC% -std=%CXX% -O3 -w -shared -D _WIN32_WINNT=0x0501 src\modules\time\time.cpp -o build\modules\time\time.dll
 
     if %COMPILE_URL_MODULE%==true (
         echo Compiling module url...
-        %CC% -std=%CXX% -O3 -shared src\modules\url\url.cpp -o build\modules\url\url.dll -I"%LIBCURL_PATH%\lib\include" -lcurl -L"%LIBCURL_PATH%\lib\lib"
+        %CC% -std=%CXX% -O3 -w -shared src\modules\url\url.cpp -o build\modules\url\url.dll -I"%LIBCURL_PATH%\lib\include" -lcurl -L"%LIBCURL_PATH%\lib\lib"
         xcopy /Y /Q src\modules\url\*.fio build\modules\url\ 1>NUL
     )
 
     if %COMPILE_GUI_MODULE%==true (
         echo Compiling module gui...
-        %CC% -O3 -shared src\modules\gui\gui.cpp -o build\modules\gui\gui.dll -I"%WXWIDGETS_PATH%\include\wx-3.1" -I"%WXWIDGETS_PATH%\lib\wx\include\msw-unicode-3.1" -L"%WXWIDGETS_PATH%\lib" -lwx_mswu_core-3.1 -llibwx_baseu-3.1
+        %CC% -O3 -w -shared src\modules\gui\gui.cpp -o build\modules\gui\gui.dll -I"%WXWIDGETS_PATH%\include\wx-3.1" -I"%WXWIDGETS_PATH%\lib\wx\include\msw-unicode-3.1" -L"%WXWIDGETS_PATH%\lib" -lwx_mswu_core-3.1 -llibwx_baseu-3.1
         xcopy /Y /Q src\modules\gui\*.fio build\modules\gui\ 1>NUL
     )
 
