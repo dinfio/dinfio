@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <math.h>
+#include <memory>
 
 #define __AST_DOUBLE__ 1
 #define __AST_BOOL__ 2
