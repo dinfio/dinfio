@@ -49,7 +49,7 @@ using namespace std;
 #elif __APPLE__
     const uint_fast8_t __DINFIO_PLATFORM_RAW__ = 1;
     const string __DINFIO_PLATFORM__ = "macOS";
-    const string __DINFIO_PATH__ = "/Library/Dinfio/3.1/";
+    const string __DINFIO_PATH__ = "/Library/Dinfio/3.2/";
     const string __MODULE_EXTENSION__ = ".so";
 
     #define __RTLD_TYPE__ RTLD_LOCAL
@@ -277,6 +277,7 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall*, uint_fast32_t&, 
 void call_function(AST*, uint_fast32_t&);
 void remove_garbage(AST*, gc<DataType>);
 void parse_function_class();
+bool local_variable_check(vector<AST*>, vector<string>, string);
 
 
 // AST Walker

@@ -118,11 +118,25 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
@@ -139,11 +153,25 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
@@ -219,11 +247,25 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
         }
@@ -319,11 +361,25 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
@@ -341,11 +397,25 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
+                gc<DataType> vp = __variables[p];
+                
+                if (vp != NULL) {
+                    if (vp->__type == __TYPE_ARRAY__) vp->__value_array = NULL;
+                    if (vp->__type == __TYPE_OBJECT__) vp->__value_object = NULL;
+                }
+
                 __variables.erase(p);
             }
 
@@ -445,21 +515,41 @@ void parse_function_class() {
         } else if (c->__header == __H_VARIABLE_ASSIGNMENT__) {
             if (cur_func != NULL) {
                 AST_Variable* v = ((AST_Variable*) c->__body);
-                cur_func->__local_variables.push_back(v->__identifier);
+
+                if (local_variable_check(cur_func->__parameters, cur_func->__local_variables, v->__identifier)) {
+                    cur_func->__local_variables.push_back(v->__identifier);
+                }
             }
         } else if (c->__header == __H_VAR__) {
             if (cur_func != NULL) {
                 AST_Parameter* v = ((AST_Parameter*) c->__body);
 
                 for (uint_fast8_t j = 0; j < v->__parameters.size(); j++) {
-                    cur_func->__local_variables.push_back(((AST_Variable*) v->__parameters.at(j))->__identifier);
+                    if (local_variable_check(cur_func->__parameters, cur_func->__local_variables, ((AST_Variable*) v->__parameters.at(j))->__identifier)) {
+                        cur_func->__local_variables.push_back(((AST_Variable*) v->__parameters.at(j))->__identifier);
+                    }
                 }
             }
         } else if (c->__header == __H_FOR__) {
             if (cur_func != NULL) {
                 AST_Parameter* v = ((AST_Parameter*) c->__body);
-                cur_func->__local_variables.push_back(((AST_Variable*) v->__parameters.at(0))->__identifier);
+
+                if (local_variable_check(cur_func->__parameters, cur_func->__local_variables, ((AST_Variable*) v->__parameters.at(0))->__identifier)) {
+                    cur_func->__local_variables.push_back(((AST_Variable*) v->__parameters.at(0))->__identifier);
+                }
             }
         }
     }
+}
+
+bool local_variable_check(vector<AST*> params, vector<string> current, string var) {
+    for (uint_fast8_t i = 0; i < current.size(); i++) {
+        if (current.at(i) == var) return false;
+    }
+
+    for (uint_fast8_t i = 0; i < params.size(); i++) {
+        if (((AST_Variable*) params.at(i))->__identifier == var) return false;
+    }
+
+    return true;
 }

@@ -112,8 +112,8 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 e->__caller_id = caller_id;
                 e->__variable_holder = __variables[c + e->__identifier];
 
-                if (e->__variable_holder->__type == __TYPE_ARRAY__) e->__variable_holder->__value_array = NULL;
-                if (e->__variable_holder->__type == __TYPE_OBJECT__) e->__variable_holder->__value_object = NULL;
+                if (e->__variable_holder->__type == __TYPE_ARRAY__ && val->__type != __TYPE_ARRAY__) e->__variable_holder->__value_array = NULL;
+                if (e->__variable_holder->__type == __TYPE_OBJECT__ && val->__type != __TYPE_OBJECT__) e->__variable_holder->__value_object = NULL;
 
                 if (val->__type == __TYPE_DOUBLE__) {
                     e->__variable_holder->__type = __TYPE_DOUBLE__;
