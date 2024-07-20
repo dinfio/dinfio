@@ -35,42 +35,42 @@ echo "Preparing..."
 # Compile main programme
 
 echo "Compiling Dinfio main programme..."
-$CC -std=$CXX -O3 src/main.cpp -o build/dinfio
+$CC -std=$CXX -O3 -w src/main.cpp -o build/dinfio
 
 
 # Compile modules
 
 if [ "$COMPILE_MODULES" = true ]; then
     echo "Compiling module fileio..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/fileio/fileio.cpp -o build/modules/fileio/fileio.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/fileio/fileio.cpp -o build/modules/fileio/fileio.so
 
     echo "Compiling module json..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/json/json.cpp -o build/modules/json/json.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/json/json.cpp -o build/modules/json/json.so
 
     echo "Compiling module math..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/math/math.cpp -o build/modules/math/math.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/math/math.cpp -o build/modules/math/math.so
 
     echo "Compiling module regex..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/regex/regex.cpp -o build/modules/regex/regex.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/regex/regex.cpp -o build/modules/regex/regex.so
 
     echo "Compiling module rl..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/rl/rl.cpp -o build/modules/rl/rl.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/rl/rl.cpp -o build/modules/rl/rl.so
 
     echo "Compiling module string..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/string/string.cpp -o build/modules/string/string.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/string/string.cpp -o build/modules/string/string.so
 
     echo "Compiling module time..."
-    $CC -std=$CXX -O3 -dynamiclib src/modules/time/time.cpp -o build/modules/time/time.so
+    $CC -std=$CXX -O3 -w -dynamiclib src/modules/time/time.cpp -o build/modules/time/time.so
 
     if [ "$COMPILE_URL_MODULE" = true ]; then
         echo "Compiling module url..."
-        $CC -std=$CXX -O3 -dynamiclib src/modules/url/url.cpp -o build/modules/url/url.so -lcurl
+        $CC -std=$CXX -O3 -w -dynamiclib src/modules/url/url.cpp -o build/modules/url/url.so -lcurl
         cp -f src/modules/url/*.fio build/modules/url/
     fi
 
     if [ "$COMPILE_GUI_MODULE" = true ]; then
         echo "Compiling module gui..."
-        $CC -std=$CXX -O3 -dynamiclib src/modules/gui/gui.cpp -o build/modules/gui/gui.so `wx-config --cxxflags --libs core`
+        $CC -std=$CXX -O3 -w -dynamiclib src/modules/gui/gui.cpp -o build/modules/gui/gui.so `wx-config --cxxflags --libs core`
         cp -f src/modules/gui/*.fio build/modules/gui/
     fi
 
