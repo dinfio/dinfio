@@ -398,7 +398,7 @@ namespace core {
 
             return result;
         } else if (func == __iif) {
-            if (params.size() < 3) error_message_params("iif", 3);
+            if (params.size() < 2) error_message_params("iif", 2);
             gc<DataType> a = get_value(params.at(0), caller_id);
             if (a->__type != __TYPE_BOOL__) error_message("iff(): parameter #1 must be a boolean expression");
 
@@ -420,22 +420,26 @@ namespace core {
 
                 remove_garbage(params.at(1), b);
             } else {
-                gc<DataType> b = get_value(params.at(2), caller_id);
-                result->__type = b->__type;
+                if (params.size() > 2) {
+                    gc<DataType> b = get_value(params.at(2), caller_id);
+                    result->__type = b->__type;
 
-                if (b->__type == __TYPE_DOUBLE__) {
-                    result->__value_double = b->__value_double;
-                } else if (b->__type == __TYPE_STRING__) {
-                    result->__value_string = b->__value_string;
-                } else if (b->__type == __TYPE_BOOL__) {
-                    result->__value_bool = b->__value_bool;
-                } else if (b->__type == __TYPE_ARRAY__) {
-                    result->__value_array = b->__value_array;
-                } else if (b->__type == __TYPE_OBJECT__) {
-                    result->__value_object = b->__value_object;
+                    if (b->__type == __TYPE_DOUBLE__) {
+                        result->__value_double = b->__value_double;
+                    } else if (b->__type == __TYPE_STRING__) {
+                        result->__value_string = b->__value_string;
+                    } else if (b->__type == __TYPE_BOOL__) {
+                        result->__value_bool = b->__value_bool;
+                    } else if (b->__type == __TYPE_ARRAY__) {
+                        result->__value_array = b->__value_array;
+                    } else if (b->__type == __TYPE_OBJECT__) {
+                        result->__value_object = b->__value_object;
+                    }
+
+                    remove_garbage(params.at(2), b);
+                } else {
+                    return result;
                 }
-
-                remove_garbage(params.at(2), b);
             }
 
             remove_garbage(params.at(0), a);

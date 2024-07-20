@@ -118,10 +118,6 @@ void import_module(string mod) {
         __gui_module = m;
         __gui_event_loop = 1;
     }
-
-    if (mod == "asynchronous") {
-        error_message("Module 'asynchronous' is now deprecated, please use 'multiprocess' instead");
-    }
 }
 
 uint_fast16_t Connector::__register_function(string name) {
