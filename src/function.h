@@ -113,22 +113,16 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
 
             for (uint_fast8_t i = 0; i < params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(params.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(f->__optional_parameters.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
-
-                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
@@ -140,22 +134,16 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
 
             for (uint_fast8_t i = 0; i < params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-
-                remove_garbage(params.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(f->__optional_parameters.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
-  
-                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
@@ -226,22 +214,16 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
 
             for (uint_fast8_t i = 0; i < params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(params.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(f->__optional_parameters.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
-
-                // delete(__variables[p]);
                 __variables.erase(p);
             }
         }
@@ -314,9 +296,7 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
         }
 
         walk(c->__index + 1, fc, stop_loop, stop_procedure);
-
         __last_cur_i = 0;
-        // delete(dfo);
 
         if (need_return) {
             gc<DataType> r = __variables[sfc + "__ret__"];
@@ -334,22 +314,16 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
 
             for (uint_fast8_t i = 0; i < params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(params.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(f->__optional_parameters.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
-
-                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
@@ -362,22 +336,16 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
 
             for (uint_fast8_t i = 0; i < params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(params.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (uint_fast8_t i = params.size(); i < declaration_params.size(); i++) {
                 string p = sfc + ((AST_Variable*) declaration_params.at(i))->__identifier;
-                
-                remove_garbage(f->__optional_parameters.at(i), __variables[p]);
                 __variables.erase(p);
             }
 
             for (int i = 0; i < f->__local_variables.size(); i++) {
                 string p = sfc + f->__local_variables.at(i);
-                
-                // delete(__variables[p]);
                 __variables.erase(p);
             }
 
@@ -391,19 +359,13 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
 void call_function(AST* func, uint_fast32_t& caller_id) {
     if (func->__type == __AST_FUNCTION_CALL__) {
         gc<DataType> d = get_function_value((AST_FunctionCall*) func, caller_id, false);
-        // delete(d);
     } else {
         gc<DataType> d = get_object_function_value((AST_ObjectFunctionCall*) func, caller_id, false);
-        // delete(d);
     }
 }
 
 void remove_garbage(AST* param, gc<DataType> d_param) {
-    // if (param->__type == __AST_FUNCTION_CALL__ || param->__type == __AST_OBJECT_FUNCTION_CALL__ ||
-    //     param->__type == __AST_BINARY_EXPRESSION__ || param->__type == __AST_ARRAY_NOTATION__ ||
-    //     param->__type == __AST_OBJECT_NOTATION__) {
-    //     delete(d_param);
-    // }
+    // Deprecated
 }
 
 void parse_function_class() {

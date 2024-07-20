@@ -541,6 +541,9 @@ void set_array_value(gc<DataType> v, AST_Array* e, gc<DataType> val, uint_fast32
         v = temp->__elements[(int) (index->__value_double)];
     }
 
+    if (v->__type == __TYPE_ARRAY__) v->__value_array = NULL;
+    if (v->__type == __TYPE_OBJECT__) v->__value_object = NULL;
+
     if (val->__type == __TYPE_DOUBLE__) {
         v->__type = __TYPE_DOUBLE__;
         v->__value_double = val->__value_double;
@@ -661,6 +664,9 @@ void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast
             v = nv;
         }
 
+        if (v->__type == __TYPE_ARRAY__) v->__value_array = NULL;
+        if (v->__type == __TYPE_OBJECT__) v->__value_object = NULL;
+
         if (val->__type == __TYPE_DOUBLE__) {
             v->__type = __TYPE_DOUBLE__;
             v->__value_double = val->__value_double;
@@ -775,6 +781,9 @@ void set_attribute_array_value(gc<Object> obj, AST* expression, gc<DataType> val
     } else {
         v = temp->__elements[(int) (index->__value_double)];
     }
+
+    if (v->__type == __TYPE_ARRAY__) v->__value_array = NULL;
+    if (v->__type == __TYPE_OBJECT__) v->__value_object = NULL;
 
     if (val->__type == __TYPE_DOUBLE__) {
         v->__type = __TYPE_DOUBLE__;
