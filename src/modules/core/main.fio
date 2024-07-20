@@ -444,15 +444,15 @@ function exit(code = 0)
 '
 ' @param boolean expression An expression to be evaluated
 ' @param any true_part A value
-' @param any false_part A value
+' @param any [false_part] A value. The default value is `nothing`
 '
 ' @return any Returns `true_part` if the `expression` is `true`, returns `false_part` if otherwise
 '
 ' @example
-' iif(10 > 5, 20, 30)          ' Returns 20
-' iif(20 > 100, "OK", "NOK")   ' Returns "NOK"
+' iif(10 > 5, 20, 30)   ' Returns 20
+' iif(20 > 100, "OK")   ' Returns nothing
 ''
-function iif(expression, true_part, false_part)
+function iif(expression, true_part, false_part = nothing)
 
 
 ''
