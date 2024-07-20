@@ -16,7 +16,7 @@ $ cd dinfio
 
 ## Configuring and Compiling
 
-Open file [`src/header.h`](src/header.h), and point to  `__DINFIO_PATH__` constant (at line 44 or 51 or 58, depending on your platform):
+Open file [`src/header.h`](src/header.h), and point to  `__DINFIO_PATH__` constant (at line 45 or 52 or 59, depending on your platform):
 
 ``` cpp
 const string __DINFIO_PATH__ = "/usr/local/dinfio/";
@@ -28,7 +28,7 @@ Change the constant value with your build path (absolute path), for example:
 const string __DINFIO_PATH__ = "/home/sweet/Documents/dinfio/build/";
 ```
 
-> Additionally, please see the [notes](#notes) below if you want to activate module `url` and/or `gui` in the compilation process.
+> Additionally, please see the [notes](#notes) below if you want to opt-in module `url` and/or `gui` in the compilation process.
 
 <br>
 
