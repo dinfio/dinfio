@@ -461,7 +461,7 @@ gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, u
             connector->__object_set_function(dfo, "writebyte", __writebyte);
             connector->__object_set_function(dfo, "writestring", __writestring);
             connector->__object_set_function(dfo, "eof", __file_eof);
-            connector->__object_set_function(dfo, "size", __file_size);
+            connector->__object_set_function(dfo, "size", __file_size_alt);
             connector->__object_set_function(dfo, "close", __file_close);
             connector->__object_set_function(dfo, "reopen", __file_reopen);
 
