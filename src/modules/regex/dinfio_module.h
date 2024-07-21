@@ -95,6 +95,7 @@ public:
     string __name;
     uint_fast32_t __address;
     string __inherited;
+    bool __has_been_inherited;
     Base* __holder_pointer;
 
     uint_fast16_t __constructor;
@@ -105,10 +106,14 @@ public:
     Object(string name, uint_fast32_t address) {
         __name = name;
         __address = address;
+        __has_been_inherited = false;
     }
 
     ~Object() {
-        if (__holder_pointer != NULL) delete __holder_pointer;
+        if (__holder_pointer != NULL && !__has_been_inherited) {
+            delete __holder_pointer;
+            __holder_pointer = NULL;
+        }
     }
 };
 

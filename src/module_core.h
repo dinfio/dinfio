@@ -229,22 +229,19 @@ namespace core {
             if (a->__type != __TYPE_OBJECT__) error_message("extend(): parameter #1 must be an object");
             if (b->__type != __TYPE_OBJECT__) error_message("extend(): parameter #2 must be an object");
 
-            gc<Object> oa = a->__value_object;
-            gc<Object> ob = b->__value_object;
+            a->__value_object->__inherited += b->__value_object->__name + " ";
+            a->__value_object->__holder_pointer = b->__value_object->__holder_pointer;
 
-            oa->__inherited += ob->__name + " ";
-            oa->__holder_pointer = ob->__holder_pointer;
-            // oa->__holder = ob->__holder;
-
-            for (const auto &attr: ob->__attributes) {
-                oa->__attributes[attr.first] = ob->__attributes[attr.first];
+            for (const auto &attr: b->__value_object->__attributes) {
+                a->__value_object->__attributes[attr.first] = b->__value_object->__attributes[attr.first];
             }
 
-            for (const auto &func: ob->__functions) {
-                if (oa->__functions.find(func.first) == oa->__functions.end()) oa->__functions[func.first] = ob->__functions[func.first];
+            for (const auto &func: b->__value_object->__functions) {
+                if (a->__value_object->__functions.find(func.first) == a->__value_object->__functions.end()) a->__value_object->__functions[func.first] = b->__value_object->__functions[func.first];
             }
 
-            oa->__attributes[ob->__name] = b;
+            b->__value_object->__has_been_inherited = true;
+            a->__value_object->__attributes[b->__value_object->__name] = b;
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
