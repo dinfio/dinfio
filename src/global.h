@@ -74,13 +74,11 @@ void error_message(string error) {
         cout << endl << red << error << def << endl << endl;
 
         if (!__walked) {
-            cout << "Syntax: " << __cur_original << endl;
-            cout << "Line: " << __cur_file_line << endl;
-            cout << "File: " << __cur_file << endl;
+            cout << "Line: " << __cur_original << endl;
+            cout << "File: " << __cur_file << ":" << __cur_file_line << endl;
         } else {
-            cout << "Syntax: " << __codes_info[__cur_i]->__original << endl;
-            cout << "Line: " << __codes_info[__cur_i]->__line << endl;
-            cout << "File: " << __codes_info[__cur_i]->__file << endl;
+            cout << "Line: " << __codes_info[__cur_i]->__original << endl;
+            cout << "File: " << __codes_info[__cur_i]->__file << ":" << __codes_info[__cur_i]->__line << endl;
         }
     } else {
         cout << red << error << def << endl;

@@ -106,6 +106,7 @@ public:
     Object(string name, uint_fast32_t address) {
         __name = name;
         __address = address;
+        __holder_pointer = NULL;
         __has_been_inherited = false;
     }
 
