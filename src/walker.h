@@ -185,8 +185,6 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 }
             }
         }
-
-        remove_garbage(value, val);
     } else if (type == __AST_ARRAY__) {
         AST_Array* e = (AST_Array*) var;
         gc<DataType> val = get_value(value, caller_id);
@@ -209,8 +207,6 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 error_message("Variable " + e->__identifier + " is not an array");
             }
         }
-
-        remove_garbage(value, val);
     } else if (type == __AST_OBJECT__) {
         AST_Object* e = (AST_Object*) var;
         gc<DataType> val = get_value(value, caller_id);
@@ -237,8 +233,6 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 set_object_value(e->__variable_holder, e, val, caller_id);
             }
         }
-
-        remove_garbage(value, val);
     } else if (type == __AST_ARRAY_NOTATION__) {
         vector<AST*> arr = ((AST_ArrayNotation*) var)->__elements;
         gc<DataType> val = get_value(value, caller_id);
@@ -260,7 +254,5 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
                 delete v;
             }
         }
-
-        remove_garbage(value, val);
     }
 }

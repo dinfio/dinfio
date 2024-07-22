@@ -109,7 +109,6 @@ namespace core {
                 gc<DataType> d = get_value(params.at(0), caller_id);
                 gc<DataType> r = core::create_array(d->__value_double);
 
-                remove_garbage(params.at(0), d);
                 return r;
             } else {
                 return core::create_array(0);
@@ -122,9 +121,6 @@ namespace core {
             if (e->__type != __TYPE_DOUBLE__) error_message("array2d(): parameter #2 must be a number");
 
             gc<DataType> r = core::create_array_2d(d->__value_double, e->__value_double);
-
-            remove_garbage(params.at(0), d);
-            remove_garbage(params.at(1), e);
             
             return r;
         } else if (func == __object) {
@@ -132,7 +128,6 @@ namespace core {
                 gc<DataType> d = get_value(params.at(0), caller_id);
                 gc<DataType> r = core::create_empty_object(d->__value_string);
 
-                remove_garbage(params.at(0), d);
                 return r;
             } else {
                 return core::create_empty_object("object");
@@ -145,7 +140,6 @@ namespace core {
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = d->__value_array->__elements.size();
 
-            remove_garbage(params.at(0), d);
             return result;
         } else if (func == __append) {
             if (params.size() < 2) error_message_params("append", 2);
@@ -179,26 +173,17 @@ namespace core {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
 
-            remove_garbage(params.at(0), f);
-            remove_garbage(params.at(1), d);
-
             return result;
         } else if (func == __clear) {
             if (params.size() < 1) error_message_param("clear");
             gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_ARRAY__) error_message("clear(): parameter #1 must be an array");
 
-            while (!d->__value_array->__elements.empty()) {
-                // delete(d->__value_array->__elements.back());
-                d->__value_array->__elements.pop_back();
-            }
-
             d->__value_array->__elements.clear();
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
 
-            remove_garbage(params.at(0), d);
             return result;
         } else if (func == __pop) {
             if (params.size() < 1) error_message_param("pop");
@@ -211,7 +196,6 @@ namespace core {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
 
-            remove_garbage(params.at(0), d);
             return result;
         } else if (func == __is_nothing) {
             if (params.size() < 1) error_message_param("is_nothing");
@@ -220,7 +204,6 @@ namespace core {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = (d->__type == __TYPE_NULL__) ? true : false;
 
-            remove_garbage(params.at(0), d);
             return result;
         } else if (func == __extend) {
             if (params.size() < 2) error_message_params("extend", 2);
@@ -246,7 +229,6 @@ namespace core {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
 
-            remove_garbage(params.at(0), a);
             return result;
         } else if (func == __equal) {
             if (params.size() < 2) error_message_params("equal", 2);
@@ -265,9 +247,6 @@ namespace core {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = (addr_a == addr_b);
 
-            remove_garbage(params.at(0), a);
-            remove_garbage(params.at(1), b);
-
             return result;
         } else if (func == __name) {
             if (params.size() < 1) error_message_param("name");
@@ -281,8 +260,6 @@ namespace core {
 
             result->__type = __TYPE_STRING__;
             result->__value_string = name;
-
-            remove_garbage(params.at(0), a);
 
             return result;
         } else if (func == __address) {
@@ -298,8 +275,6 @@ namespace core {
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = addr;
 
-            remove_garbage(params.at(0), a);
-
             return result;
         } else if (func == __inherits) {
             if (params.size() < 1) error_message_param("inherits");
@@ -310,8 +285,6 @@ namespace core {
 
             result->__type = __TYPE_STRING__;
             result->__value_string = inherits;
-
-            remove_garbage(params.at(0), a);
 
             return result;
         } else if (func == __attributes) {
@@ -331,8 +304,6 @@ namespace core {
             result->__type = __TYPE_ARRAY__;
             result->__value_array = arr;
 
-            remove_garbage(params.at(0), a);
-
             return result;
         } else if (func == __type) {
             if (params.size() < 1) error_message_param("type");
@@ -349,8 +320,6 @@ namespace core {
 
             result->__type = __TYPE_STRING__;
             result->__value_string = type;
-
-            remove_garbage(params.at(0), a);
 
             return result;
         } else if (func == __var_exists) {
@@ -414,8 +383,6 @@ namespace core {
                 } else if (b->__type == __TYPE_OBJECT__) {
                     result->__value_object = b->__value_object;
                 }
-
-                remove_garbage(params.at(1), b);
             } else {
                 if (params.size() > 2) {
                     gc<DataType> b = get_value(params.at(2), caller_id);
@@ -432,14 +399,10 @@ namespace core {
                     } else if (b->__type == __TYPE_OBJECT__) {
                         result->__value_object = b->__value_object;
                     }
-
-                    remove_garbage(params.at(2), b);
                 } else {
                     return result;
                 }
             }
-
-            remove_garbage(params.at(0), a);
 
             return result;
 
@@ -468,8 +431,6 @@ namespace core {
             } else if (b->__type == __TYPE_OBJECT__) {
                 result->__value_object = b->__value_object;
             }
-
-            remove_garbage(params.at(__DINFIO_PLATFORM_RAW__), b);
         } else if (func == __platform_linux) {
             if (params.size() < 2) error_message_params("platform_linux", 2);
             int pos = (__DINFIO_PLATFORM_RAW__ == 0) ? 0 : 1;
@@ -487,8 +448,6 @@ namespace core {
             } else if (b->__type == __TYPE_OBJECT__) {
                 result->__value_object = b->__value_object;
             }
-
-            remove_garbage(params.at(pos), b);
         } else if (func == __platform_mac) {
             if (params.size() < 2) error_message_params("platform_mac", 2);
             int pos = (__DINFIO_PLATFORM_RAW__ == 1) ? 0 : 1;
@@ -506,8 +465,6 @@ namespace core {
             } else if (b->__type == __TYPE_OBJECT__) {
                 result->__value_object = b->__value_object;
             }
-
-            remove_garbage(params.at(pos), b);
         } else if (func == __platform_windows) {
             if (params.size() < 2) error_message_params("platform_windows", 2);
             int pos = (__DINFIO_PLATFORM_RAW__ == 2) ? 0 : 1;
@@ -525,8 +482,6 @@ namespace core {
             } else if (b->__type == __TYPE_OBJECT__) {
                 result->__value_object = b->__value_object;
             }
-
-            remove_garbage(params.at(pos), b);
 
         } else if (func == __keys) {
             error_message("keys(): this function is now deprecated");
@@ -550,10 +505,6 @@ namespace core {
             result->__type = __TYPE_ARRAY__;
             result->__value_array = arr;
 
-            remove_garbage(params.at(0), a);
-            remove_garbage(params.at(1), b);
-            remove_garbage(params.at(2), c);
-
             return result;
         } else if (func == __execute) {
             #ifdef __DINFIO_PLAYGROUND__
@@ -573,7 +524,6 @@ namespace core {
                 if (e->__type != __TYPE_BOOL__) error_message("execute(): parameter #2 must be a boolean");
             
                 wait = e->__value_bool;
-                remove_garbage(params.at(1), e);
             }
 
             if (!wait) {
@@ -588,8 +538,6 @@ namespace core {
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = r;
-
-            remove_garbage(params.at(0), d);
 
             return result;
         
@@ -609,7 +557,6 @@ namespace core {
                 ((AST_FunctionCall*) rh->__func)->__parameters.push_back(params.at(i));
             }
 
-            remove_garbage(params.at(0), d);
             gc<DataType> b = get_function_value((AST_FunctionCall*) rh->__func, caller_id, true);
             result->__type = b->__type;
             
@@ -641,8 +588,6 @@ namespace core {
                 ((AST_FunctionCall*) rh->__func)->__parameters.push_back(params.at(i));
             }
 
-            remove_garbage(params.at(0), d);
-
             rh->call(caller_id);
         
         } else if (func == __caller_file) {
@@ -658,9 +603,6 @@ namespace core {
             if (b->__type != __TYPE_STRING__) error_message("attribute_get(): parameter #2 must be a string");
 
             if (((gc<Object>) a->__value_object)->__attributes.count(b->__value_string) <= 0) {
-                remove_garbage(params.at(0), a);
-                remove_garbage(params.at(1), b);
-
                 return result;
             }
 
@@ -684,9 +626,6 @@ namespace core {
                     result->__value_object = d->__value_object;
                 }
             }
-
-            remove_garbage(params.at(0), a);
-            remove_garbage(params.at(1), b);
 
             return result;
         } else if (func == __attribute_set) {
@@ -723,10 +662,6 @@ namespace core {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
 
-            remove_garbage(params.at(0), a);
-            remove_garbage(params.at(1), b);
-            remove_garbage(params.at(2), d);
-
             return result;
         } else if (func == __attribute_exists) {
             if (params.size() < 2) error_message_params("attribute_exists", 2);
@@ -737,9 +672,6 @@ namespace core {
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = ((gc<Object>) a->__value_object)->__attributes.count(b->__value_string) > 0;
-
-            remove_garbage(params.at(0), a);
-            remove_garbage(params.at(1), b);
 
             return result;
         
@@ -757,21 +689,17 @@ namespace core {
             
                 bw = e->__value_double;
                 if (bw < 1 || bw > 32) error_message("bnot(): parameter #2 must be in between 1 and 32");
-
-                remove_garbage(params.at(1), e);
             }
             if (params.size() > 2) {
                 gc<DataType> e = get_value(params.at(2), caller_id);
                 if (e->__type != __TYPE_BOOL__) error_message("bnot(): parameter #3 must be a boolean");
             
                 is_unsigned = e->__value_bool;
-                remove_garbage(params.at(2), e);
             }
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = bitwise_operation(d->__value_double, 0, bw, 0, is_unsigned);
 
-            remove_garbage(params.at(0), d);
             return result;
         } else if (func == __bit_and) {
             if (params.size() < 2) error_message_params("band", 2);
@@ -789,22 +717,16 @@ namespace core {
             
                 bw = f->__value_double;
                 if (bw < 1 || bw > 32) error_message("band(): parameter #3 must be in between 1 and 32");
-
-                remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
                 gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("band(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
-                remove_garbage(params.at(3), f);
             }
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = bitwise_operation(d->__value_double, e->__value_double, bw, 1, is_unsigned);
-
-            remove_garbage(params.at(0), d);
-            remove_garbage(params.at(1), e);
 
             return result;
         } else if (func == __bit_or) {
@@ -823,22 +745,16 @@ namespace core {
             
                 bw = f->__value_double;
                 if (bw < 1 || bw > 32) error_message("bor(): parameter #3 must be in between 1 and 32");
-
-                remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
                 gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("bor(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
-                remove_garbage(params.at(3), f);
             }
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = bitwise_operation(d->__value_double, e->__value_double, bw, 2, is_unsigned);
-
-            remove_garbage(params.at(0), d);
-            remove_garbage(params.at(1), e);
 
             return result;
         } else if (func == __bit_xor) {
@@ -857,22 +773,16 @@ namespace core {
             
                 bw = f->__value_double;
                 if (bw < 1 || bw > 32) error_message("bxor(): parameter #3 must be in between 1 and 32");
-
-                remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
                 gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("bxor(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
-                remove_garbage(params.at(3), f);
             }
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = bitwise_operation(d->__value_double, e->__value_double, bw, 3, is_unsigned);
-
-            remove_garbage(params.at(0), d);
-            remove_garbage(params.at(1), e);
 
             return result;
         } else if (func == __bit_ls) {
@@ -891,22 +801,16 @@ namespace core {
             
                 bw = f->__value_double;
                 if (bw < 1 || bw > 32) error_message("bls(): parameter #3 must be in between 1 and 32");
-
-                remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
                 gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("bls(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
-                remove_garbage(params.at(3), f);
             }
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = bitwise_operation(d->__value_double, e->__value_double, bw, 4, is_unsigned);
-
-            remove_garbage(params.at(0), d);
-            remove_garbage(params.at(1), e);
 
             return result;
         } else if (func == __bit_rs) {
@@ -925,22 +829,16 @@ namespace core {
             
                 bw = f->__value_double;
                 if (bw < 1 || bw > 32) error_message("brs(): parameter #3 must be in between 1 and 32");
-
-                remove_garbage(params.at(2), f);
             }
             if (params.size() > 3) {
                 gc<DataType> f = get_value(params.at(3), caller_id);
                 if (f->__type != __TYPE_BOOL__) error_message("brs(): parameter #4 must be a boolean");
             
                 is_unsigned = f->__value_bool;
-                remove_garbage(params.at(3), f);
             }
 
             result->__type = __TYPE_DOUBLE__;
             result->__value_double = bitwise_operation(d->__value_double, e->__value_double, bw, 5, is_unsigned);
-
-            remove_garbage(params.at(0), d);
-            remove_garbage(params.at(1), e);
 
             return result;
 
@@ -1153,7 +1051,6 @@ namespace core {
             }
             
             a->__elements.push_back(e);
-            remove_garbage(elements.at(i), d);
         }
 
         result->__value_array = a;
@@ -1198,7 +1095,6 @@ namespace core {
             }
 
             a->__attributes[names.at(i)] = e;
-            remove_garbage(attributes.at(i), d);
         }
 
         result->__value_object = a;

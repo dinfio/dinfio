@@ -28,7 +28,6 @@ void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header
         step = dst->__value_double;
 
         if (step == 0) error_message("Unable to use 0 in the parameter 'step'");
-        remove_garbage(st, dst);
     } else {
         step = 1;
     }
@@ -38,9 +37,6 @@ void loop_for(AST* body, uint_fast32_t& start_i, uint_fast8_t& additional_header
 
     double start = d_start->__value_double;
     double end = d_end->__value_double;
-
-    remove_garbage(a_start, d_start);
-    remove_garbage(a_end, d_end);
 
     AST_Variable* e = (AST_Variable*) a_counter;
     gc<DataType> counter;
@@ -78,7 +74,6 @@ void loop_while(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uin
     __cur_i = start_i;
     gc<DataType> dc = get_value(body, caller_id);
     bool condition = dc->__value_bool;
-    remove_garbage(body, dc);
 
     while (condition) {
         if (stop_loop || stop_procedure) break;
@@ -86,7 +81,6 @@ void loop_while(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uin
 
         dc = get_value(body, caller_id);
         condition = dc->__value_bool;
-        remove_garbage(body, dc);
     }
 
     stop_loop = false;
@@ -97,7 +91,6 @@ void branch_if(AST* body, uint_fast32_t& start_i, uint_fast32_t& endclause, uint
     __cur_i = start_i;
     gc<DataType> dc = get_value(body, caller_id);
     bool condition = dc->__value_bool;
-    remove_garbage(body, dc);
 
     if (condition) {
         walk(start_i + 1, caller_id, stop_loop, stop_procedure);

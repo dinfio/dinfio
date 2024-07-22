@@ -61,8 +61,6 @@ namespace standardIO {
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
 
-            remove_garbage(params.at(0), d);
-
             return result;
         } else if (func == __writeln) {
             if (params.size() > 0) {
@@ -90,8 +88,6 @@ namespace standardIO {
                 } else {
                     cout << "nothing" << endl;
                 }
-
-                remove_garbage(params.at(0), d);
             } else {
                 cout << endl;
             }
@@ -154,8 +150,6 @@ namespace standardIO {
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
-            
-            remove_garbage(params.at(0), d);
 
             return result;
         }

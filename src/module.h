@@ -169,7 +169,7 @@ bool Connector::__variable_exists(string var_name, uint_fast32_t& caller_id) {
 }
 
 void Connector::__remove_garbage(AST* param, gc<DataType> d_param) {
-    remove_garbage(param, d_param);
+    // Deprecated
 }
 
 string Connector::__get_current_file() {

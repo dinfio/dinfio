@@ -443,7 +443,6 @@ void declare_variables(AST* l, AST* r, uint_fast32_t& caller_id, bool is_local) 
         }
 
         __variables[c + ((AST_Variable*) vr)->__identifier] = d;
-        remove_garbage(vl, g);
     }
 }
 
@@ -488,8 +487,6 @@ gc<DataType> get_array_value(AST* expression, uint_fast32_t& caller_id) {
         if (v->__type != __TYPE_ARRAY__) error_message_array(msg, "is not an array", i, e->__indices, caller_id);
 
         temp = v->__value_array;
-
-        remove_garbage(e->__indices.at(i), index);
     }
 
     gc<DataType> index = get_value(e->__indices.at(i), caller_id);
@@ -500,8 +497,6 @@ gc<DataType> get_array_value(AST* expression, uint_fast32_t& caller_id) {
 
     if (temp->__elements.size() <= index->__value_double) error_message_array(msg, "is undefined", i, e->__indices, caller_id);
     v = temp->__elements[(int) (index->__value_double)];
-
-    remove_garbage(e->__indices.at(i), index);
 
     return v;
 }
@@ -522,8 +517,6 @@ void set_array_value(gc<DataType> v, AST_Array* e, gc<DataType> val, uint_fast32
         if (temp->__elements.size() <= index->__value_double) error_message_array(msg, "is undefined", i, e->__indices, caller_id);
         v = temp->__elements[(int) (index->__value_double)];
         if (v->__type != __TYPE_ARRAY__) error_message_array(msg, "is not an array", i, e->__indices, caller_id);
-
-        remove_garbage(e->__indices.at(i), index);
 
         temp = v->__value_array;
     }
@@ -573,8 +566,6 @@ void set_array_value(gc<DataType> v, AST_Array* e, gc<DataType> val, uint_fast32
     if (val->__type == __TYPE_NULL__) {
         v->__type = __TYPE_NULL__;
     }
-
-    remove_garbage(e->__indices.at(j), index);
 }
 
 gc<DataType> get_object_value(AST* expression, uint_fast32_t& caller_id) {
@@ -723,8 +714,6 @@ gc<DataType> get_attribute_array_value(gc<Object> obj, AST* expression, uint_fas
         v = temp->__elements[(int) (index->__value_double)];
         if (v->__type != __TYPE_ARRAY__) error_message_array(msg, "is not an array", i, e->__indices, caller_id);
 
-        remove_garbage(e->__indices.at(i), index);
-
         temp = v->__value_array;
     }
 
@@ -736,8 +725,6 @@ gc<DataType> get_attribute_array_value(gc<Object> obj, AST* expression, uint_fas
 
     if (temp->__elements.size() <= index->__value_double) error_message_array(msg, "is undefined", i, e->__indices, caller_id);
     v = temp->__elements[(int) (index->__value_double)];
-
-    remove_garbage(e->__indices.at(i), index);
 
     return v;
 }
@@ -763,8 +750,6 @@ void set_attribute_array_value(gc<Object> obj, AST* expression, gc<DataType> val
         if (temp->__elements.size() <= index->__value_double) error_message_array(msg, "is undefined", i, e->__indices, caller_id);
         v = temp->__elements[(int) (index->__value_double)];
         if (v->__type != __TYPE_ARRAY__) error_message_array(msg, "is not an array", i, e->__indices, caller_id);
-
-        remove_garbage(e->__indices.at(i), index);
 
         temp = v->__value_array;
     }
@@ -814,8 +799,6 @@ void set_attribute_array_value(gc<Object> obj, AST* expression, gc<DataType> val
     if (val->__type == __TYPE_NULL__) {
         v->__type = __TYPE_NULL__;
     }
-
-    remove_garbage(e->__indices.at(j), index);
 }
 
 gc<Object> get_pure_object_value(AST* expression, uint_fast32_t& caller_id) {
