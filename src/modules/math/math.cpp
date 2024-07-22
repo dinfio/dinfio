@@ -13,11 +13,9 @@
 */
 
 #include <random>
-
 #ifdef _WIN32
-#include <chrono>
+    #include <chrono>
 #endif
-
 #include "dinfio_module.h"
 
 Connector* connector;
@@ -31,18 +29,42 @@ double __MATH_PI__ = 3.14159265358979;
 double __MATH_E__ = 2.71828182845905;
 
 #ifdef _WIN32
-int random_int(int min, int max) {
-    mt19937 generator(chrono::high_resolution_clock::now().time_since_epoch().count());
-    uniform_int_distribution<int> distr(min, max);
+namespace random_generator {
+    inline default_random_engine& urng() {
+        static default_random_engine URNG {};
+        return URNG;
+    }
 
-	return distr(generator);
+    inline void srand() {
+        random_device rd;
+        unsigned seed;
+
+        if (0 != rd.entropy()) {
+            seed = rd();
+        } else {
+            seed = static_cast<unsigned> (std::chrono::system_clock::now().time_since_epoch().count());
+        }
+
+        urng().seed(seed);
+    }
+
+    inline int rand(int from, int to) {
+        static std::uniform_int_distribution<> dist {};
+        return dist(urng(), decltype(dist)::param_type {from, to});
+    }
+
+    inline double rand_double(double from, double to) {
+        static std::uniform_real_distribution<> dist {};
+        return dist(urng(), decltype(dist)::param_type {from, to});
+    }
+}
+
+int random_int(int min, int max) {
+    return random_generator::rand(min, max);
 }
 
 double random_double(double min, double max) {
-    mt19937 generator(chrono::high_resolution_clock::now().time_since_epoch().count());
-    uniform_real_distribution<double> distr(min, max);
-
-	return distr(generator);
+    return random_generator::rand_double(min, max);
 }
 #else
 int random_int(int min, int max) {
