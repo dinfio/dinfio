@@ -16,6 +16,7 @@ void init_builtin(int argc, char* argv[]) {
     // Constant 'dinfio'
 
     gc<DataType> di = core::create_empty_object("dinfio_info");
+    di->__is_constant = true;
 
     gc<DataType> version = new_gc<DataType>(__TYPE_STRING__);
     version->__value_string = __DINFIO_VERSION__;
@@ -67,6 +68,7 @@ void init_builtin(int argc, char* argv[]) {
     // Constant 'arguments'
 
     gc<DataType> args = core::create_array(0);
+    args->__is_constant = true;
 
     for (int i = 1; i < argc; i++) {
         gc<DataType> argi = new_gc<DataType>(__TYPE_STRING__);
@@ -149,6 +151,7 @@ void Connector::__object_set_function(gc<DataType> d, string name, uint_fast16_t
 }
 
 void Connector::__add_constant(const string& name, gc<DataType> value) {
+    value->__is_constant = true;
     __variables["1" + name] = value;
 }
 

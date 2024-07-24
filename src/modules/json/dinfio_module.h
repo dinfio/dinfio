@@ -66,6 +66,7 @@ class Object;
 class DataType {
 public:
     uint_fast8_t __type;
+    bool __is_constant;
 
     double __value_double;
     string __value_string;
@@ -78,6 +79,7 @@ public:
 
 DataType::DataType(uint_fast8_t type) {
     __type = type;
+    __is_constant = false;
 }
 
 class Array {

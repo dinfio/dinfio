@@ -183,6 +183,7 @@ class Object;
 class DataType {
 public:
     uint_fast8_t __type;
+    bool __is_constant;
 
     double __value_double;
     string __value_string;
@@ -198,6 +199,7 @@ gc<DataType> __nothing_value = new_gc<DataType>(__TYPE_NULL__);
 
 gc<DataType> get_value(AST*, uint_fast32_t&);
 void declare_variables(AST*, AST*, uint_fast32_t&, bool);
+void declare_constants(AST*, AST*, uint_fast32_t&);
 gc<DataType> get_array_value(AST*, uint_fast32_t&);
 void set_array_value(gc<DataType>, AST_Array*, gc<DataType>, uint_fast32_t&);
 gc<DataType> get_object_value(AST*, uint_fast32_t&);
@@ -221,6 +223,7 @@ AST_Parameter* parse_class_declaration(string&);
 AST_Parameter* parse_field_declaration(string&);
 AST_Parameter* parse_var_declaration_name(string&);
 AST_Parameter* parse_var_declaration_value(string&);
+AST_Parameter* parse_const_declaration_value(AST_Parameter*, string&);
 AST_ObjectNotation* parse_object_notation(string&);
 AST_ArrayNotation* parse_array_notation(string&);
 AST_Parameter* parse_parameters(string&);

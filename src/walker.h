@@ -55,6 +55,8 @@ void walk(uint_fast32_t start, uint_fast32_t& caller_id, bool& stop_loop, bool& 
             declare_variables(c->__body, c->__body2, caller_id, true);
         } else if (c->__header == __H_GLOBAL__) {
             declare_variables(c->__body, c->__body2, caller_id, false);
+        } else if (c->__header == __H_CONST__) {
+            declare_constants(c->__body, c->__body2, caller_id);
         
         } else if (c->__header == __H_EXIT_LOOP__) {
             stop_loop = true;
@@ -111,6 +113,8 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
             if (__variables.count(c + e->__identifier) != 0) {
                 e->__caller_id = caller_id;
                 e->__variable_holder = __variables[c + e->__identifier];
+
+                if (e->__variable_holder->__is_constant) error_message("Invalid assignment to constant '" + e->__identifier + "'");
 
                 if (e->__variable_holder->__type == __TYPE_ARRAY__ && val->__type != __TYPE_ARRAY__) e->__variable_holder->__value_array = NULL;
                 if (e->__variable_holder->__type == __TYPE_OBJECT__ && val->__type != __TYPE_OBJECT__) e->__variable_holder->__value_object = NULL;

@@ -39,6 +39,7 @@
 #define __H_CLASS__ 24
 #define __H_END_CLASS__ 25
 #define __H_FIELD__ 26
+#define __H_CONST__ 27
 
 #define __H_FOR_WITHOUT_STEP__ 1
 #define __H_FOR_WITH_STEP__ 2
@@ -270,6 +271,12 @@ Code* parse_line_code(string& line_code) {
         c->__header = __H_GLOBAL__;
         c->__body = parse_var_declaration_name(lc);
         c->__body2 = parse_var_declaration_value(lc);
+    } else if (line_code.substr(0, 6) == "const ") {
+        string lc = remove_spaces(line_code.substr(6));
+        c->__header = __H_CONST__;
+        c->__body = parse_var_declaration_name(lc);
+        c->__body2 = parse_const_declaration_value((AST_Parameter*) c->__body, lc);
+    
     } else if (line_code.substr(0, 7) == "import ") {
         string lc = remove_spaces(line_code.substr(7));
         c->__header = __H_IMPORT__;

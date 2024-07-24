@@ -393,6 +393,24 @@ AST_Parameter* parse_var_declaration_value(string& expression) {
     return r;
 }
 
+AST_Parameter* parse_const_declaration_value(AST_Parameter* names, string& expression) {
+    vector<string> parameters = parse_function_parameters(expression);
+
+    AST_Parameter* r = new AST_Parameter();
+
+    for (int i = 0; i < parameters.size(); i++) {
+        vector<string> p = split(parameters[i], "=", 2);
+
+        if (p.size() > 1) {
+            r->__parameters.push_back(parse_expression(p[1]));
+        } else {
+            error_message("Constant '" + ((AST_Variable*) (names->__parameters.at(i)))->__identifier + "' must have a value");
+        }
+    }
+
+    return r;
+}
+
 AST_ObjectNotation* parse_object_notation(string& expression) {
     string func_params = expression.substr(1, expression.length() - 2);
     vector<string> parameters = parse_function_parameters(func_params);

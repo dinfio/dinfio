@@ -14,6 +14,7 @@
 
 DataType::DataType(uint_fast8_t type) {
     __type = type;
+    __is_constant = false;
 }
 
 class Array {
@@ -443,6 +444,40 @@ void declare_variables(AST* l, AST* r, uint_fast32_t& caller_id, bool is_local) 
         }
 
         __variables[c + ((AST_Variable*) vr)->__identifier] = d;
+    }
+}
+
+void declare_constants(AST* l, AST* r, uint_fast32_t& caller_id) {
+    AST_Parameter* vars = (AST_Parameter*) l;
+    AST_Parameter* vals = (AST_Parameter*) r;
+
+    for (uint_fast16_t i = 0; i < vars->__parameters.size(); i++) {
+        AST* vr = vars->__parameters.at(i);
+        AST* vl = vals->__parameters.at(i);
+
+        gc<DataType> g = get_value(vl, caller_id);
+        gc<DataType> d = new_gc<DataType>(__TYPE_NULL__);
+
+        d->__is_constant = true;
+        d->__type = g->__type;
+
+        if (g->__type == __TYPE_DOUBLE__) {
+            d->__value_double = g->__value_double;
+        } else if (g->__type == __TYPE_BOOL__) {
+            d->__value_bool = g->__value_bool;
+        } else if (g->__type == __TYPE_STRING__) {
+            d->__value_string = g->__value_string;
+        } else if (g->__type == __TYPE_ARRAY__) {
+            d->__value_array = g->__value_array;
+        } else  if (g->__type == __TYPE_OBJECT__) {
+            d->__value_object = g->__value_object;
+        }
+
+        if (__variables["1" + ((AST_Variable*) vr)->__identifier] != NULL) {
+            error_message("Variable '" + ((AST_Variable*) vr)->__identifier + "' is already declared");
+        }
+
+        __variables["1" + ((AST_Variable*) vr)->__identifier] = d;
     }
 }
 
