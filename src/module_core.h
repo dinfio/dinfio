@@ -13,14 +13,14 @@
 */
 
 namespace core {
-    uint_fast16_t __array, __array2d, __size, __append, __clear, __pop, __keys, __array_random;
+    uint_fast16_t __array, __array2d, __size, __append, __clear, __pop, __declare, __array_random;
     uint_fast16_t __object, __is_nothing, __extend, __equal, __name, __attributes, __address, __inherits;
     uint_fast16_t __type, __exit, __iif, __total_vars;
     uint_fast16_t __platform, __platform_linux, __platform_mac, __platform_windows;
     uint_fast16_t __execute;
     uint_fast16_t __ref, __ref_call, __ref_eval;
     uint_fast16_t __var_exists, __error;
-    uint_fast16_t __caller_file;
+    uint_fast16_t __caller_file, __get_value;
     uint_fast16_t __attribute_set, __attribute_get, __attribute_exists;
     uint_fast16_t __bit_not, __bit_and, __bit_or, __bit_xor, __bit_ls, __bit_rs;
     uint_fast16_t __register_event_loop, __set_on_error_callback;
@@ -75,13 +75,14 @@ namespace core {
         __platform_mac = register_function("platform_mac", __REG_BUILT_IN_FUNCTION__);
         __platform_windows = register_function("platform_windows", __REG_BUILT_IN_FUNCTION__);
         __execute = register_function("execute", __REG_BUILT_IN_FUNCTION__);
-        __keys = register_function("keys", __REG_BUILT_IN_FUNCTION__);
+        __declare = register_function("declare", __REG_BUILT_IN_FUNCTION__);
         __array_random = register_function("array_random", __REG_BUILT_IN_FUNCTION__);
         __ref = register_function("ref", __REG_BUILT_IN_FUNCTION__);
         __ref_call = register_function("call", __REG_BUILT_IN_FUNCTION__);
         __ref_eval = register_function("eval", __REG_BUILT_IN_FUNCTION__);
         __error = register_function("error", __REG_BUILT_IN_FUNCTION__);
         __caller_file = register_function("caller_file", __REG_BUILT_IN_FUNCTION__);
+        __get_value = register_function("get_value", __REG_BUILT_IN_FUNCTION__);
         __attribute_get = register_function("attribute_get", __REG_BUILT_IN_FUNCTION__);
         __attribute_set = register_function("attribute_set", __REG_BUILT_IN_FUNCTION__);
         __attribute_exists = register_function("attribute_exists", __REG_BUILT_IN_FUNCTION__);
@@ -483,11 +484,72 @@ namespace core {
                 result->__value_object = b->__value_object;
             }
 
-        } else if (func == __keys) {
-            error_message("keys(): this function is now deprecated");
+        } else if (func == __declare) {
+            if (params.size() < 2) error_message_params("declare", 2);
+            gc<DataType> f = get_value(params.at(0), caller_id);
+            gc<DataType> d = get_value(params.at(1), caller_id);
+            if (f->__type != __TYPE_STRING__) error_message("declare(): parameter #1 must be a string");
+            if (!valid_name(f->__value_string)) error_message("declare(): invalid variable name '" + f->__value_string + "'");
 
-            result->__type = __TYPE_NULL__;
+            gc<DataType> e;
+
+            if (d->__type == __TYPE_DOUBLE__) {
+                e = new_gc<DataType>(__TYPE_DOUBLE__);
+                e->__value_double = d->__value_double;
+            } else if (d->__type == __TYPE_BOOL__) {
+                e = new_gc<DataType>(__TYPE_BOOL__);
+                e->__value_bool = d->__value_bool;
+            } else if (d->__type == __TYPE_STRING__) {
+                e = new_gc<DataType>(__TYPE_STRING__);
+                e->__value_string = d->__value_string;
+            } else if (d->__type == __TYPE_ARRAY__) {
+                e = new_gc<DataType>(__TYPE_ARRAY__);
+                e->__value_array = d->__value_array;
+            } else if (d->__type == __TYPE_OBJECT__) {
+                e = new_gc<DataType>(__TYPE_OBJECT__);
+                e->__value_object = d->__value_object;
+            } else {
+                e = new_gc<DataType>(__TYPE_NULL__);
+            }
+
+            __variables["1" + f->__value_string] = e;
+
+            result->__type = __TYPE_BOOL__;
+            result->__value_bool = true;
+
             return result;
+        } else if (func == __get_value) {
+            if (params.size() < 1) error_message_params("get_value", 1);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            if (d->__type != __TYPE_STRING__) error_message("get_value(): parameter #1 must be a string");
+
+            bool need_return = true;
+
+            if (params.size() > 1) {
+                gc<DataType> e = get_value(params.at(1), caller_id);
+                if (e->__type != __TYPE_BOOL__) error_message("get_value(): parameter #2 must be a boolean");
+                
+                need_return = e->__value_bool;
+            }
+
+            if (need_return) {
+                AST* expression = parse_expression(d->__value_string);
+                uint_fast32_t cid = 1;
+
+                result = get_value(expression, cid);
+                delete expression;
+            } else {
+                AST* expression = parse_expression(d->__value_string);
+                uint_fast32_t cid = 1;
+
+                call_function(expression, cid);
+                delete expression;
+
+                result->__type = __TYPE_NULL__;
+            }
+
+            return result;
+        
         } else if (func == __array_random) {
             if (params.size() < 3) error_message_params("array_random", 3);
             gc<DataType> a = get_value(params.at(0), caller_id);
