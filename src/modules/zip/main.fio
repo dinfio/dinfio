@@ -24,23 +24,23 @@ function zip::init()
     ''
     ' A default instance of class `zip`
     ''
-    global zip: zip = zip()
+    const zip: zip = zip()
 
 
     ' Internal constants
 
     if dinfio.is_windows
-        global __temp = dinfio.path & "temp/dinfio_zip_"
+        const __zip_temp = dinfio.path & "temp/dinfio_zip_"
 
-        global __exec_zip = dinfio.path & "modules/zip/7za a -r \q%zip_output\q %files"
-        global __exec_unzip = dinfio.path & "modules/zip/7za x -aoa \q%zip_file\q -o\q%extract_to\q"
-        global __exec_list = dinfio.path & "modules/zip/7za l \q%zip_file\q"
+        const __zip_exec_zip = dinfio.path & "modules/zip/7za a -r \q%zip_output\q %files"
+        const __zip_exec_unzip = dinfio.path & "modules/zip/7za x -aoa \q%zip_file\q -o\q%extract_to\q"
+        const __zip_exec_list = dinfio.path & "modules/zip/7za l \q%zip_file\q"
     else
-        global __temp = "/tmp/dinfio_zip_"
+        const __zip_temp = "/tmp/dinfio_zip_"
         
-        global __exec_zip = "zip -rqq \q%zip_output\q %files"
-        global __exec_unzip = "unzip -o -qq \q%zip_file\q -d \q%extract_to\q"
-        global __exec_list = "unzip -lqq \q%zip_file\q"
+        const __zip_exec_zip = "zip -rqq \q%zip_output\q %files"
+        const __zip_exec_unzip = "unzip -o -qq \q%zip_file\q -d \q%extract_to\q"
+        const __zip_exec_list = "unzip -lqq \q%zip_file\q"
     endif
 stop
 
@@ -63,8 +63,8 @@ class zip
     ' zip.create("archive.zip", ["file1.txt", "file2.txt", "mydir"])
     ''
     function create(zip_output, files)
-        files_str = ""
-        log = __temp & randomint(10000, 99999)
+        var files_str = ""
+        var log = __zip_temp & randomint(10000, 99999)
 
 
         ' Check for files
@@ -86,9 +86,9 @@ class zip
 
         ' Create the zip
 
-        command = replace(__exec_zip, "%zip_output", zip_output)
+        var command = replace(__zip_exec_zip, "%zip_output", zip_output)
         command = replace(command, "%files", files_str)
-        result = execute(command & " > " & log)
+        var result = execute(command & " > " & log)
 
         deletefile(log)
 
@@ -110,7 +110,7 @@ class zip
     ' zip.extract("archive.zip", "mydir")
     ''
     function extract(zip_file, extract_to)
-        log = __temp & randomint(10000, 99999)
+        var log = __zip_temp & randomint(10000, 99999)
 
 
         ' Check for files
@@ -128,9 +128,9 @@ class zip
 
         ' Extract the zip
 
-        command = replace(__exec_unzip, "%zip_file", zip_file)
+        var command = replace(__zip_exec_unzip, "%zip_file", zip_file)
         command = replace(command, "%extract_to", extract_to)
-        result = execute(command & " > " & log)
+        var result = execute(command & " > " & log)
 
         deletefile(log)
 
@@ -151,8 +151,8 @@ class zip
     ' contents = zip.list("archive.zip")
     ''
     function list(zip_file)
-        contents = []
-        log = __temp & randomint(10000, 99999)
+        var contents = []
+        var log = __zip_temp & randomint(10000, 99999)
 
 
         ' Check for file
@@ -165,12 +165,13 @@ class zip
 
         ' Get the contents of the zip
 
-        command = replace(__exec_list, "%zip_file", zip_file)
-        result = execute(command & " > " & log)
+        var command = replace(__zip_exec_list, "%zip_file", zip_file)
+        var result = execute(command & " > " & log)
 
         if result == 0
             if !dinfio.is_windows
-                f = file(log, file_read)
+                var f = file(log, file_read)
+                var line
 
                 while !f.eof()
                     line = regex_search("\S+", f.readln())
@@ -179,8 +180,9 @@ class zip
 
                 f.close()
             else
-                f = file(log, file_read)
-                start_read = false
+                var f = file(log, file_read)
+                var start_read = false
+                var line, parts
 
                 while !f.eof()
                     line = f.readln()
