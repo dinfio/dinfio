@@ -14,22 +14,22 @@
 ' @brief Graphical User Interface module
 ''
 function gui::init()
-    global message: message
-    global event: event
-    global gui_colours: colour
-    global keycode: keycode
-    global alignment: align
-    global scale_mode: scale
-    global pen_style: pen
-    global brush_style: brush
+    const message: message
+    const event: event
+    const gui_colours: colour
+    const keycode: keycode
+    const alignment: align
+    const scale_mode: scale
+    const pen_style: pen
+    const brush_style: brush
 
-    global menu_type: menu
-    global padding: padding
-    global dialog: dialog
-    global clipboard: clipboard
+    const menu_type: menu
+    const padding: padding
+    const dialog: dialog
+    const clipboard: clipboard
 
-    global vertical = 0
-    global horizontal = 1
+    const vertical = 0
+    const horizontal = 1
 
 
     ' This module is not available on the Playground

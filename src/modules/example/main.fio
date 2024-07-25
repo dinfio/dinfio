@@ -18,7 +18,7 @@ import helper   ' Load helper.fio
 function example::init()
     ' An example constant
 
-    global example_data = {
+    const example_data = {
         x: 10,
         y: 20,
         z: 30

@@ -17,7 +17,7 @@ function json::init()
     ''
     ' A default instance of class `json`
     ''
-    global json: json
+    const json: json
 stop
 
 

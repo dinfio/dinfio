@@ -23,7 +23,7 @@ function url::init()
     '
     ' response = url.get("https://example.com/")
     ''
-    global url: url
+    const url: url
 
 
     ''
@@ -38,7 +38,7 @@ function url::init()
     '     writeln(response.body)
     ' endif
     ''
-    global http: http
+    const http: http
 
 
     ' This module is not available on the Playground

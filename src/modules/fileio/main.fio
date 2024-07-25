@@ -24,7 +24,7 @@ function fileio::init()
     ' f.write("Hello")
     ' f.close()
     ''
-    global file_append = 0x01
+    const file_append = 0x01
 
 
     ''
@@ -37,7 +37,7 @@ function fileio::init()
     ' line = f.readln()
     ' f.close()
     ''
-    global file_read = 0x08
+    const file_read = 0x08
 
 
     ''
@@ -50,7 +50,7 @@ function fileio::init()
     ' f.writeln("Hello!")
     ' f.close()
     ''
-    global file_write = 0x10
+    const file_write = 0x10
 
 
     ''
@@ -64,7 +64,7 @@ function fileio::init()
     ' byte = f.readbyte(0)
     ' f.close()
     ''
-    global file_binary = 0x04
+    const file_binary = 0x04
 
 
     ''
@@ -78,7 +78,7 @@ function fileio::init()
     ' f.writeln("Hello!")
     ' f.close()
     ''
-    global file_truncate = 0x20
+    const file_truncate = 0x20
 
 
     ' This module is not allowed on the Playground

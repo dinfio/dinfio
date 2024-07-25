@@ -18,15 +18,15 @@ function core::init()
     ' A default instance of class `dinfio_info`. This constant stores all of Dinfio information
     '
     ' @example
-    ' ' Assuming you are running Dinfio 3.1.06 on Linux
+    ' ' Assuming you are running Dinfio 3.2.0 on Linux
     '
-    ' writeln(dinfio.version)    ' Output: 3.1.06
+    ' writeln(dinfio.version)    ' Output: 3.2.0
     '
     ' if dinfio.is_linux
     '     writeln("It's Linux")
     ' endif
     ''
-    global dinfio_info: dinfio
+    const dinfio_info: dinfio
 
 
     ''
@@ -36,7 +36,7 @@ function core::init()
     ' writeln(arguments[1])   ' Output: hello
     '                         ' if you are run: $ dinfio sample.fio hello
     ''
-    global arguments
+    const arguments
 
 
     ' Duplicate import
@@ -798,9 +798,9 @@ function brs(x, y, bit_width = 32, unsigned = false)
 ' Note: This class has no instantiation (constructor) method, please use constant `dinfio` instead
 '
 ' @example
-' ' Assuming you are running Dinfio 3.1.06 on Linux
+' ' Assuming you are running Dinfio 3.2.0 on Linux
 '
-' writeln(dinfio.version)    ' Output: 3.1.06
+' writeln(dinfio.version)    ' Output: 3.2.0
 '
 ' if dinfio.is_linux
 '     writeln("It's Linux")
