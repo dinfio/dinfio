@@ -1,0 +1,129 @@
+' Kruskal's Minimum Spanning Tree using Disjoint Set data structure
+' Original source code: https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2
+
+g = graph(4)
+
+g.add_edge(0, 1, 10)   ' vertex 1, vertex 2, weight
+g.add_edge(1, 3, 15)
+g.add_edge(2, 3, 4) 
+g.add_edge(2, 0, 6) 
+g.add_edge(0, 3, 5)
+
+mst = g.kruskal()
+print_solution(mst)
+
+class graph
+    field edges, v
+
+    function construct(v)
+        this.v = v
+        this.edges = []
+    stop
+
+    function add_edge(x, y, w)
+        append(this.edges, [w, x, y])
+    stop
+
+    function kruskal()
+        var s = disjoint_set(this.v)
+        var result = []
+        var cost = 0
+
+        this.__edges_sort(0, size(this.edges) - 1)
+
+        for i, 0, size(this.edges) - 1
+            w = this.edges[i][0]
+            x = this.edges[i][1]
+            y = this.edges[i][2]
+
+            if s.find(x) != s.find(y)
+                s.unite(x, y)
+                cost += w
+
+                append(result, {
+                    x: x,
+                    y: y,
+                    w: w
+                })
+            endif
+        endfor
+
+        return {
+            edges: result,
+            cost: cost
+        }
+    stop
+
+    function __edges_sort(low, high)
+        if low < high
+            pivot = this.edges[high][0]
+            i = low - 1
+
+            for j, low, high - 1
+                if this.edges[j][0] <= pivot
+                    i += 1
+
+                    temp = this.edges[i]
+                    this.edges[i] = this.edges[j]
+                    this.edges[j] = temp
+                endif
+            endfor
+
+            temp = this.edges[i + 1]
+            this.edges[i + 1] = this.edges[high]
+            this.edges[high] = temp
+
+            pivot = i + 1
+
+            this.__edges_sort(low, pivot - 1)
+            this.__edges_sort(pivot + 1, high)
+        endif
+    stop
+endclass
+
+class disjoint_set
+    field parent, rank
+
+    function construct(n)
+        this.parent = array(n)
+        this.rank = array(n)
+
+        for i, 0, n - 1
+            this.parent[i] = -1
+            this.rank[i] = 1
+        endfor
+    stop
+
+    function find(i)
+        if this.parent[i] == -1; return i; endif
+        this.parent[i] = this.find(this.parent[i])
+
+        return this.parent[i]
+    stop
+
+    function unite(x, y)
+        var s1 = this.find(x)
+        var s2 = this.find(y)
+
+        if s1 != s2
+            if this.rank[s1] < this.rank[s2]
+                this.parent[s1] = s2
+            elseif this.rank[s1] > this.rank[s2]
+                this.parent[s2] = s1
+            else
+                this.parent[s2] = s1
+                this.rank[s1] += 1
+            endif
+        endif
+    stop
+endclass
+
+function print_solution(mst)
+    writeln("Following are the edges in the constructed MST:")
+
+    for i, 0, size(mst.edges) - 1
+        writeln(mst.edges[i].x & " <-> " & mst.edges[i].y & " (" & mst.edges[i].w & ")")
+    endfor
+
+    writeln("\nMinimum cost spanning tree: " & mst.cost)
+stop

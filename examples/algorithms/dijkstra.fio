@@ -1,0 +1,66 @@
+' Finding shortest paths from a source to all vertices using Dijkstra's algorithm
+' Original source code: https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7
+
+graph = [
+    [0, 4, 0, 0, 0, 0, 0, 8, 0],
+    [4, 0, 8, 0, 0, 0, 0, 11, 0],
+    [0, 8, 0, 7, 0, 4, 0, 0, 2],
+    [0, 0, 7, 0, 9, 14, 0, 0, 0],
+    [0, 0, 0, 9, 0, 10, 0, 0, 0],
+    [0, 0, 4, 14, 10, 0, 2, 0, 0],
+    [0, 0, 0, 0, 0, 2, 0, 1, 6],
+    [8, 11, 0, 0, 0, 0, 1, 0, 7],
+    [0, 0, 2, 0, 0, 0, 6, 7, 0]
+]
+
+vertex_source = 0
+
+solutions = dijkstra(graph, vertex_source)
+print_solution(solutions, vertex_source)
+
+function dijkstra(graph, src)
+    var v = size(graph)
+    var dist = array(v)
+    var shortest_path = array(v)
+
+    for i, 0, v - 1
+        dist[i] = inf
+        shortest_path[i] = false
+    endfor
+
+    dist[src] = 0
+
+    for i, 0, v - 2
+        u = min_distance(dist, shortest_path)
+        shortest_path[u] = true
+
+        for j, 0, v - 1
+            if !shortest_path[j] && graph[u][j] != 0 && dist[u] != inf && dist[u] + graph[u][j] < dist[j]
+                dist[j] = dist[u] + graph[u][j]
+            endif
+        endfor
+    endfor
+
+    return dist
+stop
+
+function min_distance(dist, shortest_path)
+    var v = size(dist)
+    var min = inf
+    var min_index = 0
+    
+    for i, 0, v - 1
+        if shortest_path[i] == false && dist[i] <= min
+            min = dist[i]
+            min_index = i
+        endif
+    endfor
+
+    return min_index
+stop
+
+function print_solution(dist, src)
+    for i, 0, size(dist) - 1
+        writeln(src & " -> " & i & "\t= " & dist[i])
+    endfor
+stop

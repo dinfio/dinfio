@@ -1,0 +1,81 @@
+' Backtracking implementation for finding Hamiltonian Cycle in a Graph.
+' Original source code: https://www.geeksforgeeks.org/hamiltonian-cycle/
+
+graph_a = [
+    [0, 1, 0, 1, 0],   ' 0 -- 1 -- 2 
+    [1, 0, 1, 1, 1],   ' |   / \   | 
+    [0, 1, 0, 0, 1],   ' |  /   \  | 
+    [1, 1, 0, 0, 1],   ' | /     \ | 
+    [0, 1, 1, 1, 0]    ' 3 ------- 4
+]
+
+graph_b = [
+    [0, 1, 0, 1, 0],   ' 0 -- 1 -- 2 
+    [1, 0, 1, 1, 1],   ' |   / \   | 
+    [0, 1, 0, 0, 1],   ' |  /   \  | 
+    [1, 1, 0, 0, 0],   ' | /     \ | 
+    [0, 1, 1, 0, 0]    ' 3         4
+]
+
+print(hamiltonian_cycle(graph_a))
+print(hamiltonian_cycle(graph_b))
+
+function hamiltonian_cycle(graph)
+    var n = size(graph)
+    var path = array(n)
+
+    for i, 0, n - 1; path[i] = -1; endfor
+    path[0] = 0
+
+    if hamiltonian_cycle_util(graph, path, 1) == false; return []; endif
+    append(path, path[0])
+
+    return path
+stop
+
+function hamiltonian_cycle_util(graph, path, pos)
+    var n = size(graph)
+
+    if pos == n
+        if graph[path[pos - 1]][path[0]] == 1
+            return true
+        else
+            return false
+        endif
+    endif
+
+    for v, 1, n - 1
+        if is_safe(v, graph, path, pos)
+            path[pos] = v
+            if hamiltonian_cycle_util(graph, path, pos + 1); return true; endif
+            path[pos] = -1
+        endif
+    endfor
+
+    return false
+stop
+
+function is_safe(v, graph, path, pos)
+    if graph[path[pos - 1]][v] == 0; return false; endif
+
+    for i, 0, pos - 1
+        if path[i] == v; return false; endif
+    endfor
+
+    return true
+stop
+
+function print(path)
+    if size(path) == 0
+        writeln("Solution doesn't exist.")
+        return
+    endif
+
+    write("Solution exists: ")
+
+    for i, 0, size(path) - 1
+        write(path[i] & " ")
+    endfor
+
+    writeln()
+stop

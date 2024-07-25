@@ -11,7 +11,7 @@ stop
 class openai
     field api_key
 
-    function completion(prompt, raw_response = false, model = "text-davinci-003", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
+    function completion(prompt, raw_response = false, model = "gpt-3.5-turbo-instruct", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
         request = json.encode({
             "model": model,
             "prompt": prompt,
@@ -64,7 +64,7 @@ class openai
         endif
     stop
 
-    function completion_async(prompt, ref: callback, raw_response = false, model = "text-davinci-003", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
+    function completion_async(prompt, ref: callback, raw_response = false, model = "gpt-3.5-turbo-instruct", temperature = 0.9, max_tokens = 150, top_p = 1, frequency_penalty = 0, presence_penalty = 0.6, stop_sequence = ["\n"])
         process("openai_worker", [this.api_key, prompt, raw_response, model, temperature, max_tokens, top_p, frequency_penalty, presence_penalty, stop_sequence], nothing, callback)
         return true
     stop
