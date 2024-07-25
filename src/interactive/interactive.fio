@@ -11,40 +11,41 @@
 import fileio, string
 import regex, rl
 
-global __H_EMPTY__ = 0
-global __H_COMMENT__ = 1
-global __H_IF__ = 2
-global __H_ELSE__ = 3
-global __H_ELSE_IF__ = 4
-global __H_END_IF__ = 5
-global __H_WHILE__ = 6
-global __H_END_WHILE__ =  7
-global __H_FOR__ = 10
-global __H_END_FOR__ = 11
-global __H_RETURN__ = 12
-global __H_RETURN_VOID__ = 13
-global __H_YIELD__ = 14
-global __H_STOP__ = 15
-global __H_FUNCTION__ = 16
-global __H_EXIT_LOOP__ = 17
-global __H_VAR__ = 18
-global __H_GLOBAL__ = 19
-global __H_IMPORT__ = 20
-global __H_VARIABLE_ASSIGNMENT__ = 21
-global __H_VARIABLE_ASSIGNMENT_EXTENDED__ = 22
-global __H_PROCEDURE_CALL__ = 23
-global __H_CLASS__ = 24
-global __H_END_CLASS__ = 25
-global __H_FIELD__ = 26
-global __H_OTHER__ = 27
+const __H_EMPTY__ = 0
+const __H_COMMENT__ = 1
+const __H_IF__ = 2
+const __H_ELSE__ = 3
+const __H_ELSE_IF__ = 4
+const __H_END_IF__ = 5
+const __H_WHILE__ = 6
+const __H_END_WHILE__ =  7
+const __H_FOR__ = 10
+const __H_END_FOR__ = 11
+const __H_RETURN__ = 12
+const __H_RETURN_VOID__ = 13
+const __H_YIELD__ = 14
+const __H_STOP__ = 15
+const __H_FUNCTION__ = 16
+const __H_EXIT_LOOP__ = 17
+const __H_VAR__ = 18
+const __H_GLOBAL__ = 19
+const __H_CONST__ = 20
+const __H_IMPORT__ = 21
+const __H_VARIABLE_ASSIGNMENT__ = 22
+const __H_VARIABLE_ASSIGNMENT_EXTENDED__ = 23
+const __H_PROCEDURE_CALL__ = 24
+const __H_CLASS__ = 25
+const __H_END_CLASS__ = 26
+const __H_FIELD__ = 27
+const __H_OTHER__ = 28
 
-global __STYLE_DEFAULT__ = 0x00
-global __STYLE_BOLD__ = 0x01
-global __STYLE_RED__ = 0x1F
-global __STYLE_GREEN__ = 0x20
-global __STYLE_GREY__ = 0x25
+const __STYLE_DEFAULT__ = 0x00
+const __STYLE_BOLD__ = 0x01
+const __STYLE_RED__ = 0x1F
+const __STYLE_GREEN__ = 0x20
+const __STYLE_GREY__ = 0x25
 
-global __BEEP__ = 0x07
+const __BEEP__ = 0x07
 
 global last_commands = ""
 global batch_command = ""
@@ -62,11 +63,11 @@ global n_function = 0
 global n_class = 0
 
 if dinfio.is_windows
-    global tmp = "__interactive"
-    global history = dinfio.path & "temp/history"
+    const tmp = "__interactive"
+    const history = dinfio.path & "temp/history"
 else
-    global tmp = ".__interactive"
-    global history = unix_home() & ".dinfio_history"
+    const tmp = ".__interactive"
+    const history = unix_home() & ".dinfio_history"
 endif
 
 start
@@ -374,6 +375,8 @@ function parse_code(line)
         header = __H_VAR__
     elseif substring(line, 0, 7) == "global "
         header = __H_GLOBAL__
+    elseif substring(line, 0, 6) == "const "
+        header = __H_CONST__
     elseif substring(line, 0, 7) == "import "
         header = __H_IMPORT__
     elseif line == "start"
