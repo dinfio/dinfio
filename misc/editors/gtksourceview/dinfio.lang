@@ -45,6 +45,7 @@
       <keyword>field</keyword>
       <keyword>var</keyword>
       <keyword>global</keyword>
+      <keyword>const</keyword>
       <keyword>import</keyword>
       <keyword>endif</keyword>
       <keyword>endfor</keyword>

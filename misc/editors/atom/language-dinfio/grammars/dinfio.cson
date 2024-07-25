@@ -36,7 +36,7 @@
     'match': '\\b([01]+b)\\b'
   }
   {
-    'match': '\\b(if|else|elseif|while|for|return|yield|field|var|global|import|endif|endfor|endwhile|break|iif|ref|call|eval)\\b'
+    'match': '\\b(if|else|elseif|while|for|return|yield|field|var|global|const|import|endif|endfor|endwhile|break|iif|ref|call|eval)\\b'
     'name': 'keyword.control'
   }
   {

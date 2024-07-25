@@ -26,7 +26,7 @@ contexts:
     # strings in YAML. When using single quoted strings, only single quotes
     # need to be escaped: this is done by using two single quotes next to each
     # other.
-    - match: '\b(if|else|elseif|while|for|return|yield|field|var|global|import|endif|endfor|endwhile|break|iif|ref|call|eval|function|stop|class|endclass|start)\b'
+    - match: '\b(if|else|elseif|while|for|return|yield|field|var|global|const|import|endif|endfor|endwhile|break|iif|ref|call|eval|function|stop|class|endclass|start)\b'
       scope: keyword.control.fio
 
   numbers:

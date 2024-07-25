@@ -1,0 +1,83 @@
+{
+    "name": "dinfio",
+    "displayName": "Dinfio",
+    "description": "Dinfio Programming Language syntax highlighting",
+    "version": "0.0.3",
+    "publisher": "dinfio",
+    "icon": "images/logo.png",
+    "engines": {
+        "vscode": "^1.49.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onCommand:dinfio.run"
+    ],
+    "main": "./src/extension",
+    "contributes": {
+        "languages": [{
+            "id": "dinfio",
+            "aliases": ["Dinfio", "dinfio"],
+            "extensions": [".fio"],
+            "configuration": "./language-configuration.json",
+            "icon": {
+                "light": "./images/fio.png",
+                "dark": "./images/fio.png"
+            }
+        }],
+        "grammars": [{
+            "language": "dinfio",
+            "scopeName": "source.dinfio",
+            "path": "./syntaxes/dinfio.tmLanguage.json"
+        }],
+        "commands": [
+            {
+                "command": "dinfio.run",
+                "title": "Dinfio: Run File",
+                "icon": {
+                    "light": "./images/run-light.svg",
+                    "dark": "./images/run-dark.svg"
+                }
+            },
+            {
+                "command": "dinfio.interactive",
+                "title": "Dinfio: Open Interactive Mode"
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "resourceLangId == dinfio",
+                    "command": "dinfio.run",
+                    "group": "navigation"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "when": "resourceLangId == dinfio",
+                    "command": "dinfio.run",
+                    "group": "navigation"
+                }
+            ],
+            "editor/context": [
+                {
+                    "when": "resourceLangId == dinfio",
+                    "command": "dinfio.run",
+                    "group": "navigation"
+                },
+                {
+                    "when": "resourceLangId == dinfio",
+                    "command": "dinfio.interactive",
+                    "group": "navigation"
+                }
+            ]
+        }
+    },
+    "devDependencies": {
+        "typescript": "^3.8.3"
+    },
+    "__metadata": {
+        "publisherDisplayName": "dinfio.org"
+    }
+}
