@@ -18,7 +18,7 @@ const __H_ELSE__ = 3
 const __H_ELSE_IF__ = 4
 const __H_END_IF__ = 5
 const __H_WHILE__ = 6
-const __H_END_WHILE__ =  7
+const __H_END_WHILE__ = 7
 const __H_FOR__ = 10
 const __H_END_FOR__ = 11
 const __H_RETURN__ = 12
@@ -46,6 +46,7 @@ const __STYLE_GREEN__ = 0x20
 const __STYLE_GREY__ = 0x25
 
 const __BEEP__ = 0x07
+const __VOID__ = "function __void(_ = 0); return true; stop"
 
 global last_commands = ""
 global batch_command = ""
@@ -54,7 +55,6 @@ global last_functions = ""
 global last_classes = ""
 global functions = ""
 global classes = ""
-global void = ""
 
 global n_if = 0
 global n_for = 0
@@ -82,7 +82,6 @@ function init()
     writeln("Type \qhelp\q to get help.\n")
 
     last_commands = "import math, string, time, fileio\n"
-    void = "function __void(_ = 0); return true; stop"
     
     rl_loadhistory(history)
     rl_setcompletion([
@@ -226,7 +225,7 @@ function loop()
                                 colourise(__STYLE_BOLD__)
                                 colourise(__STYLE_GREEN__)
 
-                                code = last_commands & batch_command & printed_command & last_functions & functions & last_classes & classes & "\n" & void
+                                code = last_commands & batch_command & printed_command & last_functions & functions & last_classes & classes & "\n" & __VOID__
                                 result = run_code(code)
 
                                 if result == 0
