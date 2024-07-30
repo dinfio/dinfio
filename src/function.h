@@ -14,6 +14,7 @@
 
 uint_fast16_t register_function(string name, uint_fast8_t type) {
     uint_fast16_t counter;
+    if (__registered_functions.find(name) != __registered_functions.end()) error_message("Function '" + name + "()' is already declared");
 
     if (type == __REG_CLASS__) {
         counter = __BUCKET_CLASS__ + __address_class++;
