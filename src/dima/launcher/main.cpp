@@ -20,7 +20,7 @@ using namespace std;
 #ifdef __linux__
     const string __DINFIO_PATH__ = "/usr/local/dinfio/";
 #elif __APPLE__
-    const string __DINFIO_PATH__ = "/Library/Dinfio/3.1/";
+    const string __DINFIO_PATH__ = "/Library/Dinfio/3.2/";
 #else
     const string __DINFIO_PATH__ = "C:/Dinfio/";
 #endif

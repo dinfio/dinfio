@@ -1,6 +1,6 @@
 ' --------------------------------------------------
 '  Dima: Dinfio Module Manager
-'  Version: 1.0.1
+'  Version: 1.0.2
 ' --------------------------------------------------
 '  By: Muhammad Faruq Nuruddinsyah
 '  Copyright (C) 2014-2024. All Rights Reserved.
@@ -9,8 +9,8 @@
 ' --------------------------------------------------
 
 function parser::init()
-    global __comment__ = 1
-    global __function__ = 2
+    const __H_COMMENT__ = 1
+    const __H_FUNCTION__ = 2
 stop
 
 function parse(file)
@@ -36,7 +36,7 @@ function parse(file)
     for i, 0, size(code) - 1
         c = __parse_line(trim(code[i]))
 
-        if c.header == __comment__
+        if c.header == __H_COMMENT__
             if c.start_doc
                 if !start_doc
                     start_doc = true
@@ -51,7 +51,7 @@ function parse(file)
             endif
         endif
 
-        if c.header == __function__
+        if c.header == __H_FUNCTION__
             if c.init
                 info = __parse_comment(current_comment)
                 current_comment = ""
@@ -71,7 +71,7 @@ stop
 function __parse_line(line)
     if subleft(line, 1) == "'"
         return {
-            header: __comment__,
+            header: __H_COMMENT__,
             body: iif(length(line) > 1, rtrim(substring(line, 2)), ""),
             start_doc: substring(line, 1, 1) == "'"
         }
@@ -79,7 +79,7 @@ function __parse_line(line)
         body = trim(substring(line, 9))
 
         return {
-            header: __function__,
+            header: __H_FUNCTION__,
             init: find(body, "::init") != -1
         }
     endif

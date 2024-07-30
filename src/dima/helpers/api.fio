@@ -1,6 +1,6 @@
 ' --------------------------------------------------
 '  Dima: Dinfio Module Manager
-'  Version: 1.0.1
+'  Version: 1.0.2
 ' --------------------------------------------------
 '  By: Muhammad Faruq Nuruddinsyah
 '  Copyright (C) 2014-2024. All Rights Reserved.
@@ -13,13 +13,13 @@ function api::init()
         exit("Dima: Token is not provided")
     endif
 
-    global __server__ = "https://dima.dinfio.net/api/"
-    global __token__ = arguments[1]
-    global __temp_dir__ = platform_windows(dinfio.path & "temp\", "/tmp/")
-    global __os__ = platform("linux", "macos", "windows")
-    global __gtk_version__ = 0   ' For Linux only: 2 or 3
-    global __macos_arm64__ = true
-    global __linux_armv7__ = false
+    const __server__ = "https://dima.dinfio.net/api/"
+    const __token__ = arguments[1]
+    const __temp_dir__ = platform_windows(dinfio.path & "temp\", "/tmp/")
+    const __os__ = platform("linux", "macos", "windows")
+    const __gtk_version__ = 0   ' For Linux only: 2 or 3
+    const __macos_arm64__ = true
+    const __linux_armv7__ = false
 
     url::ssl_verify_peer(0)      ' Had to do it since some old machine failed to verify server certificate
 stop
