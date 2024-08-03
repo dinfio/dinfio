@@ -1192,9 +1192,9 @@ namespace core {
             result = r & mask;
         } else {
             unsigned int mask = pow(2, bw) - 1;
-            unsigned int ox = x;
-            unsigned int oy = y;
-            unsigned int r = 0;
+            int ox = x;
+            int oy = y;
+            int r = 0;
 
             ox &= mask;
             oy &= mask;
