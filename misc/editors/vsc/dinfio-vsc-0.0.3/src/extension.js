@@ -9,6 +9,7 @@ function activate(context) {
         let file = (fileUri !== undefined) ? fileUri.path : vscode.window.activeTextEditor.document.uri.path;
 
         if (file.substring(0, 6) == "file://") file = file.substring(7);
+        if (file.substring(2, 3) == ":") file = file.substring(1);
 
         if (terminal === undefined) {
             terminal = vscode.window.createTerminal("Dinfio");
