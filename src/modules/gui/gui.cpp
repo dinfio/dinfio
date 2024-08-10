@@ -83,6 +83,7 @@
 #define __GUI_DRAW_TEXTCOLOUR__ 15
 #define __GUI_DRAW_LINES__ 16
 #define __GUI_DRAW_BACKGROUND__ 17
+#define __GUI_DRAW_IMAGE_DATA__ 18
 
 Connector* connector;
 
@@ -91,6 +92,7 @@ uint_fast16_t __gui_window, __gui_panel, __gui_labeled_panel, __gui_tab, __gui_b
 uint_fast16_t __gui_radiobox, __gui_checkbox, __gui_listbox, __gui_combobox, __gui_timer;
 uint_fast16_t __gui_stack, __gui_grid, __gui_imagebox;
 uint_fast16_t __gui_menubar, __gui_menu;
+uint_fast16_t __gui_image_data;
 
 uint_fast16_t __gui_window_show, __gui_window_close, __gui_window_settitle, __gui_window_gettitle;
 uint_fast16_t __gui_window_isminimised, __gui_window_ismaximised, __gui_window_setfullscreen, __gui_window_isfullscreen;
@@ -114,6 +116,8 @@ uint_fast16_t __gui_colour_rgba, __gui_colour_rgb, __gui_colour_hex;
 
 uint_fast16_t __gui_imagebox_setimage, __gui_imagebox_getimage, __gui_imagebox_setscalemode;
 uint_fast16_t __gui_imagebox_getoriginalwidth, __gui_imagebox_getoriginalheight;
+
+uint_fast16_t __gui_image_data_setdata, __gui_image_data_loadfromfile;
 
 uint_fast16_t __gui_stack_add, __gui_stack_addspacer;
 uint_fast16_t __gui_grid_add, __gui_grid_addgrowablecol, __gui_grid_addgrowablerow;
@@ -142,6 +146,7 @@ uint_fast16_t __gui_draw_setpen, __gui_draw_setbrush, __gui_draw_setfont, __gui_
 uint_fast16_t __gui_draw_line, __gui_draw_lines, __gui_draw_rectangle, __gui_draw_point, __gui_draw_circle, __gui_draw_ellipse;
 uint_fast16_t __gui_draw_arc, __gui_draw_ellipticarc, __gui_draw_polygon, __gui_draw_roundedrectangle;
 uint_fast16_t __gui_draw_spline, __gui_draw_text, __gui_draw_gettextwidth, __gui_draw_gettextheight;
+uint_fast16_t __gui_draw_image_data;
 uint_fast16_t __gui_draw_clear, __gui_draw_save, __gui_draw_now;
 
 uint_fast16_t __gui_dialog_open, __gui_dialog_save, __gui_dialog_multiple, __gui_dialog_directory;
@@ -255,6 +260,22 @@ public:
     wxMenu* __holder;
 
     GUI_Menu(): GUI(__GUI_MENU__) {}
+};
+
+class GUI_ImageData: public Base {
+public:
+    int __w;
+    int __h;
+    bool __is_loaded;
+    unsigned char* __bytes;
+    int __size;
+
+    GUI_ImageData(int w, int h) {
+        __w = w;
+        __h = h;
+        __is_loaded = false;
+        __size = 0;
+    }
 };
 
 class DrawingCommand {
@@ -484,6 +505,22 @@ public:
     }
 };
 
+class DrawingImageData: public DrawingCommand {
+public:
+    int __x, __y, __w, __h;
+    bool __use_mask;
+    GUI_ImageData* __image_data;
+
+    DrawingImageData(GUI_ImageData* image_data, int x, int y, int w, int h, bool use_mask): DrawingCommand(__GUI_DRAW_IMAGE_DATA__) {
+        __image_data = image_data;
+        __x = x;
+        __y = y;
+        __w = w;
+        __h = h;
+        __use_mask = use_mask;
+    }
+};
+
 class GUI_Panel: public GUI {
 public:
     wxPanel* __holder;
@@ -695,6 +732,19 @@ gc<DataType> __new_colour(int red, int green, int blue, int alpha) {
     gc<Object> obj = result->__value_object;
 
     GUI_Colour* c = new GUI_Colour(red, green, blue, alpha);
+    obj->__holder_pointer = c;
+
+    return result;
+}
+
+gc<DataType> __new_image_data(int w, int h) {
+    gc<DataType> result = connector->__create_object("image_data");
+    gc<Object> obj = result->__value_object;
+
+    connector->__object_set_function(result, "setdata", __gui_image_data_setdata);
+    connector->__object_set_function(result, "loadfromfile", __gui_image_data_loadfromfile);
+
+    GUI_ImageData* c = new GUI_ImageData(w, h);
     obj->__holder_pointer = c;
 
     return result;
@@ -955,9 +1005,14 @@ void Module::__init(Connector* c) {
     __gui_timer = connector->__register_function("gui_timer");
     __gui_imagebox = connector->__register_function("gui_imagebox");
 
+    __gui_image_data = connector->__register_function("image_data");
+
     __gui_colour_rgba = connector->__register_function("gui_colours::rgba");
     __gui_colour_rgb = connector->__register_function("gui_colours::rgb");
     __gui_colour_hex = connector->__register_function("gui_colours::hex");
+
+    __gui_image_data_setdata = connector->__register_function("image_data::setdata");
+    __gui_image_data_loadfromfile = connector->__register_function("image_data::loadfromfile");
 
     __gui_window_show = connector->__register_function("gui_window::show");
     __gui_window_close = connector->__register_function("gui_window::close");
@@ -1116,6 +1171,7 @@ void Module::__init(Connector* c) {
     __gui_draw_roundedrectangle = connector->__register_function("gui_panel::draw_roundedrectangle");
     __gui_draw_spline = connector->__register_function("gui_panel::draw_spline");
     __gui_draw_text = connector->__register_function("gui_panel::draw_text");
+    __gui_draw_image_data = connector->__register_function("gui_panel::draw_image_data");
     __gui_draw_gettextwidth = connector->__register_function("gui_panel::draw_gettextwidth");
     __gui_draw_gettextheight = connector->__register_function("gui_panel::draw_gettextheight");
     __gui_draw_clear = connector->__register_function("gui_panel::draw_clear");
@@ -1717,6 +1773,18 @@ void __panel_render(wxDC& dc, GUI_Panel* gui) {
             }
 
             dc.DrawLines(n, points);
+        } else if (d->__type == __GUI_DRAW_IMAGE_DATA__) {
+            DrawingImageData* dd = (DrawingImageData*) d;
+            int x = dd->__x;
+            int y = dd->__y;
+            int w = dd->__w;
+            int h = dd->__h;
+            bool use_mask = dd->__use_mask;
+
+            wxImage img = wxImage(dd->__image_data->__w, dd->__image_data->__h, dd->__image_data->__bytes, true);
+            if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w, h);
+            wxBitmap bmp = wxBitmap(img);
+            dc.DrawBitmap(bmp, x, y, use_mask);
         }
     }
 }
@@ -2090,6 +2158,7 @@ gc<DataType> __create_panel(GUI* parent, int x, int y, int width, int height, bo
     connector->__object_set_function(result, "draw_polygon", __gui_draw_polygon);
     connector->__object_set_function(result, "draw_roundedrectangle", __gui_draw_roundedrectangle);
     connector->__object_set_function(result, "draw_spline", __gui_draw_spline);
+    connector->__object_set_function(result, "draw_image_data", __gui_draw_image_data);
     connector->__object_set_function(result, "draw_text", __gui_draw_text);
     connector->__object_set_function(result, "draw_gettextwidth", __gui_draw_gettextwidth);
     connector->__object_set_function(result, "draw_gettextheight", __gui_draw_gettextheight);
@@ -6367,6 +6436,36 @@ gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, u
 
         connector->__remove_garbage(params.at(0), d);
         return __new_colour(red, green, blue, alpha);
+    
+    } else if (func_id == __gui_image_data) {
+        if (params.size() < 2) connector->__error_message_params("image_data", 2);
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+        if (d->__type != __TYPE_DOUBLE__) connector->__error_message("image_data(): parameter #1 must be a number");
+        if (e->__type != __TYPE_DOUBLE__) connector->__error_message("image_data(): parameter #2 must be a number");
+
+        return __new_image_data(d->__value_double, e->__value_double);
+    } else if (func_id == __gui_image_data_setdata) {
+        if (params.size() < 1) connector->__error_message_param("image_data::setdata");
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        if (d->__type != __TYPE_ARRAY__) connector->__error_message("image_data::setdata(): parameter #1 must be an array");
+
+        GUI_ImageData* img = (GUI_ImageData*) obj->__holder_pointer;
+
+        if (!img->__is_loaded) {
+            img->__bytes = (unsigned char*) malloc(d->__value_array->__elements.size());
+            img->__is_loaded = true;
+            img->__size = d->__value_array->__elements.size();
+        } else {
+            if (img->__size != d->__value_array->__elements.size()) connector->__error_message("image_data::setdata(): new data size must be equal to the current data size");
+        }
+
+        for (int i = 0; i < d->__value_array->__elements.size(); i++) {
+            img->__bytes[i] = (unsigned char) d->__value_array->__elements[i]->__value_double;
+        }
+
+        result->__type = __TYPE_BOOL__;
+        result->__value_bool = true;
 
 
     // Start of drawing functions
@@ -6870,6 +6969,63 @@ gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, u
         result->__value_bool = true;
 
         connector->__remove_garbage(params.at(0), d);
+    
+    } else if (func_id == __gui_draw_image_data) {
+        if (params.size() < 1) connector->__error_message_param("gui_panel::draw_image_data");
+        gc<DataType> d = connector->__get_value(params.at(0), caller_id);
+        if (d->__type != __TYPE_OBJECT__) connector->__error_message("gui_panel::draw_image_data(): parameter #1 must be an object");
+        if (d->__value_object->__name != "image_data") connector->__error_message("gui_panel::draw_image_data(): parameter #1 must be an image_data");
+        
+        int x = 0;
+        int y = 0;
+        int w = -1;
+        int h = -1;
+        bool use_mask = false;
+
+        if (params.size() > 1) {
+            gc<DataType> e = connector->__get_value(params.at(1), caller_id);
+            if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_image_data(): parameter #2 must be a number");
+            x = e->__value_double;
+        }
+
+        if (params.size() > 2) {
+            gc<DataType> e = connector->__get_value(params.at(2), caller_id);
+            if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_image_data(): parameter #3 must be a number");
+            y = e->__value_double;
+        }
+
+        if (params.size() > 3) {
+            gc<DataType> e = connector->__get_value(params.at(3), caller_id);
+            if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_image_data(): parameter #4 must be a number");
+            w = e->__value_double;
+        }
+
+        if (params.size() > 4) {
+            gc<DataType> e = connector->__get_value(params.at(4), caller_id);
+            if (e->__type != __TYPE_DOUBLE__) connector->__error_message("gui_panel::draw_image_data(): parameter #5 must be a number");
+            h = e->__value_double;
+        }
+
+        if (params.size() > 5) {
+            gc<DataType> e = connector->__get_value(params.at(5), caller_id);
+            if (e->__type != __TYPE_BOOL__) connector->__error_message("gui_panel::draw_image_data(): parameter #6 must be a boolean");
+            use_mask = e->__value_bool;
+        }
+
+        GUI_Panel* panel = (GUI_Panel*) obj->__holder_pointer;
+        if (!panel->__canvas_mode) connector->__error_message("gui_panel::draw_image_data(): canvas mode of this gui_panel must be true");
+        GUI_ImageData* img = (GUI_ImageData*) d->__value_object->__holder_pointer;
+
+        if (w == -1) w = img->__w;
+        if (h == -1) h = img->__h;
+
+        panel->__drawing.push_back(new DrawingImageData(img, x, y, w, h, use_mask));
+
+        result->__type = __TYPE_BOOL__;
+        result->__value_bool = true;
+
+        connector->__remove_garbage(params.at(0), d);
+    
     } else if (func_id == __gui_draw_gettextwidth) {
         if (params.size() < 1) connector->__error_message_param("gui_panel::draw_gettextwidth");
         gc<DataType> d = connector->__get_value(params.at(0), caller_id);
