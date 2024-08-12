@@ -2218,11 +2218,8 @@ gc<DataType> __create_panel(GUI* parent, int x, int y, int width, int height, bo
     }
 
     if (as_canvas) gui->Bind(wxEVT_PAINT, &__event_gui_panel_paint, g->__index);
-
-    #ifndef _WIN32
-        if (as_canvas) gui->Bind(wxEVT_ERASE_BACKGROUND, &__event_gui_panel_erase, g->__index);
-    #endif
-
+    if (as_canvas) gui->Bind(wxEVT_ERASE_BACKGROUND, &__event_gui_panel_erase, g->__index);
+    
     __gui_bind_events(gui, g->__index);
 
     __gui_map[g->__index] = g;
