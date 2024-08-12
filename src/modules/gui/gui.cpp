@@ -1780,10 +1780,17 @@ void __panel_render(wxDC& dc, GUI_Panel* gui) {
             int w = dd->__w;
             int h = dd->__h;
             bool use_mask = dd->__use_mask;
-
+            
             wxImage img = wxImage(dd->__image_data->__w, dd->__image_data->__h, dd->__image_data->__bytes, true);
-            if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w, h);
-            wxBitmap bmp = wxBitmap(img);
+
+            #ifdef __APPLE__
+                if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w * 2, h * 2);
+                wxBitmap bmp = wxBitmap(img, -1, 2.0);
+            #else
+                if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w, h);
+                wxBitmap bmp = wxBitmap(img);
+            #endif
+
             dc.DrawBitmap(bmp, x, y, use_mask);
         }
     }
@@ -2211,7 +2218,10 @@ gc<DataType> __create_panel(GUI* parent, int x, int y, int width, int height, bo
     }
 
     if (as_canvas) gui->Bind(wxEVT_PAINT, &__event_gui_panel_paint, g->__index);
-    if (as_canvas) gui->Bind(wxEVT_ERASE_BACKGROUND, &__event_gui_panel_erase, g->__index);
+
+    #ifndef _WIN32
+        if (as_canvas) gui->Bind(wxEVT_ERASE_BACKGROUND, &__event_gui_panel_erase, g->__index);
+    #endif
 
     __gui_bind_events(gui, g->__index);
 
