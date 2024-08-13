@@ -155,6 +155,8 @@ uint_fast16_t __gui_clipboard_available, __gui_clipboard_get, __gui_clipboard_se
 
 int __key_code;
 int __screen_width, __screen_height, __screen_innerwidth, __screen_innerheight;
+double __scale_factor = 1.0, __dpi_factor = 1.0;
+bool __factor_set = false;
 
 class GUI_App: public wxApp {
 public:
@@ -1817,14 +1819,15 @@ void __panel_render(wxDC& dc, GUI_Panel* gui) {
             bool use_mask = dd->__use_mask;
             
             wxImage img = wxImage(dd->__image_data->__w, dd->__image_data->__h, dd->__image_data->__bytes, true);
+            wxBitmap bmp;
 
-            #ifdef __APPLE__
-                img.Rescale(w * 2, h * 2);
-                wxBitmap bmp = wxBitmap(img, -1, 2.0);
-            #else
+            if (__scale_factor > 1.0) {
+                img.Rescale(w * __scale_factor, h * __scale_factor);
+                bmp = wxBitmap(img, -1, __scale_factor);
+            } else {
                 if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w, h);
-                wxBitmap bmp = wxBitmap(img);
-            #endif
+                bmp = wxBitmap(img);
+            }
 
             dc.DrawBitmap(bmp, x, y, use_mask);
         } else if (d->__type == __GUI_DRAW_IMAGE__) {
@@ -2026,6 +2029,12 @@ gc<DataType> __create_window(string title, int width, int height, bool resizable
 
     wxFrame* frame = new wxFrame(NULL, w->__index, wxString::FromUTF8(title.c_str()), wxDefaultPosition, wxSize(width, height), style);
     wxPanel* panel = new wxPanel(frame, w->__index);
+
+    if (!__factor_set) {
+        __scale_factor = frame->GetContentScaleFactor();
+        __dpi_factor = frame->GetDPIScaleFactor();
+        __factor_set = true;
+    }
 
     #ifdef _WIN32
         frame->SetIcon(wxIcon("FIO-ICON-3"));
