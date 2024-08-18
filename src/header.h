@@ -67,8 +67,8 @@ const string __DINFIO_VERSION_MAJOR__ = "3";
 const string __DINFIO_VERSION_MINOR__ = "2";
 const string __DINFIO_VERSION_REVISION__ = "0";
 const string __DINFIO_VERSION__ =  __DINFIO_VERSION_MAJOR__ + "." + __DINFIO_VERSION_MINOR__ + "." + __DINFIO_VERSION_REVISION__;
-const string __DINFIO_BUILD_DATE_RAW__ = "2024-mm-dd";
-const string __DINFIO_BUILD_DATE__ = "2024";
+const string __DINFIO_BUILD_DATE_RAW__ = "2024-08-18";
+const string __DINFIO_BUILD_DATE__ = "18 August 2024";
 const string __MODULES_PATH__ = __DINFIO_PATH__ + "modules/";
 
 
