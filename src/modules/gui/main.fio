@@ -131,6 +131,8 @@ class gui_panel: gui
     function draw_polygon(array: points, x_offset = 0, y_offset = 0, fill_mode = 0)
     function draw_spline(array: points)
     function draw_lines(array: points)
+    function draw_image(image: image, x = 0, y = 0)
+    function draw_image_data(image_data: image_data, x = 0, y = 0, width = -1, height = -1, use_mask = false)
     function draw_gettextwidth(text)
     function draw_gettextheight(text)
     function draw_save(file_path, use_alpha = false)
@@ -273,6 +275,16 @@ class gui_menu
     function setchecked(item_id, boolean)
     function isenable(item_id)
     function ischecked(item_id)
+endclass
+
+class image
+    function construct(image_path)
+endclass
+
+class image_data
+    function construct(width, height)
+    function setdata(array: data)
+    function savetofile(image_path, width = -1, height = -1)
 endclass
 
 class message
