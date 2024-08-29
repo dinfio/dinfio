@@ -9,7 +9,7 @@
 ' --------------------------------------------------
 
 start
-    writeln("Usage: dinfio [file | option] [arg ...]\n")
+    writeln("Usage: dinfio [file [arg ...] | option]\n")
     writeln("file          File .fio to run")
     writeln("arg ...       Arguments passed to programme\n")
     writeln("Options:")
