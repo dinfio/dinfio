@@ -218,6 +218,7 @@ AST_Array* parse_array(string& expression) {
     AST_Array* result = new AST_Array(elements[0]);
 
     for (int i = 1; i < elements.size(); i++) {
+        if (elements[i] == "") error_message("Expected array index of '" + elements[0] + "'");
         result->__indices.push_back(parse_expression(elements[i]));
     }
 
@@ -227,12 +228,16 @@ AST_Array* parse_array(string& expression) {
 AST_Object* parse_object(string& expression) {
     vector<string> attributes = parse_object_attributes(expression);
     AST_Object* result = new AST_Object(attributes[0]);
+
+    if (attributes[0] == "") error_message("Expected object name");
+    if (attributes.size() <= 1) error_message("Expected attribute of '" + attributes[0] + "'");
     
     result->__array_holder = NULL;
     if (right(attributes[0], 1) == "]") result->__array_holder = parse_array(attributes[0]);
 
     for (int i = 1; i < attributes.size(); i++) {
         string a = attributes[i];
+        if (a == "") error_message("Expected attribute of '" + attributes[0] + "'");
 
         if (right(a, 1) == "]") {
             result->__attributes.push_back(parse_array(a));
