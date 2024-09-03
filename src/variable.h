@@ -113,21 +113,21 @@ gc<DataType> get_value(AST* expression, uint_fast32_t& caller_id) {
             return r;
         } else if (opr == __AST_OPERATOR_DIVIDE__) {
             r = new_gc<DataType>(__TYPE_DOUBLE__);
-            if (b->__value_double == 0) error_message("Division by zero");
+            if (b->__value_double == 0) error_message("Runtime error: division by zero");
 
             r->__value_double = a->__value_double / b->__value_double;
             
             return r;
         } else if (opr == __AST_OPERATOR_INT_DIVIDE__) {
             r = new_gc<DataType>(__TYPE_DOUBLE__);
-            if (b->__value_double == 0) error_message("Division by zero");
+            if (b->__value_double == 0) error_message("Runtime error: division by zero");
 
             r->__value_double = (int) (a->__value_double / b->__value_double);
             
             return r;
         } else if (opr == __AST_OPERATOR_MODULO__) {
             r = new_gc<DataType>(__TYPE_DOUBLE__);
-            if (b->__value_double == 0) error_message("Division by zero");
+            if (b->__value_double == 0) error_message("Runtime error: division by zero");
             
             r->__value_double = fmod(a->__value_double, b->__value_double);
             
