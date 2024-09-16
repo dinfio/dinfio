@@ -21,17 +21,11 @@ function __quicksort(data, low, high)
         for j, low, high - 1
             if data[j] <= pivot
                 i += 1
-
-                temp = data[i]
-                data[i] = data[j]
-                data[j] = temp
+                [data[i], data[j]] = [data[j], data[i]]
             endif
         endfor
 
-        temp = data[i + 1]
-        data[i + 1] = data[high]
-        data[high] = temp
-
+        [data[i + 1], data[high]] = [data[high], data[i + 1]]
         pivot = i + 1
 
         __quicksort(data, low, pivot - 1)
