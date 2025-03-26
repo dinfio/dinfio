@@ -5,12 +5,12 @@ Before building Dinfio, please make sure you have all the [required build tools 
 ## Getting the Source Code
 
 Download the source code by cloning the git repository:
-```s
+``` sh
 $ git clone https://github.com/dinfio/dinfio.git
 ```
 
 After the source code downloaded, go to directory `dinfio`:
-```s
+``` sh
 $ cd dinfio
 ```
 
@@ -36,33 +36,33 @@ And compile:
 
 - On Linux x86_64:
 
-    ```s
+    ``` sh
     $ ./compile_linux.sh
     ```
 - On Linux ARMv7:
 
-    ```s
+    ``` sh
     $ ./compile_linux_armv7.sh
     ```
 - On Linux Docker:
 
-    ```s
+    ``` sh
     $ ./compile_linux_docker.sh
     ```
 - On macOS:
 
-    ```s
+    ``` sh
     $ ./compile_macos.sh
     ```
 - On Windows:
 
-    ``` s
+    ```
     > compile_windows.bat
     ```
 
 Once it is compiled, go to your build path (`cd build/`), and run Dinfio executable:
 
-``` s
+``` sh
 $ ./dinfio -v
 ```
 
@@ -72,7 +72,7 @@ If you see the Dinfio version, then Dinfio is successfully compiled.
 
 You can run test below to make sure all of the modules are well compiled:
 
-``` s
+``` sh
 $ ./dinfio ../tests/modules.fio
 ```
 
@@ -80,10 +80,10 @@ If you do not see any error message, then the modules are successfully and well 
 
 Please note that module `url` and `gui` are not included in the test above. You can run test below to test module `url` and/or `gui` individually:
 
-``` s
+``` sh
 $ ./dinfio ../tests/module_url.fio
 ```
-``` s
+``` sh
 $ ./dinfio ../tests/module_gui.fio
 ```
 
