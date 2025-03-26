@@ -21,22 +21,22 @@ Please follow these steps to build Dima:
 
     - And compile:
         - On Linux x86_64, ARMv7, Docker:
-            ```s
+            ``` sh
             $ ./compile_linux.sh
             ```
 
         - On macOS:
-            ```s
+            ``` sh
             $ ./compile_macos.sh
             ```
 
         - On Windows:
-            ```s
+            ```
             > compile_windows.bat
             ```
 
 - Test the Dima:
-    ```s
+    ``` sh
     $ cd ../../build/dima/
     $ ./dima list
     ```
