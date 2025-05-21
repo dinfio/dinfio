@@ -247,7 +247,7 @@ class gui_stack
 endclass
 
 class gui_grid
-    function construct(rows, cols, attach_to, vertical_gap = 0, horizontal_gap = 0, grow_all = falseo)
+    function construct(rows, cols, attach_to, vertical_gap = 0, horizontal_gap = 0, grow_all = false)
     function add(gui, stretch = false, flags = 0, padding = 0)
     function addgrowablecol(index)
     function addgrowablerow(index)
