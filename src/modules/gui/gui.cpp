@@ -2030,6 +2030,11 @@ gc<DataType> __create_window(string title, int width, int height, bool resizable
     wxFrame* frame = new wxFrame(NULL, w->__index, wxString::FromUTF8(title.c_str()), wxDefaultPosition, wxSize(width, height), style);
     wxPanel* panel = new wxPanel(frame, w->__index);
 
+    int delta_width = width - frame->GetClientSize().GetWidth();
+    int delta_height = height - frame->GetClientSize().GetHeight();
+
+    frame->SetSize(wxSize(width + delta_width, height + delta_height));
+
     if (!__factor_set) {
         __scale_factor = frame->GetContentScaleFactor();
         __dpi_factor = frame->GetDPIScaleFactor();

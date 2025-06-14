@@ -37,7 +37,7 @@ function gui::init()
     exit("import gui: this module is not available in this Playground")
 stop
 
-function messagebox(msg, title = "", style = message.ok + message.info)
+function messagebox(content, title = "", style = message.ok + message.info)
 function getkeycode()
 
 class gui
@@ -98,7 +98,7 @@ class gui
 endclass
 
 class gui_window: gui
-    function construct(title = "", width = 220, height = 160, resizable = true, minimisable = true, closable = true)
+    function construct(title = "", inner_width = 220, inner_height = 160, resizable = true, minimisable = true, closable = true)
 
     function show()
     function close()
