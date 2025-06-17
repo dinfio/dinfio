@@ -1821,13 +1821,18 @@ void __panel_render(wxDC& dc, GUI_Panel* gui) {
             wxImage img = wxImage(dd->__image_data->__w, dd->__image_data->__h, dd->__image_data->__bytes, true);
             wxBitmap bmp;
 
-            if (__scale_factor > 1.0) {
-                img.Rescale(w * __scale_factor, h * __scale_factor);
-                bmp = wxBitmap(img, -1, __scale_factor);
-            } else {
+            #ifndef __RPI__
+                if (__scale_factor > 1.0) {
+                    img.Rescale(w * __scale_factor, h * __scale_factor);
+                    bmp = wxBitmap(img, -1, __scale_factor);
+                } else {
+                    if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w, h);
+                    bmp = wxBitmap(img);
+                }
+            #else
                 if (w != dd->__image_data->__w || h != dd->__image_data->__h) img.Rescale(w, h);
                 bmp = wxBitmap(img);
-            }
+            #endif
 
             dc.DrawBitmap(bmp, x, y, use_mask);
         } else if (d->__type == __GUI_DRAW_IMAGE__) {
@@ -2035,11 +2040,15 @@ gc<DataType> __create_window(string title, int width, int height, bool resizable
 
     frame->SetSize(wxSize(width + delta_width, height + delta_height));
 
-    if (!__factor_set) {
-        __scale_factor = frame->GetContentScaleFactor();
-        __dpi_factor = frame->GetDPIScaleFactor();
+    #ifndef __RPI__
+        if (!__factor_set) {
+            __scale_factor = frame->GetContentScaleFactor();
+            __dpi_factor = frame->GetDPIScaleFactor();
+            __factor_set = true;
+        }
+    #else
         __factor_set = true;
-    }
+    #endif
 
     #ifdef _WIN32
         frame->SetIcon(wxIcon("FIO-ICON-3"));
