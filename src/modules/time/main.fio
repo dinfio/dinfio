@@ -298,7 +298,7 @@ function get_timezone(timestamp = now(), utc = false)
 ' @param number milliseconds Total milliseconds to sleep
 '
 ' @example
-' import asynchronous
+' import time
 '
 ' writeln("Sleep for 1 second")
 ' sleep(1000)
@@ -313,7 +313,7 @@ function sleep(milliseconds)
 ' @param number seconds Total seconds to sleep
 '
 ' @example
-' import asynchronous
+' import time
 '
 ' writeln("Sleep for 1 second")
 ' sleep_s(1)
