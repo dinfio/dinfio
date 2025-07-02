@@ -20,7 +20,7 @@ Please follow these steps to build Dima:
         ```
 
     - And compile:
-        - On Linux x86_64, ARMv7, Docker:
+        - On Linux x86_64, ARMv7, ARM64, Docker:
             ``` sh
             $ ./compile_linux.sh
             ```

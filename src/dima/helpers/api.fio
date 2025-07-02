@@ -18,8 +18,9 @@ function api::init()
     const __temp_dir__ = platform_windows(dinfio.path & "temp\", "/tmp/")
     const __os__ = platform("linux", "macos", "windows")
     const __gtk_version__ = 0   ' For Linux only: 2 or 3
-    const __macos_arm64__ = true
+    const __macos_arm64__ = false
     const __linux_armv7__ = false
+    const __linux_arm64__ = false
 
     url::ssl_verify_peer(0)      ' Had to do it since some old machine failed to verify server certificate
 stop
@@ -33,6 +34,7 @@ function call_api(request)
     request.gtk_version = __gtk_version__
     request.macos_arm64 = __macos_arm64__
     request.linux_armv7 = __linux_armv7__
+    request.linux_arm64 = __linux_arm64__
 
     response = url.post(__server__, request)
 
