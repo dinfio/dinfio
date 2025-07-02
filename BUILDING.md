@@ -44,6 +44,11 @@ And compile:
     ``` sh
     $ ./compile_linux_armv7.sh
     ```
+- On Linux ARM64:
+
+    ``` sh
+    $ ./compile_linux_arm64.sh
+    ```
 - On Linux Docker:
 
     ``` sh

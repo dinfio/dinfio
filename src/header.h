@@ -4,7 +4,7 @@
  Version: 3.2
 ------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2024. All Rights Reserved.
+ Copyright (C) 2014-2025. All Rights Reserved.
 ------------------------------------------------------------
  Platform: Linux, macOS, Windows
 ------------------------------------------------------------
@@ -41,7 +41,7 @@ using namespace std;
 
 #ifdef __linux__
     const uint_fast8_t __DINFIO_PLATFORM_RAW__ = 0;
-    const string __DINFIO_PLATFORM__ = "Linux x86_64";   // NOTE: Change it to "Linux ARMv7" when compiling on Raspberry Pi
+    const string __DINFIO_PLATFORM__ = "Linux x86_64";   // NOTE: Change it to "Linux ARMv7" or "Linux ARM64" when compiling on Raspberry Pi
     const string __DINFIO_PATH__ = "/usr/local/dinfio/";
     const string __MODULE_EXTENSION__ = ".so";
 

@@ -4,7 +4,7 @@
  Version: 3.2
 -------------------------------------------------------------------
  By: Muhammad Faruq Nuruddinsyah
- Copyright (C) 2014-2024. All Rights Reserved.
+ Copyright (C) 2014-2025. All Rights Reserved.
 -------------------------------------------------------------------
  Platform: Linux, macOS, Windows
 -------------------------------------------------------------------
