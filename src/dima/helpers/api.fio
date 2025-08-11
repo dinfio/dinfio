@@ -21,6 +21,7 @@ function api::init()
     const __macos_arm64__ = false
     const __linux_armv7__ = false
     const __linux_arm64__ = false
+    const __windows_amd64__ = false
 
     url::ssl_verify_peer(0)      ' Had to do it since some old machine failed to verify server certificate
 stop
@@ -35,6 +36,7 @@ function call_api(request)
     request.macos_arm64 = __macos_arm64__
     request.linux_armv7 = __linux_armv7__
     request.linux_arm64 = __linux_arm64__
+    request.windows_amd64 = __windows_amd64__
 
     response = url.post(__server__, request)
 
