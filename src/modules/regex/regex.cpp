@@ -16,7 +16,7 @@
 #include "dinfio_module.h"
 
 Connector* connector;
-uint_fast16_t __regex_match, __regex_search, __regex_replace;
+uint_fast16_t __regex_match, __regex_search, __regex_replace_;
 
 extern "C" Module* create_module() {
     return new Module();
@@ -34,13 +34,13 @@ void Module::__init(Connector* c) {
 
     __regex_match = connector->__register_function("regex_match");
     __regex_search = connector->__register_function("regex_search");
-    __regex_replace = connector->__register_function("regex_replace");
+    __regex_replace_ = connector->__register_function("regex_replace");
 
 
     // Set function addresses boundary
 
     __min = __regex_match;
-    __max = __regex_replace;   // DO NOT FORGET THIS!
+    __max = __regex_replace_;   // DO NOT FORGET THIS!
 }
 
 gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, uint_fast32_t& caller_id) {
@@ -183,7 +183,7 @@ gc<DataType> Module::__call(uint_fast16_t& func_id, AST* func, gc<Object> obj, u
         connector->__remove_garbage(params.at(1), e);
 
         return arr;
-    } else if (func_id == __regex_replace) {
+    } else if (func_id == __regex_replace_) {
         if (params.size() < 3) connector->__error_message_params("regex_replace", 3);
         gc<DataType> d = connector->__get_value(params.at(0), caller_id);
         gc<DataType> e = connector->__get_value(params.at(1), caller_id);
