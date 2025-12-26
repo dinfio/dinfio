@@ -65,10 +65,10 @@ using namespace std;
 const int __DINFIO_VERSION_NUMBER__ = 30200;
 const string __DINFIO_VERSION_MAJOR__ = "3";
 const string __DINFIO_VERSION_MINOR__ = "2";
-const string __DINFIO_VERSION_REVISION__ = "0";
+const string __DINFIO_VERSION_REVISION__ = "01";
 const string __DINFIO_VERSION__ =  __DINFIO_VERSION_MAJOR__ + "." + __DINFIO_VERSION_MINOR__ + "." + __DINFIO_VERSION_REVISION__;
-const string __DINFIO_BUILD_DATE_RAW__ = "2024-08-18";
-const string __DINFIO_BUILD_DATE__ = "18 August 2024";
+const string __DINFIO_BUILD_DATE_RAW__ = "2025-12-27";
+const string __DINFIO_BUILD_DATE__ = "27 December 2025";
 const string __MODULES_PATH__ = __DINFIO_PATH__ + "modules/";
 
 
@@ -121,6 +121,7 @@ uint_fast32_t __cur_file_line;
 string __cur_file;
 uint_fast32_t __cur_i;
 uint_fast32_t __last_cur_i = 0;
+uint_fast32_t __last_cur_i_e = 0;
 bool __walked = false;
 bool __interactive_mode = false;
 bool __default_mode = false;

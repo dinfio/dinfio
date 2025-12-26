@@ -357,7 +357,7 @@ namespace core {
             gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_STRING__) error_message("error(): parameter #1 must be a string");
 
-            if (__last_cur_i != 0) __cur_i = __last_cur_i;
+            if (__last_cur_i_e != 0) __cur_i = __last_cur_i_e;
             error_message(d->__value_string);
 
             result->__type = __TYPE_BOOL__;

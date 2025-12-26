@@ -64,6 +64,7 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
         vector<uint_fast8_t> declaration_params_type = f->__parameters_type;
         vector<AST*> params = func->__parameters;
         __last_cur_i = __cur_i;
+        __last_cur_i_e = __cur_i;
         uint_fast32_t default_caller_id = 1;
         bool stop_loop = false;
         bool stop_procedure = false;
@@ -97,7 +98,9 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
         }
 
         walk(c->__index + 1, fc, stop_loop, stop_procedure);
+
         __last_cur_i = 0;
+        __last_cur_i_e = 1;
 
         if (need_return) {
             gc<DataType> r = __variables[sfc + "__ret__"];
@@ -199,6 +202,7 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
             vector<uint_fast8_t> declaration_params_type = f->__parameters_type;
             vector<AST*> params = func->__parameters;
             __last_cur_i = __cur_i;
+            __last_cur_i_e = __cur_i;
             uint_fast32_t default_caller_id = 1;
             bool stop_loop = false;
             bool stop_procedure = false;
@@ -234,7 +238,9 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
             }
 
             walk(c->__index + 1, fc, stop_loop, stop_procedure);
+
             __last_cur_i = 0;
+            __last_cur_i_e = 1;
 
 
             // Garbage collector
@@ -302,6 +308,7 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
         vector<uint_fast8_t> declaration_params_type = f->__parameters_type;
         vector<AST*> params = func->__parameters;
         __last_cur_i = __cur_i;
+        __last_cur_i_e = __cur_i;
         uint_fast32_t default_caller_id = 1;
         bool stop_loop = false;
         bool stop_procedure = false;
@@ -339,7 +346,9 @@ gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32
         }
 
         walk(c->__index + 1, fc, stop_loop, stop_procedure);
+
         __last_cur_i = 0;
+        __last_cur_i_e = 1;
 
         if (need_return) {
             gc<DataType> r = __variables[sfc + "__ret__"];
