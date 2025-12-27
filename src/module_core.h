@@ -24,6 +24,7 @@ namespace core {
     uint_fast16_t __attribute_set, __attribute_get, __attribute_exists;
     uint_fast16_t __bit_not, __bit_and, __bit_or, __bit_xor, __bit_ls, __bit_rs;
     uint_fast16_t __register_event_loop, __set_on_error_callback;
+    uint_fast16_t __assert;
 
     class RefHolder: public Base {
     public:
@@ -96,9 +97,11 @@ namespace core {
 
         __register_event_loop = register_function("register_event_loop", __REG_BUILT_IN_FUNCTION__);
         __set_on_error_callback = register_function("set_on_error_callback", __REG_BUILT_IN_FUNCTION__);
+
+        __assert = register_function("assert", __REG_BUILT_IN_FUNCTION__);
         
         __min = __array;
-        __max = __set_on_error_callback;   // DO NOT FORGET THIS!
+        __max = __assert;   // DO NOT FORGET THIS!
     }
 
     gc<DataType> __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
@@ -364,10 +367,30 @@ namespace core {
             result->__value_bool = true;
 
             return result;
+        } else if (func == __assert) {
+            if (params.size() < 1) error_message_param("assert");
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            if (d->__type != __TYPE_BOOL__) error_message("assert(): parameter #1 must be a boolean");
+
+            string message = "Assertion error";
+
+            if (params.size() > 1) {
+                gc<DataType> e = get_value(params.at(1), caller_id);
+                if (e->__type != __TYPE_STRING__) error_message("assert(): parameter #2 must be a string");
+
+                message = "Assertion error: " + e->__value_string;
+            }
+
+            if (!d->__value_bool) error_message(message);
+
+            result->__type = __TYPE_BOOL__;
+            result->__value_bool = true;
+
+            return result;
         } else if (func == __iif) {
             if (params.size() < 2) error_message_params("iif", 2);
             gc<DataType> a = get_value(params.at(0), caller_id);
-            if (a->__type != __TYPE_BOOL__) error_message("iff(): parameter #1 must be a boolean expression");
+            if (a->__type != __TYPE_BOOL__) error_message("iif(): parameter #1 must be a boolean expression");
 
             if (a->__value_bool) {
                 gc<DataType> b = get_value(params.at(1), caller_id);

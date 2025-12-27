@@ -456,6 +456,24 @@ function iif(expression, true_part, false_part = nothing)
 
 
 ''
+' This function is a debugging aid that tests whether a `condition` is true. If `condition` is false, it prints the error message and halts the programme's execution
+'
+' @param boolean condition A boolean expression to be tested
+' @param string [message] An error message. The default value is ""
+'
+' @return boolean Always returns `true`
+'
+' @example
+' x = 20
+' y = 10
+'
+' assert(x > 15)                                  ' Assertion passed, programme continues
+' assert(y > 15, "y should be greater than 15")   ' Assertion error: y should be greater than 15
+''
+function assert(condition, message = "")
+
+
+''
 ' Choose value based on the operating system
 '
 ' @param any linux_value A value
