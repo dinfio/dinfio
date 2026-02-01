@@ -49,7 +49,7 @@ using namespace std;
 #elif __APPLE__
     const uint_fast8_t __DINFIO_PLATFORM_RAW__ = 1;
     const string __DINFIO_PLATFORM__ = "macOS";
-    const string __DINFIO_PATH__ = "/Library/Dinfio/3.2/";
+    const string __DINFIO_PATH__ = "/Users/user/Documents/Faruq/dinfio/build/";
     const string __MODULE_EXTENSION__ = ".so";
 
     #define __RTLD_TYPE__ RTLD_LOCAL
@@ -217,7 +217,8 @@ void error_message_object(string, string, uint_fast32_t&, vector<AST*>, uint_fas
 
 AST* parse_expression(string&);
 AST* parse_function_call(string&);
-AST_Array* parse_array(string&);
+AST* parse_function_call_alt(string&);
+AST_Array* parse_array(string&, bool);
 AST_Object* parse_object(string&);
 AST_FunctionCall* parse_function_declaration(string&);
 AST_Parameter* parse_class_declaration(string&);
@@ -231,6 +232,7 @@ AST_Parameter* parse_parameters(string&);
 vector<string> parse_array_elements(string&);
 vector<string> parse_object_attributes(string&);
 vector<string> parse_function_parameters(string&);
+int parse_function_name(string&);
 AST_Parameter* parse_import_declaration(string&);
 bool is_there_object(string&);
 string __remove_unused_parentheses(string&);
@@ -277,7 +279,7 @@ vector<AST_FunctionCall*> __init_functions;
 
 uint_fast16_t register_function(string, uint_fast8_t);
 gc<DataType> get_function_value(AST_FunctionCall*, uint_fast32_t&, bool);
-gc<DataType> get_object_function_value(AST_ObjectFunctionCall*, uint_fast32_t&, bool);
+gc<DataType> get_object_function_value(AST_ObjectFunctionCall*, uint_fast32_t&, bool, gc<Object> obj);
 void call_function(AST*, uint_fast32_t&);
 void remove_garbage(AST*, gc<DataType>);
 void parse_function_class();

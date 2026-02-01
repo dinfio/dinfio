@@ -175,7 +175,7 @@ AST* parse_expression(string& expression) {
         } else if (is_there_object(expression)) {
             return parse_object(expression);
         } else if (right(expression, 1) == "]") {
-            return parse_array(expression);
+            return parse_array(expression, false);
         } else if (expression.length() > 1 && expression.substr(expression.length() - 1, 1) == "b" && is_number(expression.substr(0, expression.length() - 1))) {
             int b = stoi(expression.substr(0, expression.length() - 1), nullptr, 2);
             return new AST_Double(b);
@@ -186,7 +186,7 @@ AST* parse_expression(string& expression) {
 }
 
 AST* parse_function_call(string& expression) {
-    int ip = expression.find("(");
+    int ip = parse_function_name(expression);
     string func_name = left(expression, ip);
     string func_params = expression.substr(ip + 1, expression.length() - ip - 2);
     vector<string> parameters = parse_function_parameters(func_params);
@@ -213,9 +213,32 @@ AST* parse_function_call(string& expression) {
     }
 }
 
-AST_Array* parse_array(string& expression) {
+AST* parse_function_call_alt(string& expression) {
+    int ip = expression.find("(");
+    string func_name = left(expression, ip);
+    string func_params = expression.substr(ip + 1, expression.length() - ip - 2);
+    vector<string> parameters = parse_function_parameters(func_params);
+
+    AST_ObjectFunctionCall* r = new AST_ObjectFunctionCall(NULL, func_name);
+
+    for (int i = 0; i < parameters.size(); i++) {
+        r->__parameters.push_back(parse_expression(parameters[i]));
+    }
+
+    return r;
+}
+
+AST_Array* parse_array(string& expression, bool is_object) {
     vector<string> elements = parse_array_elements(expression);
     AST_Array* result = new AST_Array(elements[0]);
+
+    if (right(elements[0], 1) == ")") {
+        if (is_object) {
+            result->__ast_holder = parse_function_call_alt(elements[0]);
+        } else {
+            result->__ast_holder = parse_function_call(elements[0]);
+        }
+    }
 
     for (int i = 1; i < elements.size(); i++) {
         if (elements[i] == "") error_message("Expected array index of '" + elements[0] + "'");
@@ -227,20 +250,24 @@ AST_Array* parse_array(string& expression) {
 
 AST_Object* parse_object(string& expression) {
     vector<string> attributes = parse_object_attributes(expression);
-    AST_Object* result = new AST_Object(attributes[0]);
 
     if (attributes[0] == "") error_message("Expected object name");
     if (attributes.size() <= 1) error_message("Expected attribute of '" + attributes[0] + "'");
-    
-    result->__array_holder = NULL;
-    if (right(attributes[0], 1) == "]") result->__array_holder = parse_array(attributes[0]);
+
+    AST_Object* result = new AST_Object(attributes[0]);
+    result->__ast_holder = NULL;
+
+    if (right(attributes[0], 1) == "]") result->__ast_holder = parse_array(attributes[0], false);
+    if (right(attributes[0], 1) == ")") result->__ast_holder = parse_function_call(attributes[0]);
 
     for (int i = 1; i < attributes.size(); i++) {
         string a = attributes[i];
         if (a == "") error_message("Expected attribute of '" + attributes[0] + "'");
 
         if (right(a, 1) == "]") {
-            result->__attributes.push_back(parse_array(a));
+            result->__attributes.push_back(parse_array(a, true));
+        } else if (right(a, 1) == ")") {
+            result->__attributes.push_back(parse_function_call_alt(a));
         } else {
             result->__attributes.push_back(new AST_Variable(a));
         }
@@ -606,6 +633,31 @@ vector<string> parse_function_parameters(string& name) {
     }
 
     return result;
+}
+
+int parse_function_name(string& func) {
+    bool in_quotes = false;
+    int n_parentheses = 0;
+    
+    for (int i = func.length() - 1; i >= 0; i--) {
+        string m = func.substr(i, 1);
+        
+        if (m == "\"") {
+            if (in_quotes) in_quotes = false;
+            else in_quotes = true;
+        }
+
+        if (!in_quotes && m == ")") n_parentheses++;
+        if (!in_quotes && m == "(") {
+            if (n_parentheses == 1) {
+                return i;
+            } else {
+                n_parentheses--;
+            }
+        }
+    }
+
+    return 0;
 }
 
 AST_Parameter* parse_import_declaration(string& expression) {

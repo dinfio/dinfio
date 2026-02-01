@@ -170,11 +170,13 @@ public:
     string __identifier;
     uint_fast32_t __caller_id;
     gc<DataType> __variable_holder;
+    AST* __ast_holder;
     vector<AST*> __indices;
 
     AST_Array(string identifier): AST(__AST_ARRAY__) {
         __identifier = identifier;
         __caller_id = 0;
+        __ast_holder = NULL;
     }
 };
 
@@ -183,12 +185,13 @@ public:
     string __identifier;
     uint_fast32_t __caller_id;
     gc<DataType> __variable_holder;
-    AST_Array* __array_holder;
-    vector<AST*> __attributes;   // This is only AST_Variable (just literal) or AST_Array
+    AST* __ast_holder;
+    vector<AST*> __attributes;
 
     AST_Object(string identifier): AST(__AST_OBJECT__) {
         __identifier = identifier;
         __caller_id = 0;
+        __ast_holder = NULL;
     }
 };
 

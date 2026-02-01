@@ -218,7 +218,7 @@ void assignment(AST* var, AST* value, uint_fast32_t& caller_id) {
         if (e->__caller_id == caller_id) {
             set_object_value(e->__variable_holder, e, val, caller_id);
         } else {
-            if (e->__array_holder == NULL) {
+            if (e->__ast_holder == NULL) {
                 string c = to_string(caller_id);
 
                 if (__variables.count(c + e->__identifier) == 0) {

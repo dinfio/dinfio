@@ -281,9 +281,15 @@ gc<DataType> get_function_value(AST_FunctionCall* func, uint_fast32_t& caller_id
     }
 }
 
-gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t& caller_id, bool need_return) {
+gc<DataType> get_object_function_value(AST_ObjectFunctionCall* func, uint_fast32_t& caller_id, bool need_return, gc<Object> obj) {
     uint_fast16_t func_id = 0;
-    gc<Object> fo = get_pure_object_value(func->__object, caller_id);
+    gc<Object> fo;
+    
+    if (obj == NULL) {
+        fo = get_pure_object_value(func->__object, caller_id);
+    } else {
+        fo = obj;
+    }
 
     func_id = fo->__functions[func->__identifier];
     if (func_id == 0) error_message("Function " + func->__identifier + "() is not declared in class " + fo->__name);
@@ -440,7 +446,7 @@ void call_function(AST* func, uint_fast32_t& caller_id) {
     if (func->__type == __AST_FUNCTION_CALL__) {
         gc<DataType> d = get_function_value((AST_FunctionCall*) func, caller_id, false);
     } else {
-        gc<DataType> d = get_object_function_value((AST_ObjectFunctionCall*) func, caller_id, false);
+        gc<DataType> d = get_object_function_value((AST_ObjectFunctionCall*) func, caller_id, false, NULL);
     }
 }
 

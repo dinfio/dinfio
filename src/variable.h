@@ -395,7 +395,7 @@ gc<DataType> get_value(AST* expression, uint_fast32_t& caller_id) {
         return get_function_value(e, caller_id, true);
     } else if (type == __AST_OBJECT_FUNCTION_CALL__) {
         AST_ObjectFunctionCall* e = (AST_ObjectFunctionCall*) expression;
-        return get_object_function_value(e, caller_id, true);
+        return get_object_function_value(e, caller_id, true, NULL);
 
     } else if (type == __AST_ARRAY_NOTATION__) {
         AST_ArrayNotation* e = (AST_ArrayNotation*) expression;
@@ -485,24 +485,28 @@ gc<DataType> get_array_value(AST* expression, uint_fast32_t& caller_id) {
     AST_Array* e = (AST_Array*) expression;
     gc<DataType> v;
 
-    if (e->__caller_id == caller_id) {
-        v = e->__variable_holder;
-    } else {
-        string c = to_string(caller_id);
-        gc<DataType> d = __variables[c + e->__identifier];
+    if (e->__ast_holder == NULL) {
+        if (e->__caller_id == caller_id) {
+            v = e->__variable_holder;
+        } else {
+            string c = to_string(caller_id);
+            gc<DataType> d = __variables[c + e->__identifier];
 
-        if (d == NULL) {
-            __variables.erase(c + e->__identifier);
-            c = "1";
-            d = __variables[c + e->__identifier];
+            if (d == NULL) {
+                __variables.erase(c + e->__identifier);
+                c = "1";
+                d = __variables[c + e->__identifier];
+            }
+
+            if (d == NULL) error_message("Undeclared variable '" + e->__identifier + "'");
+
+            e->__caller_id = caller_id;
+            e->__variable_holder = d;
+
+            v = d;
         }
-
-        if (d == NULL) error_message("Undeclared variable '" + e->__identifier + "'");
-
-        e->__caller_id = caller_id;
-        e->__variable_holder = d;
-
-        v = d;
+    } else {
+        v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
     }
 
     uint_fast32_t i = 0;
@@ -537,6 +541,8 @@ gc<DataType> get_array_value(AST* expression, uint_fast32_t& caller_id) {
 }
 
 void set_array_value(gc<DataType> v, AST_Array* e, gc<DataType> val, uint_fast32_t& caller_id) {
+    if (e->__ast_holder != NULL) error_message("Assignment to a function call is not supported");
+    
     uint_fast32_t i = 0;
     string msg = e->__identifier;
     if (v->__type != __TYPE_ARRAY__) error_message(msg + " is not an array");
@@ -607,7 +613,7 @@ gc<DataType> get_object_value(AST* expression, uint_fast32_t& caller_id) {
     AST_Object* e = (AST_Object*) expression;
     gc<DataType> v;
 
-    if (e->__array_holder == NULL) {
+    if (e->__ast_holder == NULL) {
         if (e->__caller_id == caller_id) {
             v = e->__variable_holder;
         } else {
@@ -628,7 +634,11 @@ gc<DataType> get_object_value(AST* expression, uint_fast32_t& caller_id) {
             v = d;
         }
     } else {
-        v = get_array_value(e->__array_holder, caller_id);
+        if (e->__ast_holder->__type == __AST_ARRAY__) {
+            v = get_array_value(e->__ast_holder, caller_id);
+        } else {
+            v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
+        }
     }
 
     uint_fast32_t i = 0;
@@ -640,8 +650,10 @@ gc<DataType> get_object_value(AST* expression, uint_fast32_t& caller_id) {
         if (e->__attributes.at(i)->__type == __AST_VARIABLE__) {
             string idx = ((AST_Variable*) e->__attributes.at(i))->__identifier;
             v = temp->__attributes[idx];
-        } else {
+        } else if (e->__attributes.at(i)->__type == __AST_ARRAY__) {
             v = get_attribute_array_value(temp, e->__attributes.at(i), caller_id);
+        } else {
+            v = get_object_function_value((AST_ObjectFunctionCall*) e->__attributes.at(i), caller_id, true, temp);
         }
 
         if (v == NULL) error_message_object(msg, "is undefined", i, e->__attributes, caller_id);
@@ -663,8 +675,12 @@ gc<DataType> get_object_value(AST* expression, uint_fast32_t& caller_id) {
 }
 
 void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast32_t& caller_id) {
-    if (e->__array_holder != NULL) {
-        v = get_array_value(e->__array_holder, caller_id);
+    if (e->__ast_holder != NULL) {
+        if (e->__ast_holder->__type == __AST_ARRAY__) {
+            v = get_array_value(e->__ast_holder, caller_id);
+        } else {
+            error_message("Assignment to a function call is not supported");
+        }
     }
 
     uint_fast32_t i = 0;
@@ -676,8 +692,10 @@ void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast
         if (e->__attributes.at(i)->__type == __AST_VARIABLE__) {
             string idx = ((AST_Variable*) e->__attributes.at(i))->__identifier;
             v = temp->__attributes[idx];
-        } else {
+        } else if (e->__attributes.at(i)->__type == __AST_ARRAY__) {
             v = get_attribute_array_value(temp, e->__attributes.at(i), caller_id);
+        } else {
+            error_message("Assignment to a function call is not supported");
         }
 
         if (v == NULL) error_message_object(msg, "is undefined", i, e->__attributes, caller_id);
@@ -722,14 +740,22 @@ void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast
         if (val->__type == __TYPE_NULL__) {
             v->__type = __TYPE_NULL__;
         }
-    } else {
+    } else if (e->__attributes.at(i)->__type == __AST_ARRAY__) {
         set_attribute_array_value(temp, e->__attributes.at(i), val, caller_id);
+    } else {
+        error_message("Assignment to a function call is not supported");
     }
 }
 
 gc<DataType> get_attribute_array_value(gc<Object> obj, AST* expression, uint_fast32_t& caller_id) {
     AST_Array* e = (AST_Array*) expression;
-    gc<DataType> v = obj->__attributes[e->__identifier];
+    gc<DataType> v;
+    
+    if (e->__ast_holder == NULL) {
+        v = obj->__attributes[e->__identifier];
+    } else {
+        v = get_object_function_value((AST_ObjectFunctionCall*) e->__ast_holder, caller_id, true, obj);
+    }
 
     if (v == NULL) error_message("Attribute " + e->__identifier + " is undefined");
 
@@ -766,8 +792,10 @@ gc<DataType> get_attribute_array_value(gc<Object> obj, AST* expression, uint_fas
 
 void set_attribute_array_value(gc<Object> obj, AST* expression, gc<DataType> val, uint_fast32_t& caller_id) {
     AST_Array* e = (AST_Array*) expression;
-    gc<DataType> v = obj->__attributes[e->__identifier];
 
+    if (e->__ast_holder != NULL) error_message("Assignment to a function call is not supported");
+
+    gc<DataType> v = obj->__attributes[e->__identifier];
     if (v == NULL) error_message("Attribute " + e->__identifier + " is undefined");
 
     uint_fast32_t i = 0;
@@ -840,7 +868,7 @@ gc<Object> get_pure_object_value(AST* expression, uint_fast32_t& caller_id) {
     AST_Object* e = (AST_Object*) expression;
     gc<DataType> v;
 
-    if (e->__array_holder == NULL) {
+    if (e->__ast_holder == NULL) {
         if (e->__caller_id == caller_id) {
             v = e->__variable_holder;
         } else {
@@ -861,7 +889,11 @@ gc<Object> get_pure_object_value(AST* expression, uint_fast32_t& caller_id) {
             v = d;
         }
     } else {
-        v = get_array_value(e->__array_holder, caller_id);
+        if (e->__ast_holder->__type == __AST_ARRAY__) {
+            v = get_array_value(e->__ast_holder, caller_id);
+        } else {
+            v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
+        }
     }
 
     uint_fast32_t i = 0;
@@ -873,8 +905,10 @@ gc<Object> get_pure_object_value(AST* expression, uint_fast32_t& caller_id) {
         if (e->__attributes.at(i)->__type == __AST_VARIABLE__) {
             string idx = ((AST_Variable*) e->__attributes.at(i))->__identifier;
             v = temp->__attributes[idx];
-        } else {
+        } else if (e->__attributes.at(i)->__type == __AST_ARRAY__) {
             v = get_attribute_array_value(temp, e->__attributes.at(i), caller_id);
+        } else {
+            v = get_object_function_value((AST_ObjectFunctionCall*) e->__attributes.at(i), caller_id, true, temp);
         }
 
         if (v == NULL) error_message_object(msg, "is undefined", i, e->__attributes, caller_id);
