@@ -144,16 +144,12 @@ public:
     }
 };
 
-class AST_BinaryExpression: public AST {
+class AST_Value: public AST {
 public:
-    AST* __left;
-    AST* __right;
-    uint_fast8_t __operator;
+    gc<DataType> __value;
 
-    AST_BinaryExpression(AST* left, uint_fast8_t opr, AST* right): AST(__AST_BINARY_EXPRESSION__) {
-        __left = left;
-        __right = right;
-        __operator = opr;
+    AST_Value(gc<DataType> value): AST(__AST_VALUE__) {
+        __value = value;
     }
 };
 
@@ -178,6 +174,31 @@ public:
     AST_ObjectFunctionCall(AST_Object* object, string identifier): AST(__AST_OBJECT_FUNCTION_CALL__) {
         __identifier = identifier;
         __object = object;
+    }
+};
+
+class AST_BinaryExpression: public AST {
+public:
+    AST* __left;
+    AST* __right;
+    uint_fast8_t __operator;
+    AST_FunctionCall* __overload;
+    
+    AST_BinaryExpression(AST* left, uint_fast8_t opr, AST* right): AST(__AST_BINARY_EXPRESSION__) {
+        __left = left;
+        __right = right;
+        __operator = opr;
+        __overload = NULL;
+    }
+
+    void __new_overload(string identifier) {
+        AST_FunctionCall* f = new AST_FunctionCall(identifier);
+        f->__address = 0;
+
+        f->__parameters.push_back(new AST_Value(NULL));
+        f->__parameters.push_back(new AST_Value(NULL));
+
+        __overload = f;
     }
 };
 
@@ -275,15 +296,6 @@ public:
         __identifier = identifier;
         __caller_id = -1;
         __ast_holder = NULL;
-    }
-};
-
-class AST_Value: public AST {
-public:
-    gc<DataType> __value;
-
-    AST_Value(gc<DataType> value): AST(__AST_VALUE__) {
-        __value = value;
     }
 };
 

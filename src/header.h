@@ -49,7 +49,7 @@ using namespace std;
 #elif __APPLE__
     const uint_fast8_t __DINFIO_PLATFORM_RAW__ = 1;
     const string __DINFIO_PLATFORM__ = "macOS";
-    const string __DINFIO_PATH__ = "/Users/user/Documents/Faruq/dinfio/build/";
+    const string __DINFIO_PATH__ = "/Library/Dinfio/3.2/";
     const string __MODULE_EXTENSION__ = ".so";
 
     #define __RTLD_TYPE__ RTLD_LOCAL

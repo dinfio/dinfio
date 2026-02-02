@@ -97,83 +97,314 @@ gc<DataType> get_value(AST* expression, uint_fast32_t& caller_id) {
         uint_fast8_t opr = e->__operator;
 
         if (opr == __AST_OPERATOR_PLUS__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            r->__value_double = a->__value_double + b->__value_double;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::+" : ((gc<Object>) b->__value_object)->__name + "::+";
 
-            return r;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                r->__value_double = a->__value_double + b->__value_double;
+
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_MINUS__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            r->__value_double = a->__value_double - b->__value_double;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::-" : ((gc<Object>) b->__value_object)->__name + "::-";
 
-            return r;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                r->__value_double = a->__value_double - b->__value_double;
+
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_MULTIPLY__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            r->__value_double = a->__value_double * b->__value_double;
-            
-            return r;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::*" : ((gc<Object>) b->__value_object)->__name + "::*";
+
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                r->__value_double = a->__value_double * b->__value_double;
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_DIVIDE__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            if (b->__value_double == 0) error_message("Runtime error: division by zero");
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::/" : ((gc<Object>) b->__value_object)->__name + "::/";
 
-            r->__value_double = a->__value_double / b->__value_double;
-            
-            return r;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                if (b->__value_double == 0) error_message("Runtime error: division by zero");
+
+                r->__value_double = a->__value_double / b->__value_double;
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_INT_DIVIDE__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            if (b->__value_double == 0) error_message("Runtime error: division by zero");
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::\\" : ((gc<Object>) b->__value_object)->__name + "::\\";
 
-            r->__value_double = (int) (a->__value_double / b->__value_double);
-            
-            return r;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                if (b->__value_double == 0) error_message("Runtime error: division by zero");
+
+                r->__value_double = (int) (a->__value_double / b->__value_double);
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_MODULO__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            if (b->__value_double == 0) error_message("Runtime error: division by zero");
-            
-            r->__value_double = fmod(a->__value_double, b->__value_double);
-            
-            return r;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::%" : ((gc<Object>) b->__value_object)->__name + "::%";
+
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                if (b->__value_double == 0) error_message("Runtime error: division by zero");
+                
+                r->__value_double = fmod(a->__value_double, b->__value_double);
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_CONCAT__) {
-            r = new_gc<DataType>(__TYPE_STRING__);
-            
-            gc<DataType> x = a;
-            gc<DataType> y = b;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::&" : ((gc<Object>) b->__value_object)->__name + "::&";
 
-            if (x->__type == __TYPE_DOUBLE__) {
-                char buffer[255];
-                sprintf(buffer, "%g", x->__value_double);
-                x->__value_string = buffer;
-            }
-            if (y->__type == __TYPE_DOUBLE__) {
-                char buffer[255];
-                sprintf(buffer, "%g", y->__value_double);
-                y->__value_string = buffer;
-            }
-            if (x->__type == __TYPE_BOOL__) x->__value_string = (x->__value_bool) ? "true" : "false";
-            if (y->__type == __TYPE_BOOL__) y->__value_string = (y->__value_bool) ? "true" : "false";
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
 
-            r->__value_string = x->__value_string + y->__value_string;
-            
-            return r;
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_STRING__);
+                
+                gc<DataType> x = a;
+                gc<DataType> y = b;
+
+                if (x->__type == __TYPE_DOUBLE__) {
+                    char buffer[255];
+                    sprintf(buffer, "%g", x->__value_double);
+                    x->__value_string = buffer;
+                }
+                if (y->__type == __TYPE_DOUBLE__) {
+                    char buffer[255];
+                    sprintf(buffer, "%g", y->__value_double);
+                    y->__value_string = buffer;
+                }
+                if (x->__type == __TYPE_BOOL__) x->__value_string = (x->__value_bool) ? "true" : "false";
+                if (y->__type == __TYPE_BOOL__) y->__value_string = (y->__value_bool) ? "true" : "false";
+
+                r->__value_string = x->__value_string + y->__value_string;
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_EXPONENT__) {
-            r = new_gc<DataType>(__TYPE_DOUBLE__);
-            r->__value_double = pow(a->__value_double, b->__value_double);
-            
-            return r;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::^" : ((gc<Object>) b->__value_object)->__name + "::^";
+
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_DOUBLE__);
+                r->__value_double = pow(a->__value_double, b->__value_double);
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_AND__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
-            r->__value_bool = a->__value_bool && b->__value_bool;
-            
-            return r;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::&&" : ((gc<Object>) b->__value_object)->__name + "::&&";
+
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+                r->__value_bool = a->__value_bool && b->__value_bool;
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_OR__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
-            r->__value_bool = a->__value_bool || b->__value_bool;
-            
-            return r;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::||" : ((gc<Object>) b->__value_object)->__name + "::||";
+
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+                r->__value_bool = a->__value_bool || b->__value_bool;
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_XOR__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
-            r->__value_bool = a->__value_bool == !b->__value_bool;
-            
-            return r;
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::^^" : ((gc<Object>) b->__value_object)->__name + "::^^";
+
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+                r->__value_bool = a->__value_bool == !b->__value_bool;
+                
+                return r;
+            }
         } else if (opr == __AST_OPERATOR_NOT__) {
             r = new_gc<DataType>(__TYPE_BOOL__);
             r->__value_bool = !b->__value_bool;
@@ -238,11 +469,31 @@ gc<DataType> get_value(AST* expression, uint_fast32_t& caller_id) {
             }
 
             if (a->__type == __TYPE_OBJECT__) {
-                r->__value_bool = a->__value_object->__address == b->__value_object->__address;
-                return r;
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::==" : ((gc<Object>) b->__value_object)->__name + "::==";
+                
+                if (e->__overload == NULL) {
+                    if (__registered_functions.find(ofunc_id) != __registered_functions.end()) {
+                        e->__new_overload(ofunc_id);
+                    }
+                }
+
+                if (e->__overload == NULL) {
+                    r->__value_bool = a->__value_object->__address == b->__value_object->__address;
+                    return r;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+
+                    return get_function_value(e->__overload, caller_id, true);
+                }
             }
 
-            return NULL;
+            return r;
         } else if (opr == __AST_OPERATOR_NOT_EQUAL__) {
             r = new_gc<DataType>(__TYPE_BOOL__);
 
@@ -302,87 +553,191 @@ gc<DataType> get_value(AST* expression, uint_fast32_t& caller_id) {
             }
 
             if (a->__type == __TYPE_OBJECT__) {
-                r->__value_bool = a->__value_object->__address != b->__value_object->__address;
-                return r;
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::!=" : ((gc<Object>) b->__value_object)->__name + "::!=";
+                
+                if (e->__overload == NULL) {
+                    if (__registered_functions.find(ofunc_id) != __registered_functions.end()) {
+                        e->__new_overload(ofunc_id);
+                    }
+                }
+
+                if (e->__overload == NULL) {
+                    r->__value_bool = a->__value_object->__address != b->__value_object->__address;
+                    return r;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+
+                    return get_function_value(e->__overload, caller_id, true);
+                }
             }
 
-            return NULL;
+            return r;
         } else if (opr == __AST_OPERATOR_LESS__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::<" : ((gc<Object>) b->__value_object)->__name + "::<";
 
-            if (a->__type == __TYPE_DOUBLE__) {
-                r->__value_bool = a->__value_double < b->__value_double;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+
+                if (a->__type == __TYPE_DOUBLE__) {
+                    r->__value_bool = a->__value_double < b->__value_double;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_STRING__) {
+                    r->__value_bool = a->__value_string < b->__value_string;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_BOOL__) {
+                    r->__value_bool = a->__value_bool < b->__value_bool;
+                    return r;
+                }
+
                 return r;
             }
-
-            if (a->__type == __TYPE_STRING__) {
-                r->__value_bool = a->__value_string < b->__value_string;
-                return r;
-            }
-
-            if (a->__type == __TYPE_BOOL__) {
-                r->__value_bool = a->__value_bool < b->__value_bool;
-                return r;
-            }
-
-            return NULL;
         } else if (opr == __AST_OPERATOR_GREATER__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::>" : ((gc<Object>) b->__value_object)->__name + "::>";
 
-            if (a->__type == __TYPE_DOUBLE__) {
-                r->__value_bool = a->__value_double > b->__value_double;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+
+                if (a->__type == __TYPE_DOUBLE__) {
+                    r->__value_bool = a->__value_double > b->__value_double;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_STRING__) {
+                    r->__value_bool = a->__value_string > b->__value_string;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_BOOL__) {
+                    r->__value_bool = a->__value_bool > b->__value_bool;
+                    return r;
+                }
+
                 return r;
             }
-
-            if (a->__type == __TYPE_STRING__) {
-                r->__value_bool = a->__value_string > b->__value_string;
-                return r;
-            }
-
-            if (a->__type == __TYPE_BOOL__) {
-                r->__value_bool = a->__value_bool > b->__value_bool;
-                return r;
-            }
-
-            return NULL;
         } else if (opr == __AST_OPERATOR_LESS_EQUAL__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::<=" : ((gc<Object>) b->__value_object)->__name + "::<=";
 
-            if (a->__type == __TYPE_DOUBLE__) {
-                r->__value_bool = a->__value_double <= b->__value_double;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+
+                if (a->__type == __TYPE_DOUBLE__) {
+                    r->__value_bool = a->__value_double <= b->__value_double;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_STRING__) {
+                    r->__value_bool = a->__value_string <= b->__value_string;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_BOOL__) {
+                    r->__value_bool = a->__value_bool <= b->__value_bool;
+                    return r;
+                }
+
                 return r;
             }
-
-            if (a->__type == __TYPE_STRING__) {
-                r->__value_bool = a->__value_string <= b->__value_string;
-                return r;
-            }
-
-            if (a->__type == __TYPE_BOOL__) {
-                r->__value_bool = a->__value_bool <= b->__value_bool;
-                return r;
-            }
-
-            return NULL;
         } else if (opr == __AST_OPERATOR_GREATER_EQUAL__) {
-            r = new_gc<DataType>(__TYPE_BOOL__);
+            if (a->__type == __TYPE_OBJECT__ || b->__type == __TYPE_OBJECT__) {
+                const string ofunc_id = (a->__type == __TYPE_OBJECT__) ? ((gc<Object>) a->__value_object)->__name + "::>=" : ((gc<Object>) b->__value_object)->__name + "::>=";
 
-            if (a->__type == __TYPE_DOUBLE__) {
-                r->__value_bool = a->__value_double >= b->__value_double;
+                if (e->__overload == NULL) {
+                    e->__new_overload(ofunc_id);
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                } else {
+                    if (e->__overload->__identifier != ofunc_id) {
+                        e->__overload->__identifier = ofunc_id;
+                        e->__overload->__address = 0;
+                    }
+
+                    ((AST_Value*) e->__overload->__parameters[0])->__value = a;
+                    ((AST_Value*) e->__overload->__parameters[1])->__value = b;
+                }
+
+                return get_function_value(e->__overload, caller_id, true);
+            } else {
+                r = new_gc<DataType>(__TYPE_BOOL__);
+
+                if (a->__type == __TYPE_DOUBLE__) {
+                    r->__value_bool = a->__value_double >= b->__value_double;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_STRING__) {
+                    r->__value_bool = a->__value_string >= b->__value_string;
+                    return r;
+                }
+
+                if (a->__type == __TYPE_BOOL__) {
+                    r->__value_bool = a->__value_bool >= b->__value_bool;
+                    return r;
+                }
+
                 return r;
             }
-
-            if (a->__type == __TYPE_STRING__) {
-                r->__value_bool = a->__value_string >= b->__value_string;
-                return r;
-            }
-
-            if (a->__type == __TYPE_BOOL__) {
-                r->__value_bool = a->__value_bool >= b->__value_bool;
-                return r;
-            }
-
-            return NULL;
         }
     
     } else if (type == __AST_ARRAY__) {
