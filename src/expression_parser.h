@@ -237,6 +237,11 @@ AST_Array* parse_array(string& expression, bool is_object) {
             result->__ast_holder = parse_function_call_alt(elements[0]);
         } else {
             result->__ast_holder = parse_function_call(elements[0]);
+
+            if (((AST_FunctionCall*) result->__ast_holder)->__identifier == "") {
+                string expr = __remove_unused_parentheses(elements[0]);
+                result->__ast_holder = parse_expression(expr);
+            }
         }
     }
 
@@ -258,7 +263,15 @@ AST_Object* parse_object(string& expression) {
     result->__ast_holder = NULL;
 
     if (right(attributes[0], 1) == "]") result->__ast_holder = parse_array(attributes[0], false);
-    if (right(attributes[0], 1) == ")") result->__ast_holder = parse_function_call(attributes[0]);
+
+    if (right(attributes[0], 1) == ")") {
+        result->__ast_holder = parse_function_call(attributes[0]);
+
+        if (((AST_FunctionCall*) result->__ast_holder)->__identifier == "") {
+            string expr = __remove_unused_parentheses(attributes[0]);
+            result->__ast_holder = parse_expression(expr);
+        }
+    }
 
     for (int i = 1; i < attributes.size(); i++) {
         string a = attributes[i];
@@ -519,6 +532,7 @@ vector<string> parse_array_elements(string& name) {
 
     bool in_quotes = false;
     int n_square_brackets = 0;
+    int n_parentheses = 0;
     int first_pos = 0;
     string temp = "";
 
@@ -530,7 +544,12 @@ vector<string> parse_array_elements(string& name) {
             else in_quotes = true;
         }
 
-        if (!in_quotes && m == "["){
+        if (!in_quotes && m == "(") n_parentheses++;
+        if (!in_quotes && m == ")") n_parentheses--;
+        if (!in_quotes && m == "{") n_parentheses++;
+        if (!in_quotes && m == "}") n_parentheses--;
+
+        if (!in_quotes && n_parentheses == 0 && m == "[") {
             if (first_pos == 0) {
                 first_pos = i;
                 result.push_back(name.substr(0, first_pos));
@@ -540,14 +559,13 @@ vector<string> parse_array_elements(string& name) {
             n_square_brackets++;
         }
 
-        if (!in_quotes && m == "]"){
+        if (!in_quotes && n_parentheses == 0 && m == "]") {
             n_square_brackets--;
 
             if (n_square_brackets == 0) {
                 string t = temp.substr(1);
                 result.push_back(t);
             }
-            
         }
 
         temp += m;

@@ -861,7 +861,11 @@ gc<DataType> get_array_value(AST* expression, uint_fast32_t& caller_id) {
             v = d;
         }
     } else {
-        v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
+        if (e->__ast_holder->__type == __AST_FUNCTION_CALL__) {
+            v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
+        } else {
+            v = get_value(e->__ast_holder, caller_id);
+        }
     }
 
     uint_fast32_t i = 0;
@@ -896,7 +900,7 @@ gc<DataType> get_array_value(AST* expression, uint_fast32_t& caller_id) {
 }
 
 void set_array_value(gc<DataType> v, AST_Array* e, gc<DataType> val, uint_fast32_t& caller_id) {
-    if (e->__ast_holder != NULL) error_message("Assignment to a function call is not supported");
+    if (e->__ast_holder != NULL) error_message("Assignment to a function call/expression is not supported");
     
     uint_fast32_t i = 0;
     string msg = e->__identifier;
@@ -991,8 +995,10 @@ gc<DataType> get_object_value(AST* expression, uint_fast32_t& caller_id) {
     } else {
         if (e->__ast_holder->__type == __AST_ARRAY__) {
             v = get_array_value(e->__ast_holder, caller_id);
-        } else {
+        } else if (e->__ast_holder->__type == __AST_FUNCTION_CALL__) {
             v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
+        } else {
+            v = get_value(e->__ast_holder, caller_id);
         }
     }
 
@@ -1034,7 +1040,7 @@ void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast
         if (e->__ast_holder->__type == __AST_ARRAY__) {
             v = get_array_value(e->__ast_holder, caller_id);
         } else {
-            error_message("Assignment to a function call is not supported");
+            error_message("Assignment to a function call/expression is not supported");
         }
     }
 
@@ -1050,7 +1056,7 @@ void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast
         } else if (e->__attributes.at(i)->__type == __AST_ARRAY__) {
             v = get_attribute_array_value(temp, e->__attributes.at(i), caller_id);
         } else {
-            error_message("Assignment to a function call is not supported");
+            error_message("Assignment to a function call/expression is not supported");
         }
 
         if (v == NULL) error_message_object(msg, "is undefined", i, e->__attributes, caller_id);
@@ -1098,7 +1104,7 @@ void set_object_value(gc<DataType> v, AST_Object* e, gc<DataType> val, uint_fast
     } else if (e->__attributes.at(i)->__type == __AST_ARRAY__) {
         set_attribute_array_value(temp, e->__attributes.at(i), val, caller_id);
     } else {
-        error_message("Assignment to a function call is not supported");
+        error_message("Assignment to a function call/expression is not supported");
     }
 }
 
@@ -1148,7 +1154,7 @@ gc<DataType> get_attribute_array_value(gc<Object> obj, AST* expression, uint_fas
 void set_attribute_array_value(gc<Object> obj, AST* expression, gc<DataType> val, uint_fast32_t& caller_id) {
     AST_Array* e = (AST_Array*) expression;
 
-    if (e->__ast_holder != NULL) error_message("Assignment to a function call is not supported");
+    if (e->__ast_holder != NULL) error_message("Assignment to a function call/expression is not supported");
 
     gc<DataType> v = obj->__attributes[e->__identifier];
     if (v == NULL) error_message("Attribute " + e->__identifier + " is undefined");
@@ -1246,8 +1252,10 @@ gc<Object> get_pure_object_value(AST* expression, uint_fast32_t& caller_id) {
     } else {
         if (e->__ast_holder->__type == __AST_ARRAY__) {
             v = get_array_value(e->__ast_holder, caller_id);
-        } else {
+        } else if (e->__ast_holder->__type == __AST_FUNCTION_CALL__) {
             v = get_function_value((AST_FunctionCall*) e->__ast_holder, caller_id, true);
+        } else {
+            v = get_value(e->__ast_holder, caller_id);
         }
     }
 
