@@ -24,7 +24,7 @@ namespace core {
     uint_fast16_t __attribute_set, __attribute_get, __attribute_exists;
     uint_fast16_t __bit_not, __bit_and, __bit_or, __bit_xor, __bit_ls, __bit_rs;
     uint_fast16_t __register_event_loop, __set_on_error_callback;
-    uint_fast16_t __assert;
+    uint_fast16_t __assert, __range;
 
     class RefHolder: public Base {
     public:
@@ -99,9 +99,10 @@ namespace core {
         __set_on_error_callback = register_function("set_on_error_callback", __REG_BUILT_IN_FUNCTION__);
 
         __assert = register_function("assert", __REG_BUILT_IN_FUNCTION__);
+        __range = register_function("range", __REG_BUILT_IN_FUNCTION__);
         
         __min = __array;
-        __max = __assert;   // DO NOT FORGET THIS!
+        __max = __range;   // DO NOT FORGET THIS!
     }
 
     gc<DataType> __call(uint_fast16_t& func, AST* ast_func, uint_fast32_t& caller_id) {
@@ -585,6 +586,40 @@ namespace core {
                 gc<DataType> d = new_gc<DataType>(__TYPE_DOUBLE__);
                 d->__value_double = random_int(b->__value_double, c->__value_double);
                 arr->__elements.push_back(d);
+            }
+
+            result->__type = __TYPE_ARRAY__;
+            result->__value_array = arr;
+
+            return result;
+        } else if (func == __range) {
+            if (params.size() < 2) error_message_params("range", 2);
+            gc<DataType> a = get_value(params.at(0), caller_id);
+            gc<DataType> b = get_value(params.at(1), caller_id);
+
+            double step = 1;
+
+            if (params.size() > 2) {
+                gc<DataType> c = get_value(params.at(2), caller_id);
+                step = c->__value_double;
+
+                if (step == 0) error_message("range(): unable to use 0 in parameter #3");
+            }
+
+            gc<Array> arr = core::create_array(0)->__value_array;
+
+            if (step > 0) {
+                for (double i = a->__value_double; i <= b->__value_double; i += step) {
+                    gc<DataType> ii = new_gc<DataType>(__TYPE_DOUBLE__);
+                    ii->__value_double = i;
+                    arr->__elements.push_back(ii);
+                }
+            } else {
+                for (double i = a->__value_double; i >= b->__value_double; i += step) {
+                    gc<DataType> ii = new_gc<DataType>(__TYPE_DOUBLE__);
+                    ii->__value_double = i;
+                    arr->__elements.push_back(ii);
+                }
             }
 
             result->__type = __TYPE_ARRAY__;
