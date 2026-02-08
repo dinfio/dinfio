@@ -200,11 +200,11 @@ function size(arr)
 '
 ' ' a is:
 ' ' array(
-' '    [0] = 1,
-' '    [1] = 2,
-' '    [2] = 3,
-' '    [3] = 4,
-' '    [4] = 5
+' '     [0] = 1,
+' '     [1] = 2,
+' '     [2] = 3,
+' '     [3] = 4,
+' '     [4] = 5
 ' ' )
 ''
 function append(arr, value)
@@ -224,13 +224,87 @@ function append(arr, value)
 '
 ' ' a is:
 ' ' array(
-' '    [0] = 3,
-' '    [1] = 4,
-' '    [2] = 5,
-' '    [3] = 6
+' '     [0] = 3,
+' '     [1] = 4,
+' '     [2] = 5,
+' '     [3] = 6
 ' ' )
 ''
 function pop(arr)
+
+
+''
+' Remove the last element of an array
+'
+' @param array arr An array
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3, 4, 5, 6]
+' pop_back(a)
+' pop_back(a)
+'
+' ' a is:
+' ' array(
+' '     [0] = 1,
+' '     [1] = 2,
+' '     [2] = 3,
+' '     [3] = 4
+' ' )
+''
+function pop_back(arr)
+
+
+''
+' Remove the element of an array at the specified index
+'
+' @param array arr An array
+' @param number index The index of the element to be removed
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3, 4, 5, 6]
+' remove(a, 1)
+'
+' ' a is:
+' ' array(
+' '     [0] = 1,
+' '     [1] = 3,
+' '     [2] = 4,
+' '     [3] = 5,
+' '     [4] = 6
+' ' )
+''
+function remove(arr, index)
+
+
+''
+' Insert a new element to an array at the specified index
+'
+' @param array arr An array
+' @param number index The index at which the element has to be inserted
+' @param any value A value to be inserted
+'
+' @return boolean Always returns `true`
+'
+' @example
+' a = [1, 2, 3, 4, 5, 6]
+' insert(a, 0, 10)
+'
+' ' a is:
+' ' array(
+' '     [0] = 10,
+' '     [1] = 1,
+' '     [2] = 2,
+' '     [3] = 3,
+' '     [4] = 4,
+' '     [5] = 5,
+' '     [6] = 6
+' ' )
+''
+function insert(arr, index, value)
 
 
 ''

@@ -13,18 +13,19 @@
 */
 
 namespace core {
-    uint_fast16_t __array, __array2d, __size, __append, __clear, __pop, __declare, __array_random;
+    uint_fast16_t __array, __array2d, __size, __declare, __array_random;
     uint_fast16_t __object, __is_nothing, __extend, __equal, __name, __attributes, __address, __inherits;
     uint_fast16_t __type, __exit, __iif, __total_vars;
     uint_fast16_t __platform, __platform_linux, __platform_mac, __platform_windows;
     uint_fast16_t __execute;
-    uint_fast16_t __ref, __ref_call, __ref_eval;
+    uint_fast16_t __ref, __ref_call, __ref_eval, __ref_fname;
     uint_fast16_t __var_exists, __error;
     uint_fast16_t __caller_file, __get_value;
     uint_fast16_t __attribute_set, __attribute_get, __attribute_exists;
     uint_fast16_t __bit_not, __bit_and, __bit_or, __bit_xor, __bit_ls, __bit_rs;
     uint_fast16_t __register_event_loop, __set_on_error_callback;
     uint_fast16_t __assert, __range;
+    uint_fast16_t __append, __clear, __pop, __pop_back, __remove, __insert;
 
     class RefHolder: public Base {
     public:
@@ -45,6 +46,10 @@ namespace core {
             return get_function_value((AST_FunctionCall*) __func, caller_id, true);
         }
 
+        string fname() {
+            return ((AST_FunctionCall*) __func)->__identifier;
+        }
+
         ~RefHolder() {
             if (__func != NULL) delete __func;
             __original_params.clear();
@@ -59,6 +64,9 @@ namespace core {
         __append = register_function("append", __REG_BUILT_IN_FUNCTION__);
         __clear = register_function("clear", __REG_BUILT_IN_FUNCTION__);
         __pop = register_function("pop", __REG_BUILT_IN_FUNCTION__);
+        __pop_back = register_function("pop_back", __REG_BUILT_IN_FUNCTION__);
+        __remove = register_function("remove", __REG_BUILT_IN_FUNCTION__);
+        __insert = register_function("insert", __REG_BUILT_IN_FUNCTION__);
         __is_nothing = register_function("is_nothing", __REG_BUILT_IN_FUNCTION__);
         __extend = register_function("extend", __REG_BUILT_IN_FUNCTION__);
         __equal = register_function("equal", __REG_BUILT_IN_FUNCTION__);
@@ -81,6 +89,7 @@ namespace core {
         __ref = register_function("ref", __REG_BUILT_IN_FUNCTION__);
         __ref_call = register_function("call", __REG_BUILT_IN_FUNCTION__);
         __ref_eval = register_function("eval", __REG_BUILT_IN_FUNCTION__);
+        __ref_fname = register_function("fname", __REG_BUILT_IN_FUNCTION__);
         __error = register_function("error", __REG_BUILT_IN_FUNCTION__);
         __caller_file = register_function("caller_file", __REG_BUILT_IN_FUNCTION__);
         __get_value = register_function("get_value", __REG_BUILT_IN_FUNCTION__);
@@ -195,8 +204,47 @@ namespace core {
             gc<DataType> d = get_value(params.at(0), caller_id);
             if (d->__type != __TYPE_ARRAY__) error_message("pop(): parameter #1 must be an array");
 
-            // delete(d->__value_array->__elements[0]);
             d->__value_array->__elements.erase(d->__value_array->__elements.begin());
+
+            result->__type = __TYPE_BOOL__;
+            result->__value_bool = true;
+
+            return result;
+        } else if (func == __pop_back) {
+            if (params.size() < 1) error_message_param("pop_back");
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            if (d->__type != __TYPE_ARRAY__) error_message("pop_back(): parameter #1 must be an array");
+
+            d->__value_array->__elements.pop_back();
+
+            result->__type = __TYPE_BOOL__;
+            result->__value_bool = true;
+
+            return result;
+        } else if (func == __remove) {
+            if (params.size() < 2) error_message_params("remove", 2);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
+
+            if (d->__type != __TYPE_ARRAY__) error_message("remove(): parameter #1 must be an array");
+            if (e->__type != __TYPE_DOUBLE__) error_message("remove(): parameter #2 must be a number");
+
+            d->__value_array->__elements.erase(d->__value_array->__elements.begin() + e->__value_double);
+
+            result->__type = __TYPE_BOOL__;
+            result->__value_bool = true;
+
+            return result;
+        } else if (func == __insert) {
+            if (params.size() < 3) error_message_params("insert", 3);
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            gc<DataType> e = get_value(params.at(1), caller_id);
+            gc<DataType> f = get_value(params.at(2), caller_id);
+
+            if (d->__type != __TYPE_ARRAY__) error_message("insert(): parameter #1 must be an array");
+            if (e->__type != __TYPE_DOUBLE__) error_message("insert(): parameter #2 must be a number");
+
+            d->__value_array->__elements.insert(d->__value_array->__elements.begin() + e->__value_double, f);
 
             result->__type = __TYPE_BOOL__;
             result->__value_bool = true;
@@ -709,6 +757,18 @@ namespace core {
             }
 
             rh->call(caller_id);
+        } else if (func == __ref_fname) {
+            if (params.size() < 1) error_message_param("fname");
+            gc<DataType> d = get_value(params.at(0), caller_id);
+            if (d->__type != __TYPE_OBJECT__) error_message("fname(): parameter #1 must be a ref object");
+            if (d->__value_object->__name != "ref") error_message("fname(): parameter #1 must be a ref object");
+
+            RefHolder* rh = (RefHolder*) d->__value_object->__holder_pointer;
+            
+            result->__type = __TYPE_STRING__;
+            result->__value_string = rh->fname();
+
+            return result;
         
         } else if (func == __caller_file) {
             result->__type = __TYPE_STRING__;
